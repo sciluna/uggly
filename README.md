@@ -1,1 +1,1 @@
-# ugly
+# UGGLY - User-Guided Graph LaYout
