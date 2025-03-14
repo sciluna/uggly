@@ -1,26 +1,101 @@
+let generateConstraints = function (placement, nodeIdMapReverse) {
+  let relativePlacementConstraints = [];
+  let verticalAlignments = [];
+  let horizontalAlignments = [];
+  let direction = "";
+  placement.forEach(line => {
+    // generate collection from nodes in the line together with their edges
+    let lineCollection = generateCollectionFromLine(line, nodeIdMapReverse);
+    if (line.end[0] - line.start[0] > 0 && line.end[1] - line.start[1] == 0) {
+      direction = "l-r";
+      // generate appropriate constraints
+      let constraints = bfs(lineCollection, direction);
+      relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+      horizontalAlignments.push(constraints.alignment);
+    } else if (line.end[0] - line.start[0] < 0 && line.end[1] - line.start[1] == 0) {
+      direction = "r-l";
+      // generate appropriate constraints
+      let constraints = bfs(lineCollection, direction);
+      relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+      horizontalAlignments.push(constraints.alignment);
+    } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] == 0) {
+      direction = "t-b";
+      // generate appropriate constraints
+      let constraints = bfs(lineCollection, direction);
+      relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+      verticalAlignments.push(constraints.alignment);
+    } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] == 0) {
+      direction = "b-t";
+      // generate appropriate constraints
+      let constraints = bfs(lineCollection, direction);
+      relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+      verticalAlignments.push(constraints.alignment);
+    } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] > 0) {
+      direction = "tl-br";
+      // generate appropriate constraints
+      let constraints = bfs(lineCollection, direction);
+      relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+    } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] < 0) {
+      direction = "br-tl";
+      // generate appropriate constraints
+      let constraints = bfs(lineCollection, direction);
+      relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+    } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] < 0) {
+      direction = "tr-bl";
+      // generate appropriate constraints
+      let constraints = bfs(lineCollection, direction);
+      relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+    } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
+      direction = "bl-tr";
+      // generate appropriate constraints
+      let constraints = bfs(lineCollection, direction);
+      relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+    }
+  });
+  if (verticalAlignments.length) {
+    verticalAlignments = mergeArrays(verticalAlignments);
+  }
+  if (horizontalAlignments.length) {
+    horizontalAlignments = mergeArrays(horizontalAlignments);
+  }
+  let alignmentConstraints = { vertical: verticalAlignments.length > 0 ? verticalAlignments : undefined, horizontal: horizontalAlignments.length > 0 ? horizontalAlignments : undefined }
+
+  return { relativePlacementConstraint: relativePlacementConstraints, alignmentConstraint: alignmentConstraints }
+};
+
+let generateCollectionFromLine = function (line, nodeIdMapReverse) {
+  let lineCollection = cy.collection();
+  line.nodes.forEach((node, i) => {
+    lineCollection.merge(cy.getElementById(nodeIdMapReverse.get(node)));
+  });
+  let edgesBetween = lineCollection.edgesWith(lineCollection);
+  lineCollection.merge(edgesBetween);
+  return lineCollection;
+};
+
 let generateConstraintsForFcose = function (positioning) {
   let relativePlacementConstraints = [];
   positioning.forEach(item => {
     if (item[1] == "above") {
-      relativePlacementConstraints.push({top: item[0], bottom: item[2]});
+      relativePlacementConstraints.push({ top: item[0], bottom: item[2] });
     } else if (item[1] == "below") {
-      relativePlacementConstraints.push({top: item[2], bottom: item[0]});
+      relativePlacementConstraints.push({ top: item[2], bottom: item[0] });
     } else if (item[1] == "left") {
-      relativePlacementConstraints.push({left: item[0], right: item[2]});
+      relativePlacementConstraints.push({ left: item[0], right: item[2] });
     } else if (item[1] == "right") {
-      relativePlacementConstraints.push({left: item[2], right: item[0]});
+      relativePlacementConstraints.push({ left: item[2], right: item[0] });
     } else if (item[1] == "aboveLeft") {
-      relativePlacementConstraints.push({top: item[0], bottom: item[2]});
-      relativePlacementConstraints.push({left: item[0], right: item[2]});
+      relativePlacementConstraints.push({ top: item[0], bottom: item[2] });
+      relativePlacementConstraints.push({ left: item[0], right: item[2] });
     } else if (item[1] == "aboveRight") {
-      relativePlacementConstraints.push({top: item[0], bottom: item[2]});
-      relativePlacementConstraints.push({left: item[2], right: item[0]});
+      relativePlacementConstraints.push({ top: item[0], bottom: item[2] });
+      relativePlacementConstraints.push({ left: item[2], right: item[0] });
     } else if (item[1] == "belowLeft") {
-      relativePlacementConstraints.push({top: item[2], bottom: item[0]});
-      relativePlacementConstraints.push({left: item[0], right: item[2]});
+      relativePlacementConstraints.push({ top: item[2], bottom: item[0] });
+      relativePlacementConstraints.push({ left: item[0], right: item[2] });
     } else if (item[1] == "belowRight") {
-      relativePlacementConstraints.push({top: item[2], bottom: item[0]});
-      relativePlacementConstraints.push({left: item[2], right: item[0]});
+      relativePlacementConstraints.push({ top: item[2], bottom: item[0] });
+      relativePlacementConstraints.push({ left: item[2], right: item[0] });
     }
   });
 
@@ -42,9 +117,57 @@ let refineConstraints = function (alignmentConstraint, relativePlacementConstrai
   // TO DO: work on refinement of relative placement constraints
   //
 
-  return { relativePlacementConstraints: relativePlacementConstraint, alignmentConstraints: alignmentConstraints}
+  return { relativePlacementConstraints: relativePlacementConstraint, alignmentConstraints: alignmentConstraints }
 };
 
+let bfs = function (cyCollection, direction) {
+  let queue = [];
+  let visited = new Set();
+  let currentNode = cyCollection[0];
+  queue.push(currentNode);
+  visited.add(currentNode.id());
+  let relativePlacementConstraints = [];
+
+  while (queue.length !== 0) {
+    currentNode = queue.shift();
+    let neighborEdges = currentNode.edgesWith(cyCollection);
+    for (let i = 0; i < neighborEdges.length; i++) {
+      let neighborEdge = neighborEdges[i];
+      let currentNeighbor;
+      if (currentNode.id() == neighborEdge.source().id()) {
+        currentNeighbor = neighborEdge.target();
+      } else {
+        currentNeighbor = neighborEdge.source();
+      }
+      if (!visited.has(currentNeighbor.id())) {
+        if (direction == "l-r") {
+          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id() });
+        } else if (direction == "r-l") {
+          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
+        } else if (direction == "t-b") {
+          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
+        } else if (direction == "b-t") {
+          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
+        } else if (direction == "tl-br") {
+          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id() });
+          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
+        } else if (direction == "br-tl") {
+          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
+          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
+        } else if (direction == "tr-bl") {
+          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
+          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
+        } else if (direction == "bl-tr") {
+          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id() });
+          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
+        }
+        queue.push(currentNeighbor);
+        visited.add(currentNeighbor.id());
+      }
+    }
+  }
+  return { relativePlacement: relativePlacementConstraints, alignment: [...visited] };
+};
 
 // auxuliary function to merge arrays with duplicates
 let mergeArrays = function (arrays) {
@@ -83,4 +206,4 @@ let mergeArrays = function (arrays) {
   return arrays;
 };
 
-export { generateConstraintsForFcose, refineConstraints };
+export { generateConstraints, refineConstraints };

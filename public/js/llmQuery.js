@@ -52,7 +52,7 @@ export { runLLM };
            - Use relative placement constraints to maintain proper positioning of nodes.\n\
         4. **Constraints**:\n\
            - `alignmentConstraint`: Only supports "horizontal" and "vertical" alignments and are based on the orientation of the line.\n\
-           - `relativePlacementConstraint`: Only supports left-right e.g. {"left": "n3", "right": "n4"} and top-down e.g. {"top": "n0", "bottom": "n1"} relations and are based on relationships between nodes for proper positioning. You do not have to use both constraint types, use them when needed (e.g. use vertical alignment if nodes are really vertically aligned) \n\
+           - `relativePlacementConstraint`: Only supports left-right e.g. {"left": "n3", "right": "n4"} and top-down e.g. {"top": "n0", "bottom": "n1"} relations and are based on relationships between nodes for proper positioning. You do not have to use both constraint types, use them when needed. \n\
       Example Input: \n\
       Graph: "n0 n1\nn1 n2\nn2 n3\nn3 n4\nn4 n5\nn5 n6"\n\
       User Drawing: Looks like L shape \n\

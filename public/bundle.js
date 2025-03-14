@@ -46447,24 +46447,129 @@
   var bundleExports = bundle.exports;
   var sbgnStylesheet = /*@__PURE__*/getDefaultExportFromCjs(bundleExports);
 
-  let refineConstraints = function (alignmentConstraint, relativePlacementConstraint) {
-    // alignment: merge arrays if two arrays share a common node id (fCoSE doesn't work if they aren't in compact form)
-    let verticalAlignments = undefined;
-    let horizontalAlignments = undefined;
-    if (alignmentConstraint.vertical) {
-      verticalAlignments = mergeArrays(alignmentConstraint.vertical);
+  let generateConstraints = function (placement, nodeIdMapReverse) {
+    let relativePlacementConstraints = [];
+    let verticalAlignments = [];
+    let horizontalAlignments = [];
+    let direction = "";
+    placement.forEach(line => {
+      // generate collection from nodes in the line together with their edges
+      let lineCollection = generateCollectionFromLine(line, nodeIdMapReverse);
+      if (line.end[0] - line.start[0] > 0 && line.end[1] - line.start[1] == 0){
+        direction = "l-r";
+        // generate appropriate constraints
+        let constraints = bfs(lineCollection, direction);
+        relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+        horizontalAlignments.push(constraints.alignment);
+      } else if (line.end[0] - line.start[0] < 0 && line.end[1] - line.start[1] == 0) {
+        direction = "r-l";
+        // generate appropriate constraints
+        let constraints = bfs(lineCollection, direction);
+        relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+        horizontalAlignments.push(constraints.alignment);
+      } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] == 0) {
+        direction = "t-b";
+        // generate appropriate constraints
+        let constraints = bfs(lineCollection, direction);
+        relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+        verticalAlignments.push(constraints.alignment);
+      } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] == 0) {
+        direction = "b-t";
+        // generate appropriate constraints
+        let constraints = bfs(lineCollection, direction);
+        relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+        verticalAlignments.push(constraints.alignment);
+      } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] > 0) {
+        direction = "tl-br";
+        // generate appropriate constraints
+        let constraints = bfs(lineCollection, direction);
+        relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+      } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] < 0) {
+        direction = "br-tl";
+        // generate appropriate constraints
+        let constraints = bfs(lineCollection, direction);
+        relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+      } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] < 0) {
+        direction = "tr-bl";
+        // generate appropriate constraints
+        let constraints = bfs(lineCollection, direction);
+        relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+      } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
+        direction = "bl-tr";
+        // generate appropriate constraints
+        let constraints = bfs(lineCollection, direction);
+        relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
+      }
+    });
+    if (verticalAlignments.length) {
+      verticalAlignments = mergeArrays(verticalAlignments);
     }
-    if (alignmentConstraint.horizontal) {
-      horizontalAlignments = mergeArrays(alignmentConstraint.horizontal);
+    if (horizontalAlignments.length) {
+      horizontalAlignments = mergeArrays(horizontalAlignments);
     }
-    let alignmentConstraints = { vertical: verticalAlignments, horizontal: horizontalAlignments };
+    let alignmentConstraints = {vertical: verticalAlignments.length > 0 ? verticalAlignments : undefined, horizontal: horizontalAlignments.length > 0 ? horizontalAlignments : undefined};
 
-    // TO DO: work on refinement of relative placement constraints
-    //
-
-    return { relativePlacementConstraints: relativePlacementConstraint, alignmentConstraints: alignmentConstraints}
+    return {relativePlacementConstraint: relativePlacementConstraints, alignmentConstraint: alignmentConstraints}
   };
 
+  let generateCollectionFromLine = function(line, nodeIdMapReverse) {
+    let lineCollection = cy.collection();
+    line.nodes.forEach((node, i) => {
+      lineCollection.merge(cy.getElementById(nodeIdMapReverse.get(node)));
+    });
+    let edgesBetween = lineCollection.edgesWith(lineCollection);
+    lineCollection.merge(edgesBetween);
+    return lineCollection;
+  };
+
+  let bfs = function(cyCollection, direction) {
+    let queue = [];
+    let visited = new Set();
+    let currentNode = cyCollection[0];
+    queue.push(currentNode);
+    visited.add(currentNode.id());
+    let relativePlacementConstraints = [];
+
+    while (queue.length !== 0) {
+      currentNode = queue.shift();
+      let neighborEdges = currentNode.edgesWith(cyCollection);
+      for (let i = 0; i < neighborEdges.length; i++) {
+        let neighborEdge = neighborEdges[i];
+        let currentNeighbor;
+        if (currentNode.id() == neighborEdge.source().id()) {
+          currentNeighbor = neighborEdge.target();
+        } else {
+          currentNeighbor = neighborEdge.source();
+        }
+        if(!visited.has(currentNeighbor.id())) {
+          if(direction == "l-r") {
+            relativePlacementConstraints.push({left: currentNode.id(), right: currentNeighbor.id()});
+          } else if(direction == "r-l") {
+            relativePlacementConstraints.push({right: currentNode.id(), left: currentNeighbor.id()});
+          } else if(direction == "t-b") {
+            relativePlacementConstraints.push({top: currentNode.id(), bottom: currentNeighbor.id()});
+          } else if(direction == "b-t") {
+            relativePlacementConstraints.push({bottom: currentNode.id(), top: currentNeighbor.id()});
+          } else if(direction == "tl-br") {
+            relativePlacementConstraints.push({left: currentNode.id(), right: currentNeighbor.id()});
+            relativePlacementConstraints.push({top: currentNode.id(), bottom: currentNeighbor.id()});
+          } else if(direction == "br-tl") {
+            relativePlacementConstraints.push({right: currentNode.id(), left: currentNeighbor.id()});
+            relativePlacementConstraints.push({bottom: currentNode.id(), top: currentNeighbor.id()});
+          } else if(direction == "tr-bl") {
+            relativePlacementConstraints.push({right: currentNode.id(), left: currentNeighbor.id()});
+            relativePlacementConstraints.push({top: currentNode.id(), bottom: currentNeighbor.id()});
+          } else if(direction == "bl-tr") {
+            relativePlacementConstraints.push({left: currentNode.id(), right: currentNeighbor.id()});
+            relativePlacementConstraints.push({bottom: currentNode.id(), top: currentNeighbor.id()});
+          }
+          queue.push(currentNeighbor);
+          visited.add(currentNeighbor.id());
+        }
+      }
+    }
+    return {relativePlacement: relativePlacementConstraints, alignment: [...visited]};
+  };
 
   // auxuliary function to merge arrays with duplicates
   let mergeArrays = function (arrays) {
@@ -46504,12 +46609,12 @@
   };
 
   // convert cy graph data to space separated values (name is tsv but inserts space, not tab) 
-  let cyToTsv = function (cyElements) {
+  let cyToTsv = function (cyElements, nodeIdMap) {
     let tsvString = "";
     cyElements.edges().forEach(edge => {
       let source = edge.source();
       let target = edge.target();
-      tsvString += source.id() + " " + target.id();
+      tsvString += nodeIdMap.get(source.id()) + " " + nodeIdMap.get(target.id());
       tsvString += "\n";
     });
     return tsvString;
@@ -46517,7 +46622,7 @@
 
   cytoscape$1.use(fcose);
 
-  let cy = window.cy = cytoscape$1({
+  let cy$1 = window.cy = cytoscape$1({
     container: document.getElementById('cy'),
     style: [
       {
@@ -46536,8 +46641,19 @@
       { "data": { "id": "n4", "group": "nodes" } },
       { "data": { "id": "n5", "group": "nodes" } },
       { "data": { "id": "n6", "group": "nodes" } },
-      { "data": { "id": "n7", "group": "nodes" } },
+      { "data": { "id": "n7", "group": "nodes" } }, // actual until here
       { "data": { "id": "n8", "group": "nodes" } },
+      { "data": { "id": "n9", "group": "nodes" } },
+      { "data": { "id": "n10", "group": "nodes" } },
+      { "data": { "id": "n11", "group": "nodes" } },
+      { "data": { "id": "n12", "group": "nodes" } },
+      { "data": { "id": "n13", "group": "nodes" } },
+      { "data": { "id": "n14", "group": "nodes" } },
+      { "data": { "id": "n15", "group": "nodes" } },
+      { "data": { "id": "n16", "group": "nodes" } },
+      { "data": { "id": "n17", "group": "nodes" } },
+      { "data": { "id": "n18", "group": "nodes" } },
+      { "data": { "id": "n19", "group": "nodes" } },
       { "data": { "id": "e0", "source": "n0", "target": "n1", "group": "edges" } },
       { "data": { "id": "e1", "source": "n1", "target": "n2", "group": "edges" } },
       { "data": { "id": "e2", "source": "n2", "target": "n3", "group": "edges" } },
@@ -46545,23 +46661,33 @@
       { "data": { "id": "e4", "source": "n4", "target": "n5", "group": "edges" } },
       { "data": { "id": "e5", "source": "n5", "target": "n6", "group": "edges" } },
       { "data": { "id": "e6", "source": "n6", "target": "n7", "group": "edges" } },
-      { "data": { "id": "e7", "source": "n7", "target": "n8", "group": "edges" } }
+      { "data": { "id": "e7", "source": "n1", "target": "n8", "group": "edges" } },
+      { "data": { "id": "e8", "source": "n1", "target": "n9", "group": "edges" } },
+      { "data": { "id": "e9", "source": "n2", "target": "n10", "group": "edges" } },
+      { "data": { "id": "e10", "source": "n2", "target": "n11", "group": "edges" } },
+      { "data": { "id": "e11", "source": "n3", "target": "n12", "group": "edges" } },
+      { "data": { "id": "e12", "source": "n3", "target": "n13", "group": "edges" } },
+      { "data": { "id": "e13", "source": "n4", "target": "n14", "group": "edges" } },
+      { "data": { "id": "e14", "source": "n4", "target": "n15", "group": "edges" } },
+      { "data": { "id": "e15", "source": "n5", "target": "n16", "group": "edges" } },
+      { "data": { "id": "e16", "source": "n5", "target": "n17", "group": "edges" } },
+      { "data": { "id": "e17", "source": "n6", "target": "n18", "group": "edges" } },
+      { "data": { "id": "e18", "source": "n6", "target": "n19", "group": "edges" } }
     ],
     layout: "grid"
   });
-
-  let sampleName = "";
 
   document.getElementById("samples").addEventListener("change", function (event) {
   	let sample = event.target.value;
   	let filename = "";
   	if (sample == "sample1") {
   		filename = "sample1.json";
-      sampleName = "sample1";
   	}
     if (sample == "sample2") {
   		filename = "sample2copy.json";
-      sampleName = "sample2";
+  	}
+    if (sample == "tca_cycle") {
+  		filename = "tca_cycle.json";
   	}
 
   	loadSample('../samples/' + filename);
@@ -46569,24 +46695,34 @@
 
   // randomize layout
   document.getElementById("randomizeButton").addEventListener("click", async function () {
-    cy.layout({name: "random"}).run();
+    cy$1.layout({name: "random", animate: true, animationDuration: 500}).run();
   });
   document.getElementById("layoutButton").addEventListener("click", async function () {
-    let userDescription = document.getElementById("textInput").value;
+    // let userDescription = document.getElementById("textInput").value;
+    let userDescription = "";
     let base64Image = getBase64Image();
 
-    let prunedGraph = pruneGraph();
+    let nodeIdMap = new Map();  // actual id to pseudo id 
+    let nodeIdMapReverse = new Map(); // pseudo id to actual id 
+    cy$1.nodes().forEach((node, i) => {
+      nodeIdMap.set(node.id(), "n" + i);
+      nodeIdMapReverse.set("n" + i, node.id());
+    });
+
+    let pruneResult = pruneGraph();
+    let prunedGraph = pruneResult.prunedGraph;
+    prunedGraph.select();
+    let ignoredGraph = pruneResult.ignoredGraph;
+  /*   let prunedNodesAll = reduceTrees();
+    let prunedGraph = cy.elements(); */
+    console.log(prunedGraph.nodes().length);
+    //console.log(prunedGraph.ap({damping: 0.8, preference: 'median'}));
     let graphData;
-    let randomize = true;
-    if(sampleName == ""){
-      prunedGraph = cy.elements();
-    }
     // if there are selected elements, apply incremental layout
-    if (prunedGraph.edges(':selected').length > 0) {
-      graphData = cyToTsv(prunedGraph.edges(':selected'));
-      randomize = false;
+    if (prunedGraph.edges(':selected').length > 10000) {
+      graphData = cyToTsv(prunedGraph.edges(':selected'), nodeIdMap);
     } else {
-      graphData = cyToTsv(prunedGraph);
+      graphData = cyToTsv(prunedGraph, nodeIdMap);
     }
 
   	let data = {
@@ -46595,57 +46731,89 @@
   		image: base64Image
   	};
 
-    let answer = await runLLM(data);
-    //let positioning = JSON.parse(answer).positioning;
+    let result = await runLLM(data);
+    console.log(result);
+    let placement = JSON.parse(result).lines;
+    let constraints = generateConstraints(placement, nodeIdMapReverse);
+    console.log(constraints);
 
-    let relativePlacementConstraint = JSON.parse(answer).relativePlacementConstraint;
-    let alignmentConstraint = JSON.parse(answer).alignmentConstraint;
-    let refinedConstraints = refineConstraints(alignmentConstraint, relativePlacementConstraint);
-    relativePlacementConstraint = refinedConstraints.relativePlacementConstraints;
-    alignmentConstraint = refinedConstraints.alignmentConstraints;
-    //let relativePlacementConstraint = generateConstraintsForFcose(positioning);
-    console.log(relativePlacementConstraint);
-
-    cy.layout({
-      name: "fcose",
-      randomize: randomize,
-      relativePlacementConstraint: relativePlacementConstraint ? relativePlacementConstraint : undefined,
-      alignmentConstraint: alignmentConstraint ? alignmentConstraint : undefined,
-      stop: () => {cy.layout({name: "fcose", randomize: false}).run();}
-    }).run();
+    try {
+      cy$1.layout({
+        name: "fcose",
+        randomize: true,
+        idealEdgeLength: 100,
+        animationDuration: 2000,
+        relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
+        alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
+        stop: () => {
+    /*      while(prunedNodesAll.length > 0) {
+            prunedNodesAll = growTree(prunedNodesAll);
+          } */
+          prunedGraph.select();
+          let nodeToConnect;
+          ignoredGraph.nodes().forEach(node => {
+            let connectedEdge = node.connectedEdges()[0];
+            if(node.id() == connectedEdge.source().id()){
+              nodeToConnect = connectedEdge.target();
+            }
+            else {
+              nodeToConnect = connectedEdge.source();  
+            }
+            let random1 = Math.random() * 100 - 50;
+            node.position({x: nodeToConnect.position().x + (Math.random() * 200 - 100), y: nodeToConnect.position().y + (Math.random() * 200 - 100)});
+          });
+          //removedEles.restore();
+          cy$1.layout({
+            name: "fcose", 
+            randomize: false, 
+            idealEdgeLength: (edge) => {
+              if(ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
+                return 50;
+              else
+                return 100; 
+            }, 
+            relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined, 
+            /* alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined, */initialEnergyOnIncremental: 0.1}).run();
+        }
+      }).run();
+    } catch (error) {
+      alert("Couldn't process constraints! Please try again!");
+    }
   });
 
   document.getElementById('clearButton').addEventListener('click', clearCanvas);
 
   let loadSample = function (fname) {
-  	cy.remove(cy.elements());
+  	cy$1.remove(cy$1.elements());
   	fetch(fname).then(function (res) {
   		return res.json();
   	}).then(data => new Promise((resolve, reject) => {
-      cy.json({elements: data});
-      cy.nodes().forEach(node => {
+      cy$1.json({elements: data});
+      cy$1.nodes().forEach(node => {
         if(!node.data('stateVariables'))
           node.data('stateVariables', []);
         if(!node.data('unitsOfInformation'))
           node.data('unitsOfInformation', []);
       });
-      cy.style(sbgnStylesheet(cytoscape$1));
-      cy.layout({"name": "fcose"}).run();
-      cy.fit();
+      cy$1.style(sbgnStylesheet(cytoscape$1));
+      cy$1.layout({"name": "fcose"}).run();
+      cy$1.fit();
   	}));
   };
 
   // remove one degree nodes from graph to make it simpler
   let pruneGraph = function () {
-    let prunedGraph = cy.collection();
-    cy.nodes().forEach(node => {
+    let prunedGraph = cy$1.collection();
+    cy$1.nodes().forEach(node => {
       if (node.degree() > 1) {
         prunedGraph.merge(node);
       }
     });
     let edgesBetween = prunedGraph.edgesWith(prunedGraph);
     prunedGraph.merge(edgesBetween);
-    return prunedGraph;
+    let ignoredGraph = cy$1.elements().difference(prunedGraph);
+    //let removedEles = cy.remove(cy.elements().difference(prunedGraph));
+    return { prunedGraph, ignoredGraph };
   };
 
   let runLLM = async function (data) {

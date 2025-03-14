@@ -17,29 +17,30 @@
 
 <body>
   <h4>UGGLY - User-Guided Graph LaYout</h4>
-
-  <nav class="navbar navbar-light bg-light">
+  <hr>
+  <div id="inputArea">
+    <ul>
+      <li>Select a sample file</li>
+      <li>Draw the shape that will guide your graph's layout</li>
+      <li>Click Apply Layout button</li>
+    </ul>
     <form class="form-inline">
-      <button id="randomizeButton" class="btn btn-secondary btn-sm">Randomize</button>
-      <button id="layoutButton" class="btn btn-secondary btn-sm">Apply Layout</button>
-
       <label for="samples">Sample file:</label>
 
       <select class="custom-select" name="samples" id="samples">
         <option value="" disabled selected>Select</option>
         <option value="sample1">Sample 1</option>
         <option value="sample2">Sample 2</option>
+        <option value="tca_cycle">TCA cycle</option>
       </select>
 
       <span id="fileName" class="text-secondary"></span>
     </form>
-  </nav>
-  
-  <div id="inputArea">
-    <p>Please draw the shape that will guide the layout of your graph in the area below and then click the <i>Apply Layout </i>button above.</p>
     <div id="shapeInputField">
       <canvas id="drawingCanvas"></canvas><br>
-      <button class="btn btn-info btn-sm" id="clearButton">Clear Drawing</button>
+      <button id="randomizeButton" class="btn btn-primary btn-sm">Randomize</button>
+      <button id="layoutButton" class="btn btn-primary btn-sm">Apply Layout</button>
+      <button class="btn btn-info btn-sm float-end" id="clearButton">Clear Drawing</button>
     </div>
   </div>
   <div id="cy"></div>

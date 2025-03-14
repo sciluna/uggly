@@ -5,12 +5,16 @@ body {
   font-size: 14px;
 }
 
+hr {
+  margin: 8px 0px 16px 0px !important;
+}
+
 #cy {
   position: absolute;
   left: 30%;
-  top: 110;
-  bottom: 6%;
-  right: 10;
+  top: 8%;
+  bottom: 5%;
+  right: 1%;
   z-index: 999;
   border-radius: 1px;
   border-width: 2px;
