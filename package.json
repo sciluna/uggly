@@ -15,9 +15,13 @@
     "cors": "^2.8.5",
     "cytoscape": "^3.2.0",
     "cytoscape-fcose": "^2.2.0",
+    "cytoscape-graphml": "https://github.com/iVis-at-Bilkent/cytoscape.js-graphml.git#unstable",
     "cytoscape-sbgn-stylesheet": "https://github.com/hasanbalci/cytoscape-sbgn-stylesheet.git",
+    "cytoscape-svg": "^0.4.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "file-saver": "^2.0.5",
+    "jquery": "^3.7.1",
     "openai": "^4.78.1",
     "token.js": "^0.5.4"
   },

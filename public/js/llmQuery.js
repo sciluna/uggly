@@ -146,3 +146,42 @@ By carefully checking the lines and considering to placing nodes over those line
         type: 'image_url', image_url: { "url": image }
       }
     ] */
+
+
+
+// turn to this -- this is most tried prompt
+
+/* let userPrompt = {
+  role: "user",
+  content: [
+    { type: 'text', text: 'I have the following graph: \n' + graph + '. I have drawn a shape in the given image and I want my graph to have a layout where the nodes positioned like the overall shape in this image. Analyze the image, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. While identfying lines try to be consistent with the given image. Also, do not consider slight changes in the directions since the drawing is made by hand and each line may not be drawn linearly. Please generate the required assignments of the nodes in the correct order based on their adjacencies in JSON format as in the following example output: { "explanation": detailed reasoning behind the result, "lines": [\n\
+        {\n\
+            "id": 0,\n\
+            "start": [x1, y1],\n\
+            "end": [x2, y2],\n\
+            "nodes": ["n1", "n2"]\n\
+        },\n\
+        {\n\
+            "id": 1,\n\
+            "start": [x2, y2],\n\
+            "end": [x3, y3],\n\
+            "nodes": ["n2", "n3", "n4", "n5"]\n\
+        }\n\
+        {\n\
+            "id": 2,\n\
+            "start": [x3, y3],\n\
+            "end": [x4, y4],\n\
+            "nodes": ["n5", "n6", "n7"]\n\
+        }\n\
+        {\n\
+            "id": 3,\n\
+            "start": [x4, y4],\n\
+            "end": [x5, y5],\n\
+            "nodes": ["n7", "n8", "n9"]\n\
+        }\n\
+    ],\n\: where x1, y1, x2, y2. etc. are real coordinates. Make sure that the last node of a line is also the first node of the next line (THIS IS IMPORTANT). Other than this condition, a node cannot be on two different lines. You can generate as many line segments as required. For the curved drawings, try to approximate it by using multiple lines Consider that x axis increases from left to right and y axis increases from top to bottom. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time and produce answer carefully!' },
+    {
+      type: 'image_url', image_url: { "url": image }
+    }
+  ]
+}; */

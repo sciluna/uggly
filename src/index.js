@@ -1,6 +1,7 @@
 import express from 'express';
 import { config } from 'dotenv';
-import { TokenJS } from 'token.js'
+import { TokenJS } from 'token.js';
+import OpenAI from "openai";
 import path from 'path';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
@@ -33,8 +34,8 @@ app.post('/llm', async (req, res) => {
 		let description = body["userDescription"];
 		let image = body["image"];
 
-		// Create the Token.js client
-		const tokenjs = new TokenJS({
+/* 		// Create the Token.js client
+		const client = new TokenJS({
 			//baseURL: 'http://127.0.0.1:11434/v1/'
 		});
 
@@ -49,15 +50,18 @@ app.post('/llm', async (req, res) => {
 			model = "llama3.2-vision";
 		} else if (provider == "bedrock") {
       model = "anthropic.claude-3-sonnet-20240229-v1:0";
-    }
+    } */
+
+    const client = new OpenAI();
 
 		let messagesArray = generateMessage(graph, description, image);
 
 		async function main() {
-			const response = await tokenjs.chat.completions.create({
-				provider: provider,
-				model: model,
-				messages: messagesArray
+			const response = await client.chat.completions.create({
+				//provider: provider,
+				model: 'gpt-4o',
+				messages: messagesArray,
+        temperature: 0
 			});
 			let answer = response.choices[0]["message"]["content"];
 			console.log(answer);
@@ -78,7 +82,7 @@ let generateMessage = function (graph, description, image) {
   let userPrompt = {
     role: "user",
     content: [
-      { type: 'text', text: 'I have the following graph: \n' + graph + '. I have drawn a shape in the given image and I want my graph to have a layout where the nodes positioned like the overall shape in this image. Analyze the image, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. While identfying lines try to be consistent with the given image. Also, do not consider slight changes in the directions since the drawing is made by hand and each line may not be drawn linearly. Please generate the required placements of the nodes in the correct placement order in JSON format as in the following example output: { "explanation": detailed reasoning behind the result, "lines": [\n\
+      { type: 'text', text: 'I have the following graph: \n' + graph + '. I have drawn a shape in the given image and I want my graph to have a layout where the nodes positioned like the overall shape in this image. Analyze the image, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. While identfying lines try to be consistent with the given image. Also, do not consider slight changes in the directions since the drawing is made by hand and each line may not be drawn linearly. Please generate the required assignments of the nodes in the correct order based on their adjacencies in JSON format as in the following example output: { "explanation": detailed reasoning behind the result, "lines": [\n\
           {\n\
               "id": 0,\n\
               "start": [x1, y1],\n\
