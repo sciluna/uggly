@@ -94,7 +94,7 @@ let loadSample = function (fname, sampleName) {
     return res.json();
   }).then(data => new Promise((resolve, reject) => {
     if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
-      cy.style(sbgnStylesheet(cytoscape));
+      cy.style(sbgnStylesheet(cytoscape, "purple_green"));
       cy.json({ elements: data });
       cy.nodes().forEach(node => {
         if (!node.data('stateVariables'))

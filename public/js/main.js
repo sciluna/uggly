@@ -26,7 +26,7 @@ document.getElementById("layoutButton").addEventListener("click", async function
     nodeIdMap.set(node.id(), "n" + i);
     nodeIdMapReverse.set("n" + i, node.id());
   });
-
+  console.log(nodeIdMapReverse);
   let pruneResult = pruneGraph();
   let prunedGraph = pruneResult.prunedGraph;
   prunedGraph.select();
@@ -120,7 +120,7 @@ document.getElementById("layoutButton").addEventListener("click", async function
           randomize: false,
           idealEdgeLength: (edge) => {
             if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
-              return 50;
+              return 75;
             else
               return 200;
           },

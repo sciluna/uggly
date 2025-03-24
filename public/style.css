@@ -16,9 +16,9 @@ hr {
   bottom: 5%;
   right: 1%;
   z-index: 999;
-  border-radius: 1px;
+  border-radius: 2px;
   border-width: 2px;
-  border-color: black;
+  border-color: #555555;
   border-style: solid;
 }
 
@@ -41,9 +41,9 @@ hr {
   display: flexbox;
   margin-bottom: 15px;
   cursor: crosshair;
-  border-radius: 1px;
+  border-radius: 2px;
   border-width: 2px;
-  border-color: black;
+  border-color: #555555;
   border-style: solid;
 }
 

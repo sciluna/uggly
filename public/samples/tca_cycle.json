@@ -97,7 +97,7 @@
           "h": 25
         },
         "class": "macromolecule",
-        "label": "Pyruvate Dehydrogenase",
+        "label": "Pyruvate\nDehydrogenase",
         "statesandinfos": [],
         "language": "PD",
         "border-width": 1.25,
@@ -1076,7 +1076,7 @@
           "h": 25
         },
         "class": "macromolecule",
-        "label": "Isocitrate Dehydrogenase",
+        "label": "Isocitrate\nDehydrogenase",
         "statesandinfos": [],
         "language": "PD",
         "border-width": 1.25,

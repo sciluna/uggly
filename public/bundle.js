@@ -43778,21 +43778,29 @@
       } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] > 0) {
         direction = "tl-br";
         // generate appropriate constraints
+        Math.abs(line.end[0] - line.start[0]);
+        Math.abs(line.end[1] - line.start[1]);
         let constraints = bfs(lineCollection, direction);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] < 0) {
         direction = "br-tl";
         // generate appropriate constraints
+        Math.abs(line.end[0] - line.start[0]);
+        Math.abs(line.end[1] - line.start[1]);
         let constraints = bfs(lineCollection, direction);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] < 0) {
         direction = "tr-bl";
         // generate appropriate constraints
+        Math.abs(line.end[0] - line.start[0]);
+        Math.abs(line.end[1] - line.start[1]);
         let constraints = bfs(lineCollection, direction);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
         direction = "bl-tr";
         // generate appropriate constraints
+        Math.abs(line.end[0] - line.start[0]);
+        Math.abs(line.end[1] - line.start[1]);
         let constraints = bfs(lineCollection, direction);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       }
@@ -43818,7 +43826,7 @@
     return lineCollection;
   };
 
-  let bfs = function (cyCollection, direction) {
+  let bfs = function (cyCollection, direction, lineWidth, lineHeight) {
     let queue = [];
     let visited = new Set();
     let currentNode = cyCollection[0];
@@ -43847,8 +43855,8 @@
           } else if (direction == "b-t") {
             relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
           } else if (direction == "tl-br") {
-            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id() });
-            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
+            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id()});
+            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id()});
           } else if (direction == "br-tl") {
             relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
             relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
@@ -44508,6 +44516,41 @@
   	  },
   	  height: function height(node) {
   	    return this.dimensions(node).h;
+  	  },
+  	  bgColor: function bgColor(node, bgColors) {
+  	    if (bgColors.length == 2) {
+  	      return bgColors[0];
+  	    } else if (bgColors.length == 3) {
+  	      var sbgnClass = sbgnData.sbgnClass(node);
+  	      if (sbgnClass == 'unspecified entity' || sbgnClass == 'simple chemical' || sbgnClass == 'simple chemical multimer' || sbgnClass == 'macromolecule' || sbgnClass == 'macromolecule multimer' || sbgnClass == 'nucleic acid feature' || sbgnClass == 'nucleic acid feature multimer' || sbgnClass == 'perturbing agent' || sbgnClass == 'source and sink' || sbgnClass == 'phenotype' || sbgnClass == 'tag') {
+  	        return bgColors[2];
+  	      }
+  	      if (sbgnClass == 'complex' || sbgnClass == 'complex multimer') {
+  	        return bgColors[1];
+  	      }
+  	      if (sbgnClass == 'compartment') {
+  	        return bgColors[0];
+  	      }
+  	      return "#ffffff";
+  	    } else if (bgColors.length == 5) {
+  	      var _sbgnClass = sbgnData.sbgnClass(node);
+  	      if (_sbgnClass == 'unspecified entity' || _sbgnClass == 'perturbing agent' || _sbgnClass == 'source and sink' || _sbgnClass == 'phenotype' || _sbgnClass == 'tag' || _sbgnClass == 'compartment') {
+  	        return bgColors[2];
+  	      }
+  	      if (_sbgnClass == 'simple chemical' || _sbgnClass == 'simple chemical multimer') {
+  	        return bgColors[1];
+  	      }
+  	      if (_sbgnClass == 'macromolecule' || _sbgnClass == 'macromolecule multimer') {
+  	        return bgColors[4];
+  	      }
+  	      if (_sbgnClass == 'nucleic acid feature' || _sbgnClass == 'nucleic acid feature multimer') {
+  	        return bgColors[0];
+  	      }
+  	      if (_sbgnClass == 'complex' || _sbgnClass == 'complex multimer') {
+  	        return bgColors[3];
+  	      }
+  	      return "#ffffff";
+  	    }
   	  }
   	};
 
@@ -45265,8 +45308,8 @@
 
   	var sbgnStyleSheet = __webpack_require__(7);
 
-  	module.exports = function (cytoscape) {
-  	  return sbgnStyleSheet(cytoscape);
+  	module.exports = function (cytoscape, colorScheme) {
+  	  return sbgnStyleSheet(cytoscape, colorScheme);
   	};
 
   	/***/ }),
@@ -45277,7 +45320,26 @@
   	var elementStyle = __webpack_require__(3);
   	var sbgnsvg = __webpack_require__(8);
 
-  	var sbgnStyleSheet = function sbgnStyleSheet(cytoscape) {
+  	var sbgnStyleSheet = function sbgnStyleSheet(cytoscape, colorScheme) {
+
+  	  var bgColors = [];
+  	  if (colorScheme == "greyscale") {
+  	    bgColors = ['#f0f0f0', '#d9d9d9', '#bdbdbd'];
+  	  } else if (colorScheme == "bluescale") {
+  	    bgColors = ['#eff3ff', '#c6dbef', '#9ecae1'];
+  	  } else if (colorScheme == "red_blue") {
+  	    bgColors = ['#f4a582', '#fddbc7', '#f7f7f7', '#d1e5f0', '#92c5de'];
+  	  } else if (colorScheme == "green_brown") {
+  	    bgColors = ['#dfc27d', '#f6e8c3', '#f5f5f5', '#c7eae5', '#80cdc1'];
+  	  } else if (colorScheme == "purple_brown") {
+  	    bgColors = ['#fdb863', '#fee0b6', '#f7f7f7', '#d8daeb', '#b2abd2'];
+  	  } else if (colorScheme == "purple_green") {
+  	    bgColors = ['#a6dba0', '#d9f0d3', '#f7f7f7', '#e7d4e8', '#c2a5cf'];
+  	  } else if (colorScheme == "grey_red") {
+  	    bgColors = ['#bababa', '#e0e0e0', '#ffffff', '#fddbc7', '#f4a582'];
+  	  } else {
+  	    bgColors = ['#ffffff', '#000000'];
+  	  }
 
   	  return cytoscape.stylesheet()
   	  // general node style
@@ -45300,7 +45362,9 @@
   	    'text-wrap': 'wrap',
   	    'border-width': 1.5,
   	    'border-color': '#555',
-  	    'background-color': '#ffffff',
+  	    'background-color': function backgroundColor(node) {
+  	      return elementStyle.bgColor(node, bgColors);
+  	    },
   	    'text-opacity': 1,
   	    'opacity': 1,
   	    'text-outline-color': 'white',
@@ -57685,7 +57749,7 @@
       return res.json();
     }).then(data => new Promise((resolve, reject) => {
       if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
-        cy$1.style(sbgnStylesheet(cytoscape$1));
+        cy$1.style(sbgnStylesheet(cytoscape$1, "purple_green"));
         cy$1.json({ elements: data });
         cy$1.nodes().forEach(node => {
           if (!node.data('stateVariables'))
@@ -57769,7 +57833,7 @@
       nodeIdMap.set(node.id(), "n" + i);
       nodeIdMapReverse.set("n" + i, node.id());
     });
-
+    console.log(nodeIdMapReverse);
     let pruneResult = pruneGraph();
     let prunedGraph = pruneResult.prunedGraph;
     prunedGraph.select();
@@ -57861,7 +57925,7 @@
             randomize: false,
             idealEdgeLength: (edge) => {
               if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
-                return 50;
+                return 75;
               else
                 return 200;
             },

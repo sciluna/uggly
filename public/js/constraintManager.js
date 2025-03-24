@@ -33,22 +33,30 @@ let generateConstraints = function (placement, nodeIdMapReverse) {
     } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] > 0) {
       direction = "tl-br";
       // generate appropriate constraints
-      let constraints = bfs(lineCollection, direction);
+      let lineWidth = Math.abs(line.end[0] - line.start[0]);
+      let lineHeight = Math.abs(line.end[1] - line.start[1]);
+      let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
     } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] < 0) {
       direction = "br-tl";
       // generate appropriate constraints
-      let constraints = bfs(lineCollection, direction);
+      let lineWidth = Math.abs(line.end[0] - line.start[0]);
+      let lineHeight = Math.abs(line.end[1] - line.start[1]);
+      let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
     } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] < 0) {
       direction = "tr-bl";
       // generate appropriate constraints
-      let constraints = bfs(lineCollection, direction);
+      let lineWidth = Math.abs(line.end[0] - line.start[0]);
+      let lineHeight = Math.abs(line.end[1] - line.start[1]);
+      let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
     } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
       direction = "bl-tr";
       // generate appropriate constraints
-      let constraints = bfs(lineCollection, direction);
+      let lineWidth = Math.abs(line.end[0] - line.start[0]);
+      let lineHeight = Math.abs(line.end[1] - line.start[1]);
+      let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
     }
   });
@@ -120,7 +128,7 @@ let refineConstraints = function (alignmentConstraint, relativePlacementConstrai
   return { relativePlacementConstraints: relativePlacementConstraint, alignmentConstraints: alignmentConstraints }
 };
 
-let bfs = function (cyCollection, direction) {
+let bfs = function (cyCollection, direction, lineWidth, lineHeight) {
   let queue = [];
   let visited = new Set();
   let currentNode = cyCollection[0];
@@ -149,15 +157,19 @@ let bfs = function (cyCollection, direction) {
         } else if (direction == "b-t") {
           relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
         } else if (direction == "tl-br") {
-          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id() });
-          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
+          let ratio = lineHeight/lineWidth;
+          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id()});
+          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id()});
         } else if (direction == "br-tl") {
+          let ratio = lineHeight/lineWidth;
           relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
           relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
         } else if (direction == "tr-bl") {
+          let ratio = lineHeight/lineWidth;
           relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
           relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
         } else if (direction == "bl-tr") {
+          let ratio = lineHeight/lineWidth;
           relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id() });
           relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
         }
