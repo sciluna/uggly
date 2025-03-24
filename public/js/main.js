@@ -6,6 +6,8 @@ import {cy} from './menu';
 
 cytoscape.use(fcose);
 
+let ugly = !(location.hostname === "localhost" || location.hostname === "127.0.0.1");
+
 // randomize layout
 document.getElementById("randomizeButton").addEventListener("click", async function () {
   cy.layout({ name: "random", animate: true, animationDuration: 500 }).run();
@@ -366,8 +368,10 @@ let findPlaceforPrunedNode = function (nodeData) {
 };
 
 let runLLM = async function (data) {
-  let url = "http://localhost:8080/llm/";
-
+	let url = "http://localhost:8080/llm/";
+	if (ugly) {
+		url = "http://ec2-3-87-167-56.compute-1.amazonaws.com/llm/";
+	}
   const settings = {
     method: 'POST',
     headers: {
