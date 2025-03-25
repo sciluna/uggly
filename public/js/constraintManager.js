@@ -158,20 +158,20 @@ let bfs = function (cyCollection, direction, lineWidth, lineHeight) {
           relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
         } else if (direction == "tl-br") {
           let ratio = lineHeight/lineWidth;
-          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id()});
-          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id()});
+          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id(), gap: 50});
+          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id(), gap: 50 * ratio});
         } else if (direction == "br-tl") {
           let ratio = lineHeight/lineWidth;
-          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
-          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
+          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id(), gap: 50 });
+          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id(), gap: 50 * ratio });
         } else if (direction == "tr-bl") {
           let ratio = lineHeight/lineWidth;
-          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
-          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
+          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id(), gap: 50 });
+          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id(), gap: 50 * ratio });
         } else if (direction == "bl-tr") {
           let ratio = lineHeight/lineWidth;
-          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id() });
-          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
+          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id(), gap: 50 });
+          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id(), gap: 50 * ratio });
         }
         queue.push(currentNeighbor);
         visited.add(currentNeighbor.id());

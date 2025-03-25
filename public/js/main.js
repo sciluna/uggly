@@ -2,7 +2,7 @@ import cytoscape from "cytoscape";
 import fcose from 'cytoscape-fcose';
 import { generateConstraints, refineConstraints } from "./constraintManager";
 import { cyToTsv } from "./auxiliary";
-import {cy} from './menu'; 
+import { cy, sampleName } from './menu'; 
 
 cytoscape.use(fcose);
 
@@ -29,19 +29,17 @@ document.getElementById("layoutButton").addEventListener("click", async function
     nodeIdMapReverse.set("n" + i, node.id());
   });
   console.log(nodeIdMapReverse);
+
   let pruneResult = pruneGraph();
   let prunedGraph = pruneResult.prunedGraph;
-  prunedGraph.select();
   let ignoredGraph = pruneResult.ignoredGraph;
-  /*   let prunedNodesAll = reduceTrees();
-    let prunedGraph = cy.elements(); */
   console.log(prunedGraph.nodes().length);
-  //console.log(prunedGraph.ap({damping: 0.8, preference: 'median'}));
+
   let graphData;
   let randomize = true;
 
   // if there are selected elements, apply incremental layout
-  if (prunedGraph.edges(':selected').length > 10000) {
+  if (prunedGraph.edges(':selected').length > 0) {
     graphData = cyToTsv(prunedGraph.edges(':selected'), nodeIdMap);
     randomize = false;
   } else {
@@ -60,75 +58,73 @@ document.getElementById("layoutButton").addEventListener("click", async function
   let constraints = generateConstraints(placement, nodeIdMapReverse);
   console.log(constraints);
 
+  let idealEdgeLength;
+  if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
+    idealEdgeLength = 150;
+  } else {
+    idealEdgeLength = 75;
+  }
   try {
     cy.layout({
       name: "fcose",
-      randomize: true,
-      idealEdgeLength: 200,
+      randomize: randomize,
+      idealEdgeLength: idealEdgeLength,
       animationDuration: 2000,
       relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
       alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
       stop: () => {
-        /*      while(prunedNodesAll.length > 0) {
-                prunedNodesAll = growTree(prunedNodesAll);
-              } */
-        prunedGraph.select();
-
-        prunedGraph.nodes().forEach(node => {
-          let oneDegreeNeighborEdges = node.edgesWith(ignoredGraph);
-          oneDegreeNeighborEdges.forEach((edge, i) => {
-            let neighbor;
-            if (node.id() == edge.source().id()) {
-              neighbor = edge.target();
-            }
-            else {
-              neighbor = edge.source();
-            }
-            if (i % 4 == 0) { // north-west
-              let random1 = Math.random() * 100;
-              let random2 = Math.random() * 100;
-              neighbor.position({ x: node.position().x - random1, y: node.position().y - random2 });
-            } else if (i % 4 == 1) {  // north-east
-              let random1 = Math.random() * 100;
-              let random2 = Math.random() * 100;
-              neighbor.position({ x: node.position().x + random1, y: node.position().y - random2 });
-            } else if (i % 4 == 2) {  // south-east
-              let random1 = Math.random() * 100;
-              let random2 = Math.random() * 100;
-              neighbor.position({ x: node.position().x + random1, y: node.position().y + random2 });
-            } else if (i % 4 == 3) {  // south-west
-              let random1 = Math.random() * 100;
-              let random2 = Math.random() * 100;
-              neighbor.position({ x: node.position().x - random1, y: node.position().y + random2 });
-            }
+        if (cy.elements(":selected").length == 0) {
+          prunedGraph.nodes().forEach(node => {
+            let oneDegreeNeighborEdges = node.edgesWith(ignoredGraph);
+            oneDegreeNeighborEdges.forEach((edge, i) => {
+              let neighbor;
+              if (node.id() == edge.source().id()) {
+                neighbor = edge.target();
+              }
+              else {
+                neighbor = edge.source();
+              }
+              if (i % 4 == 0) { // north-west
+                let random1 = Math.random() * 100;
+                let random2 = Math.random() * 100;
+                neighbor.position({ x: node.position().x - random1, y: node.position().y - random2 });
+              } else if (i % 4 == 1) {  // north-east
+                let random1 = Math.random() * 100;
+                let random2 = Math.random() * 100;
+                neighbor.position({ x: node.position().x + random1, y: node.position().y - random2 });
+              } else if (i % 4 == 2) {  // south-east
+                let random1 = Math.random() * 100;
+                let random2 = Math.random() * 100;
+                neighbor.position({ x: node.position().x + random1, y: node.position().y + random2 });
+              } else if (i % 4 == 3) {  // south-west
+                let random1 = Math.random() * 100;
+                let random2 = Math.random() * 100;
+                neighbor.position({ x: node.position().x - random1, y: node.position().y + random2 });
+              }
+            });
           });
-        });
-/* 
-        let nodeToConnect;
-        ignoredGraph.nodes().forEach(node => {
-          let connectedEdge = node.connectedEdges()[0];
-          if (node.id() == connectedEdge.source().id()) {
-            nodeToConnect = connectedEdge.target();
-          }
-          else {
-            nodeToConnect = connectedEdge.source();
-          }
-          let random1 = Math.random() * 100 - 50;
-          node.position({ x: nodeToConnect.position().x + (Math.random() * 200 - 100), y: nodeToConnect.position().y + (Math.random() * 200 - 100) });
-        }); */
-        //removedEles.restore();
+        }
+        
         cy.layout({
           name: "fcose",
           randomize: false,
           idealEdgeLength: (edge) => {
-            if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
-              return 75;
-            else
-              return 200;
+            if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
+              if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
+                return 75;
+              else
+                return 150;
+            } else {
+              if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
+                return 40;
+              else
+                return 75;
+            }
           },
           relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
           /* alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined, */initialEnergyOnIncremental: 0.3
         }).run();
+
         document.getElementById("layoutButton").disabled = false;
         document.getElementById("layoutButton").innerHTML = 'Apply Layout';
       }

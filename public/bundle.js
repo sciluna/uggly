@@ -43778,30 +43778,30 @@
       } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] > 0) {
         direction = "tl-br";
         // generate appropriate constraints
-        Math.abs(line.end[0] - line.start[0]);
-        Math.abs(line.end[1] - line.start[1]);
-        let constraints = bfs(lineCollection, direction);
+        let lineWidth = Math.abs(line.end[0] - line.start[0]);
+        let lineHeight = Math.abs(line.end[1] - line.start[1]);
+        let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] < 0) {
         direction = "br-tl";
         // generate appropriate constraints
-        Math.abs(line.end[0] - line.start[0]);
-        Math.abs(line.end[1] - line.start[1]);
-        let constraints = bfs(lineCollection, direction);
+        let lineWidth = Math.abs(line.end[0] - line.start[0]);
+        let lineHeight = Math.abs(line.end[1] - line.start[1]);
+        let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] < 0) {
         direction = "tr-bl";
         // generate appropriate constraints
-        Math.abs(line.end[0] - line.start[0]);
-        Math.abs(line.end[1] - line.start[1]);
-        let constraints = bfs(lineCollection, direction);
+        let lineWidth = Math.abs(line.end[0] - line.start[0]);
+        let lineHeight = Math.abs(line.end[1] - line.start[1]);
+        let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
         direction = "bl-tr";
         // generate appropriate constraints
-        Math.abs(line.end[0] - line.start[0]);
-        Math.abs(line.end[1] - line.start[1]);
-        let constraints = bfs(lineCollection, direction);
+        let lineWidth = Math.abs(line.end[0] - line.start[0]);
+        let lineHeight = Math.abs(line.end[1] - line.start[1]);
+        let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       }
     });
@@ -43855,17 +43855,21 @@
           } else if (direction == "b-t") {
             relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
           } else if (direction == "tl-br") {
-            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id()});
-            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id()});
+            let ratio = lineHeight/lineWidth;
+            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id(), gap: 50});
+            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id(), gap: 50 * ratio});
           } else if (direction == "br-tl") {
-            relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
-            relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
+            let ratio = lineHeight/lineWidth;
+            relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id(), gap: 50 });
+            relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id(), gap: 50 * ratio });
           } else if (direction == "tr-bl") {
-            relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
-            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
+            let ratio = lineHeight/lineWidth;
+            relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id(), gap: 50 });
+            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id(), gap: 50 * ratio });
           } else if (direction == "bl-tr") {
-            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id() });
-            relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
+            let ratio = lineHeight/lineWidth;
+            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id(), gap: 50 });
+            relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id(), gap: 50 * ratio });
           }
           queue.push(currentNeighbor);
           visited.add(currentNeighbor.id());
@@ -57762,7 +57766,7 @@
         cy$1.json({ elements: data });
       }
       document.getElementById("fileName").innerHTML = sampleName;
-      cy$1.layout({ "name": "fcose" }).run();
+      cy$1.layout({ "name": "fcose"}).run();
       cy$1.fit();
     }));
   };
@@ -57836,19 +57840,19 @@
       nodeIdMapReverse.set("n" + i, node.id());
     });
     console.log(nodeIdMapReverse);
+
     let pruneResult = pruneGraph();
     let prunedGraph = pruneResult.prunedGraph;
-    prunedGraph.select();
     let ignoredGraph = pruneResult.ignoredGraph;
-    /*   let prunedNodesAll = reduceTrees();
-      let prunedGraph = cy.elements(); */
     console.log(prunedGraph.nodes().length);
-    //console.log(prunedGraph.ap({damping: 0.8, preference: 'median'}));
+
     let graphData;
+    let randomize = true;
 
     // if there are selected elements, apply incremental layout
-    if (prunedGraph.edges(':selected').length > 10000) {
+    if (prunedGraph.edges(':selected').length > 0) {
       graphData = cyToTsv(prunedGraph.edges(':selected'), nodeIdMap);
+      randomize = false;
     } else {
       graphData = cyToTsv(prunedGraph, nodeIdMap);
     }
@@ -57865,75 +57869,73 @@
     let constraints = generateConstraints(placement, nodeIdMapReverse);
     console.log(constraints);
 
+    let idealEdgeLength;
+    if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
+      idealEdgeLength = 150;
+    } else {
+      idealEdgeLength = 75;
+    }
     try {
       cy$1.layout({
         name: "fcose",
-        randomize: true,
-        idealEdgeLength: 200,
+        randomize: randomize,
+        idealEdgeLength: idealEdgeLength,
         animationDuration: 2000,
         relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
         alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
         stop: () => {
-          /*      while(prunedNodesAll.length > 0) {
-                  prunedNodesAll = growTree(prunedNodesAll);
-                } */
-          prunedGraph.select();
-
-          prunedGraph.nodes().forEach(node => {
-            let oneDegreeNeighborEdges = node.edgesWith(ignoredGraph);
-            oneDegreeNeighborEdges.forEach((edge, i) => {
-              let neighbor;
-              if (node.id() == edge.source().id()) {
-                neighbor = edge.target();
-              }
-              else {
-                neighbor = edge.source();
-              }
-              if (i % 4 == 0) { // north-west
-                let random1 = Math.random() * 100;
-                let random2 = Math.random() * 100;
-                neighbor.position({ x: node.position().x - random1, y: node.position().y - random2 });
-              } else if (i % 4 == 1) {  // north-east
-                let random1 = Math.random() * 100;
-                let random2 = Math.random() * 100;
-                neighbor.position({ x: node.position().x + random1, y: node.position().y - random2 });
-              } else if (i % 4 == 2) {  // south-east
-                let random1 = Math.random() * 100;
-                let random2 = Math.random() * 100;
-                neighbor.position({ x: node.position().x + random1, y: node.position().y + random2 });
-              } else if (i % 4 == 3) {  // south-west
-                let random1 = Math.random() * 100;
-                let random2 = Math.random() * 100;
-                neighbor.position({ x: node.position().x - random1, y: node.position().y + random2 });
-              }
+          if (cy$1.elements(":selected").length == 0) {
+            prunedGraph.nodes().forEach(node => {
+              let oneDegreeNeighborEdges = node.edgesWith(ignoredGraph);
+              oneDegreeNeighborEdges.forEach((edge, i) => {
+                let neighbor;
+                if (node.id() == edge.source().id()) {
+                  neighbor = edge.target();
+                }
+                else {
+                  neighbor = edge.source();
+                }
+                if (i % 4 == 0) { // north-west
+                  let random1 = Math.random() * 100;
+                  let random2 = Math.random() * 100;
+                  neighbor.position({ x: node.position().x - random1, y: node.position().y - random2 });
+                } else if (i % 4 == 1) {  // north-east
+                  let random1 = Math.random() * 100;
+                  let random2 = Math.random() * 100;
+                  neighbor.position({ x: node.position().x + random1, y: node.position().y - random2 });
+                } else if (i % 4 == 2) {  // south-east
+                  let random1 = Math.random() * 100;
+                  let random2 = Math.random() * 100;
+                  neighbor.position({ x: node.position().x + random1, y: node.position().y + random2 });
+                } else if (i % 4 == 3) {  // south-west
+                  let random1 = Math.random() * 100;
+                  let random2 = Math.random() * 100;
+                  neighbor.position({ x: node.position().x - random1, y: node.position().y + random2 });
+                }
+              });
             });
-          });
-  /* 
-          let nodeToConnect;
-          ignoredGraph.nodes().forEach(node => {
-            let connectedEdge = node.connectedEdges()[0];
-            if (node.id() == connectedEdge.source().id()) {
-              nodeToConnect = connectedEdge.target();
-            }
-            else {
-              nodeToConnect = connectedEdge.source();
-            }
-            let random1 = Math.random() * 100 - 50;
-            node.position({ x: nodeToConnect.position().x + (Math.random() * 200 - 100), y: nodeToConnect.position().y + (Math.random() * 200 - 100) });
-          }); */
-          //removedEles.restore();
+          }
+          
           cy$1.layout({
             name: "fcose",
             randomize: false,
             idealEdgeLength: (edge) => {
-              if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
-                return 75;
-              else
-                return 200;
+              if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
+                if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
+                  return 75;
+                else
+                  return 150;
+              } else {
+                if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
+                  return 40;
+                else
+                  return 75;
+              }
             },
             relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
             /* alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined, */initialEnergyOnIncremental: 0.3
           }).run();
+
           document.getElementById("layoutButton").disabled = false;
           document.getElementById("layoutButton").innerHTML = 'Apply Layout';
         }

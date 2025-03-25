@@ -158,4 +158,4 @@ document.getElementById("saveSVG").addEventListener("click", function () {
   saveAs(blob, "graph.svg");
 });
 
-export {cy};
+export {cy, sampleName};

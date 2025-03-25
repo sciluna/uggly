@@ -88,7 +88,7 @@ let generateMessage = function (graph, description, image) {
       - Try to assign nodes starting from the appropriate node (You do not have to start with the first node in the input graph) and by following adjacencies.\n\
       - Each assigned consecutive nodes must be adjacent in the input graph and all nodes in the input graph musthave an assignment.\n\
       - Do not consider slight changes in the directions since the drawing is made by hand and each line may not be drawn linearly.\n\
-      - You can generate as many line segments as required. For the curved drawings, try to approximate the curved line by using multiple shorter straight lines.\n\
+      - You can generate as many line segments as required. For the curved drawings, try to approximate the curved line by using multiple short straight lines.\n\
       - Consider that x axis increases from left to right and y axis increases from top to bottom. \n\
       Please generate the required assignments of the nodes in the correct order based on their adjacencies in JSON format. For example, for the sample graph: \n' + sampleGraph + ' and a drawing with an Z-shape, the example output should be as follows: { "explanation": detailed reasoning behind the result, "lines": [\n\
           {\n\

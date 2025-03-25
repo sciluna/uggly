@@ -20,15 +20,16 @@
   <hr>
   <div id="inputArea">
     <form class="form-inline">
-      <div class="btn-group btn-group-lg me-3" role="group">
-        <button id="openFile" type="button" class="btn btn-secondary bi bi-folder2-open" title="Load GraphML file"></button>
+      <div class="btn-group me-2" role="group">
+        <button id="openFile" type="button" class="btn btn-secondary" title="Load GraphML file"> Open...</button>
+        <div class="alert alert-dark m-0 px-0"></div>
         <input id="inputFile" type='file' style="display: none" />
         <ul class="dropdown-menu">
           <li><a id="savePNG" class="dropdown-item" href="#">Save as PNG</a></li>
           <li><a id="saveJPG" class="dropdown-item" href="#">Save as JPG</a></li>
           <li><a id="saveSVG" class="dropdown-item" href="#">Save as SVG</a></li>
         </ul>
-        <button type="button" class="btn btn-secondary bi bi-image" data-bs-toggle="dropdown" aria-expanded="false" title="Save as PNG, JPG or SVG"></button>
+        <button type="button" class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="false" title="Save as PNG, JPG or SVG">  Save as Image</button>
       </div>
       <label for="samples">Sample file:</label>
       <select class="custom-select"  name="samples" id="samples">
@@ -44,6 +45,7 @@
         <li>Load a GraphML file or select a sample file</li>
         <li>Draw the shape that will guide your graph's layout</li>
         <li>Click Apply Layout button</li>
+        <li><i>Note: </i>For partial adjustment, first select the relevant part, then apply the layout</li>
       </ul>
     </div>
     <div id="shapeInputField">
