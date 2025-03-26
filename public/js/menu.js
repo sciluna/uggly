@@ -62,8 +62,7 @@ let cy = window.cy = cytoscape({
     { "data": { "id": "e16", "source": "n5", "target": "n17", "group": "edges" } },
     { "data": { "id": "e17", "source": "n6", "target": "n18", "group": "edges" } },
     { "data": { "id": "e18", "source": "n6", "target": "n19", "group": "edges" } }
-  ],
-  layout: "grid"
+  ]
 });
 
 let sampleName = "";
@@ -107,7 +106,7 @@ let loadSample = function (fname, sampleName) {
       cy.json({ elements: data });
     }
     document.getElementById("fileName").innerHTML = sampleName;
-    cy.layout({ "name": "fcose" }).run();
+    cy.layout({ "name": "fcose", idealEdgeLength: 100}).run();
     cy.fit();
   }))
 };

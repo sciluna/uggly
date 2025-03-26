@@ -43778,30 +43778,30 @@
       } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] > 0) {
         direction = "tl-br";
         // generate appropriate constraints
-        let lineWidth = Math.abs(line.end[0] - line.start[0]);
-        let lineHeight = Math.abs(line.end[1] - line.start[1]);
-        let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
+        Math.abs(line.end[0] - line.start[0]);
+        Math.abs(line.end[1] - line.start[1]);
+        let constraints = bfs(lineCollection, direction);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] < 0) {
         direction = "br-tl";
         // generate appropriate constraints
-        let lineWidth = Math.abs(line.end[0] - line.start[0]);
-        let lineHeight = Math.abs(line.end[1] - line.start[1]);
-        let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
+        Math.abs(line.end[0] - line.start[0]);
+        Math.abs(line.end[1] - line.start[1]);
+        let constraints = bfs(lineCollection, direction);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] < 0) {
         direction = "tr-bl";
         // generate appropriate constraints
-        let lineWidth = Math.abs(line.end[0] - line.start[0]);
-        let lineHeight = Math.abs(line.end[1] - line.start[1]);
-        let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
+        Math.abs(line.end[0] - line.start[0]);
+        Math.abs(line.end[1] - line.start[1]);
+        let constraints = bfs(lineCollection, direction);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
         direction = "bl-tr";
         // generate appropriate constraints
-        let lineWidth = Math.abs(line.end[0] - line.start[0]);
-        let lineHeight = Math.abs(line.end[1] - line.start[1]);
-        let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
+        Math.abs(line.end[0] - line.start[0]);
+        Math.abs(line.end[1] - line.start[1]);
+        let constraints = bfs(lineCollection, direction);
         relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       }
     });
@@ -43811,6 +43811,10 @@
     if (horizontalAlignments.length) {
       horizontalAlignments = mergeArrays(horizontalAlignments);
     }
+    let refinedConstraints = keepOneCommonElement(verticalAlignments, horizontalAlignments);
+    verticalAlignments = refinedConstraints[0];
+    horizontalAlignments = refinedConstraints[1];
+
     let alignmentConstraints = { vertical: verticalAlignments.length > 0 ? verticalAlignments : undefined, horizontal: horizontalAlignments.length > 0 ? horizontalAlignments : undefined };
 
     return { relativePlacementConstraint: relativePlacementConstraints, alignmentConstraint: alignmentConstraints }
@@ -43824,6 +43828,19 @@
     let edgesBetween = lineCollection.edgesWith(lineCollection);
     lineCollection.merge(edgesBetween);
     return lineCollection;
+  };
+
+  let keepOneCommonElement = function(arr1, arr2) {
+    const common = arr1.filter(val => arr2.includes(val));
+
+    if (common.length > 1) {
+      const [keep] = common;
+
+      arr1 = arr1.filter(val => val === keep || !common.includes(val));
+      arr2 = arr2.filter(val => val === keep || !common.includes(val));
+    }
+
+    return [arr1, arr2];
   };
 
   let bfs = function (cyCollection, direction, lineWidth, lineHeight) {
@@ -43855,21 +43872,17 @@
           } else if (direction == "b-t") {
             relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
           } else if (direction == "tl-br") {
-            let ratio = lineHeight/lineWidth;
-            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id(), gap: 50});
-            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id(), gap: 50 * ratio});
+            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id()});
+            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id()});
           } else if (direction == "br-tl") {
-            let ratio = lineHeight/lineWidth;
-            relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id(), gap: 50 });
-            relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id(), gap: 50 * ratio });
+            relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id()});
+            relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
           } else if (direction == "tr-bl") {
-            let ratio = lineHeight/lineWidth;
-            relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id(), gap: 50 });
-            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id(), gap: 50 * ratio });
+            relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
+            relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
           } else if (direction == "bl-tr") {
-            let ratio = lineHeight/lineWidth;
-            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id(), gap: 50 });
-            relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id(), gap: 50 * ratio });
+            relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id()});
+            relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id()});
           }
           queue.push(currentNeighbor);
           visited.add(currentNeighbor.id());
@@ -43919,7 +43932,9 @@
   // convert cy graph data to space separated values (name is tsv but inserts space, not tab) 
   let cyToTsv = function (cyElements, nodeIdMap) {
     let tsvString = "";
-    cyElements.edges().forEach(edge => {
+    let edges = cyElements.edges().toArray();
+    shuffleArray(edges);
+    edges.forEach(edge => {
       let source = edge.source();
       let target = edge.target();
       tsvString += nodeIdMap.get(source.id()) + " " + nodeIdMap.get(target.id());
@@ -43927,6 +43942,13 @@
     });
     return tsvString;
   };
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
 
   function commonjsRequire(path) {
   	throw new Error('Could not dynamically require "' + path + '". Please configure the dynamicRequireTargets or/and ignoreDynamicRequires option of @rollup/plugin-commonjs appropriately for this require call to work.');
@@ -57721,8 +57743,7 @@
       { "data": { "id": "e16", "source": "n5", "target": "n17", "group": "edges" } },
       { "data": { "id": "e17", "source": "n6", "target": "n18", "group": "edges" } },
       { "data": { "id": "e18", "source": "n6", "target": "n19", "group": "edges" } }
-    ],
-    layout: "grid"
+    ]
   });
 
   let sampleName = "";
@@ -57766,7 +57787,7 @@
         cy$1.json({ elements: data });
       }
       document.getElementById("fileName").innerHTML = sampleName;
-      cy$1.layout({ "name": "fcose"}).run();
+      cy$1.layout({ "name": "fcose", idealEdgeLength: 100}).run();
       cy$1.fit();
     }));
   };
@@ -57855,6 +57876,7 @@
       randomize = false;
     } else {
       graphData = cyToTsv(prunedGraph, nodeIdMap);
+      console.log(graphData);
     }
 
     let data = {
@@ -57873,7 +57895,7 @@
     if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
       idealEdgeLength = 150;
     } else {
-      idealEdgeLength = 75;
+      idealEdgeLength = 100;
     }
     try {
       cy$1.layout({
@@ -57927,13 +57949,13 @@
                   return 150;
               } else {
                 if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
-                  return 40;
+                  return 50;
                 else
-                  return 75;
+                  return 100;
               }
             },
             relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
-            /* alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined, */initialEnergyOnIncremental: 0.3
+            /* alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined, */initialEnergyOnIncremental: 0.1
           }).run();
 
           document.getElementById("layoutButton").disabled = false;

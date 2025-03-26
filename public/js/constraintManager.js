@@ -66,6 +66,10 @@ let generateConstraints = function (placement, nodeIdMapReverse) {
   if (horizontalAlignments.length) {
     horizontalAlignments = mergeArrays(horizontalAlignments);
   }
+  let refinedConstraints = keepOneCommonElement(verticalAlignments, horizontalAlignments);
+  verticalAlignments = refinedConstraints[0];
+  horizontalAlignments = refinedConstraints[1];
+
   let alignmentConstraints = { vertical: verticalAlignments.length > 0 ? verticalAlignments : undefined, horizontal: horizontalAlignments.length > 0 ? horizontalAlignments : undefined }
 
   return { relativePlacementConstraint: relativePlacementConstraints, alignmentConstraint: alignmentConstraints }
@@ -80,6 +84,19 @@ let generateCollectionFromLine = function (line, nodeIdMapReverse) {
   lineCollection.merge(edgesBetween);
   return lineCollection;
 };
+
+let keepOneCommonElement = function(arr1, arr2) {
+  const common = arr1.filter(val => arr2.includes(val));
+
+  if (common.length > 1) {
+    const [keep] = common;
+
+    arr1 = arr1.filter(val => val === keep || !common.includes(val));
+    arr2 = arr2.filter(val => val === keep || !common.includes(val));
+  }
+
+  return [arr1, arr2];
+}
 
 let generateConstraintsForFcose = function (positioning) {
   let relativePlacementConstraints = [];
@@ -158,20 +175,20 @@ let bfs = function (cyCollection, direction, lineWidth, lineHeight) {
           relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
         } else if (direction == "tl-br") {
           let ratio = lineHeight/lineWidth;
-          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id(), gap: 50});
-          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id(), gap: 50 * ratio});
+          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id()});
+          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id()});
         } else if (direction == "br-tl") {
           let ratio = lineHeight/lineWidth;
-          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id(), gap: 50 });
-          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id(), gap: 50 * ratio });
+          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id()});
+          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id() });
         } else if (direction == "tr-bl") {
           let ratio = lineHeight/lineWidth;
-          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id(), gap: 50 });
-          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id(), gap: 50 * ratio });
+          relativePlacementConstraints.push({ right: currentNode.id(), left: currentNeighbor.id() });
+          relativePlacementConstraints.push({ top: currentNode.id(), bottom: currentNeighbor.id() });
         } else if (direction == "bl-tr") {
           let ratio = lineHeight/lineWidth;
-          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id(), gap: 50 });
-          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id(), gap: 50 * ratio });
+          relativePlacementConstraints.push({ left: currentNode.id(), right: currentNeighbor.id()});
+          relativePlacementConstraints.push({ bottom: currentNode.id(), top: currentNeighbor.id()});
         }
         queue.push(currentNeighbor);
         visited.add(currentNeighbor.id());

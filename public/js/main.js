@@ -1,7 +1,7 @@
 import cytoscape from "cytoscape";
 import fcose from 'cytoscape-fcose';
 import { generateConstraints, refineConstraints } from "./constraintManager";
-import { cyToTsv } from "./auxiliary";
+import { cyToTsv, cyToAdjacencyMatrix } from "./auxiliary";
 import { cy, sampleName } from './menu'; 
 
 cytoscape.use(fcose);
@@ -44,6 +44,7 @@ document.getElementById("layoutButton").addEventListener("click", async function
     randomize = false;
   } else {
     graphData = cyToTsv(prunedGraph, nodeIdMap);
+    console.log(graphData);
   }
 
   let data = {
@@ -62,7 +63,7 @@ document.getElementById("layoutButton").addEventListener("click", async function
   if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
     idealEdgeLength = 150;
   } else {
-    idealEdgeLength = 75;
+    idealEdgeLength = 100;
   }
   try {
     cy.layout({
@@ -116,13 +117,13 @@ document.getElementById("layoutButton").addEventListener("click", async function
                 return 150;
             } else {
               if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
-                return 40;
+                return 50;
               else
-                return 75;
+                return 100;
             }
           },
           relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
-          /* alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined, */initialEnergyOnIncremental: 0.3
+          /* alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined, */initialEnergyOnIncremental: 0.1
         }).run();
 
         document.getElementById("layoutButton").disabled = false;

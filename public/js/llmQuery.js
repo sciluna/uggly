@@ -266,38 +266,62 @@ By carefully checking the lines and considering to placing nodes over those line
   ]
 }; */
 
-/* let userPrompt = {
-  role: "user",
-  content: [
-    { type: 'text', text: 'I have the following graph: \n' + graph + '. I have drawn a shape in the given image and I want my graph to have a layout where the nodes positioned like the overall shape in this image. Analyze the image, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. Carefully think and strictly apply the following rules, otherwise assignment will be invalid: \n\
-    - Consider lines as continuing paths where the last node of a line is also assigned as the first node of the next line. Other than this condition, a node cannot be on two different lines.\n\
-    - Try to assign nodes starting from the appropriate node (You do not have to start with the first node in the input graph) and by following adjacencies.\n\
-    - Each assigned consecutive nodes must be adjacent in the input graph and all nodes in the input graph musthave an assignment.\n\
-    - Do not consider slight changes in the directions since the drawing is made by hand and each line may not be drawn linearly.\n\
-    - You can generate as many line segments as required. For the curved drawings, try to approximate the curved line by using multiple shorter straight lines.\n\
-    - Consider that x axis increases from left to right and y axis increases from top to bottom. \n\
-    Please generate the required assignments of the nodes in the correct order based on their adjacencies in JSON format. For example, for the sample graph: \n' + sampleGraph + ' and a drawing with an Z-shape, the example output should be as follows: { "explanation": detailed reasoning behind the result, "lines": [\n\
-        {\n\
-            "id": 0,\n\
-            "start": [0, 0],\n\
-            "end": [10, 0],\n\
-            "nodes": ["n0", "n1", "n2"]\n\
-        },\n\
-        {\n\
-            "id": 1,\n\
-            "start": [10, 0],\n\
-            "end": [0, 10],\n\
-            "nodes": ["n2", "n3", "n4", "n5"]\n\
-        }\n\
-        {\n\
-            "id": 1,\n\
-            "start": [0, 10],\n\
-            "end": [10, 10],\n\
-            "nodes": ["n5", "n6", "n7"]\n\
-        }\n\
-    ],\n\ See that first line ends and second line starts with n2 and second line ends and third line starts with n5 to achieve continuity. See also all consecutive nodes are adjacent in the input graph. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time, check if your answer obeys the rules defined above and produce your final answer carefully!' },
-    {
-      type: 'image_url', image_url: { "url": image }
-    }
-  ]
-}; */
+// Second preference
+/*   let userPrompt = {
+    role: "user",
+    content: [
+      { type: 'text', text: 'I have the following graph: \n' + graph + '. I have drawn the shape in the given image and I want my graph to have a layout where the nodes positioned like the overall shape in this image. Analyze the image, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. Carefully think and strictly apply the following rules, otherwise assignment will be invalid: \n\
+      - Consider lines as continuing paths where the last node of a line is also assigned as the first node of the next line to achieve continuity. Other than this condition, a node cannot be on two different lines (THIS IS IMPORTANT).\n\
+      - Try to assign nodes starting from the appropriate node (You do not have to start with the first node in the input graph) and follow adjacencies.\n\
+      - All nodes in the input graph must have an assignment.\n\
+      - Do not consider slight changes in the directions since the drawing is made by hand and each line may not be drawn linearly.\n\
+      - You can generate as many line segments as required. For the curved drawings, try to approximate the curved line by using multiple short straight lines.\n\
+      - Consider that x axis increases from left to right and y axis increases from top to bottom. \n\
+      Please generate the required assignments of the nodes in the correct order based on their adjacencies in JSON format. For example, for the sample graph: \n' + sampleGraph + ' and a drawing with an Z-shape, the example output should be as follows: { "explanation": detailed reasoning behind the result, "lines": [\n\
+          {\n\
+              "start": [0, 0],\n\
+              "end": [10, 0],\n\
+              "nodes": ["n0", "n1", "n2"]\n\
+          },\n\
+          {\n\
+              "start": [10, 0],\n\
+              "end": [0, 10],\n\
+              "nodes": ["n2", "n3", "n4", "n5"]\n\
+          }\n\
+          {\n\
+              "start": [0, 10],\n\
+              "end": [10, 10],\n\
+              "nodes": ["n5", "n6", "n7"]\n\
+          }\n\
+      ],\n\ See that first line ends and second line starts with n2 and second line ends and third line starts with n5 to achieve continuity. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time, check if your answer obeys the rules defined above and produce your final answer carefully!' },
+      {
+        type: 'image_url', image_url: { "url": image }
+      }
+    ]
+  }; */
+
+/*   let userPrompt = {
+    role: "user",
+    content: [
+      { type: 'text', text: 'I have the following graph: \n' + graph + '. I have drawn the shape in the given image and I want my graph to have a layout where the nodes positioned like the overall shape in this image. Analyze the image, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. One node should be common between consecutive lines and that node should indicate the connection points of those lines. Try to assign nodes starting from the appropriate node based on the shape (You do not have to start with the first node in the input graph). Please generate the required assignments of the nodes in JSON format as in the following example output: { "explanation": detailed reasoning behind the result, "lines": [\n\
+          {\n\
+              "start": [x1, y1],\n\
+              "end": [x2, y2],\n\
+              "nodes": []\n\
+          },\n\
+          {\n\
+              "start": [x2, y2],\n\
+              "end": [x3, y3],\n\
+              "nodes": []\n\
+          }\n\
+          {\n\
+              "start": [x3, y3],\n\
+              "end": [x4, y4],\n\
+              "nodes": []\n\
+          }\n\
+      ],\n\ where x1, y1, x2, y2. etc. denotes real coordinates. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time, check if your answer obeys the rules defined above and produce your final answer carefully!' },
+      {
+        type: 'image_url', image_url: { "url": image }
+      }
+    ]
+  }; */
