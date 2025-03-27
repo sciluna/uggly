@@ -43950,6 +43950,78 @@
     }
   }
 
+  function bfsFarthestNode(graph, start) {
+    const visited = new Set();
+    const queue = [[start, null]];
+    const parent = {};
+    let farthest = start;
+
+    while (queue.length) {
+        const [node, from] = queue.shift();
+        if (visited.has(node.id())) continue;
+        visited.add(node.id());
+        parent[node.id()] = from;
+        farthest = node;
+
+        let neighborEdges = node.edgesWith(graph);
+        for (let i = 0; i < neighborEdges.length; i++) {
+          let neighborEdge = neighborEdges[i];
+          let currentNeighbor;
+          if (node.id() == neighborEdge.source().id()) {
+            currentNeighbor = neighborEdge.target();
+          } else {
+            currentNeighbor = neighborEdge.source();
+          }
+          if (!visited.has(currentNeighbor.id())) {
+            queue.push([currentNeighbor, node.id()]);
+          }
+        }
+    }
+
+    return { farthest, parent };
+  }
+
+  function findLongestPath(graph, startNode) {
+    const { farthest: end1 } = bfsFarthestNode(graph, startNode);
+    const { farthest: end2, parent } = bfsFarthestNode(graph, end1);
+
+    // Reconstruct path from end2 to end1 using parent map
+    const path = [];
+    let currentId = end2.id();
+    while (currentId !== null) {
+        path.push(currentId);
+        currentId = parent[currentId];
+    }
+
+    return path.reverse(); // from end1 to end2
+  }
+
+  function splitArrayIntoChunks(array, k) {
+    if (k < 1) return [];
+
+    const n = array.length;
+    if (k === 1) return [array];
+
+    const approxSize = Math.floor((n + (k - 1)) / k); // includes overlaps
+    const result = [];
+
+    let start = 0;
+    for (let i = 0; i < k; i++) {
+        let end = start + approxSize;
+        if (i === k - 1) {
+            // Last chunk goes to the end
+            end = array.length;
+        }
+        const chunk = array.slice(start, end);
+        result.push(chunk);
+
+        // Next chunk starts from the last item of this one
+        start = end - 1;
+    }
+
+    return result;
+  }
+
   function commonjsRequire(path) {
   	throw new Error('Could not dynamically require "' + path + '". Please configure the dynamicRequireTargets or/and ignoreDynamicRequires option of @rollup/plugin-commonjs appropriately for this require call to work.');
   }
@@ -57898,78 +57970,110 @@
       idealEdgeLength = 100;
     }
     try {
-      cy$1.layout({
-        name: "fcose",
-        randomize: randomize,
-        idealEdgeLength: idealEdgeLength,
-        animationDuration: 2000,
-        relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
-        alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
-        stop: () => {
-          if (cy$1.elements(":selected").length == 0) {
-            prunedGraph.nodes().forEach(node => {
-              let oneDegreeNeighborEdges = node.edgesWith(ignoredGraph);
-              oneDegreeNeighborEdges.forEach((edge, i) => {
-                let neighbor;
-                if (node.id() == edge.source().id()) {
-                  neighbor = edge.target();
-                }
-                else {
-                  neighbor = edge.source();
-                }
-                if (i % 4 == 0) { // north-west
-                  let random1 = Math.random() * 100;
-                  let random2 = Math.random() * 100;
-                  neighbor.position({ x: node.position().x - random1, y: node.position().y - random2 });
-                } else if (i % 4 == 1) {  // north-east
-                  let random1 = Math.random() * 100;
-                  let random2 = Math.random() * 100;
-                  neighbor.position({ x: node.position().x + random1, y: node.position().y - random2 });
-                } else if (i % 4 == 2) {  // south-east
-                  let random1 = Math.random() * 100;
-                  let random2 = Math.random() * 100;
-                  neighbor.position({ x: node.position().x + random1, y: node.position().y + random2 });
-                } else if (i % 4 == 3) {  // south-west
-                  let random1 = Math.random() * 100;
-                  let random2 = Math.random() * 100;
-                  neighbor.position({ x: node.position().x - random1, y: node.position().y + random2 });
-                }
-              });
-            });
-          }
-          
-          cy$1.layout({
-            name: "fcose",
-            randomize: false,
-            idealEdgeLength: (edge) => {
-              if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
-                if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
-                  return 75;
-                else
-                  return 150;
-              } else {
-                if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
-                  return 50;
-                else
-                  return 100;
-              }
-            },
-            relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
-            /* alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined, */initialEnergyOnIncremental: 0.1
-          }).run();
+      callLayout(randomize, idealEdgeLength, constraints, prunedGraph, ignoredGraph);
+    } catch (error) {
+      let lineCount = placement.length;
+      if (placement[0].start[0] == placement[lineCount - 1].end[0] && placement[0].start[1] == placement[lineCount - 1].end[1]) {
+        alert("Couldn't process constraints! Please try again!");
+        document.getElementById("layoutButton").disabled = false;
+        document.getElementById("layoutButton").innerHTML = 'Apply Layout';
+      } 
+      else { // make some postprocesssing and give a second chance
+        console.log('here');
 
+        let graphPath = findLongestPath(prunedGraph, prunedGraph.nodes()[0]); // TODO: look for a smarter way
+        console.log(graphPath);
+        let graphPathFakeIds = [];
+        graphPath.forEach(nodeId => {
+          graphPathFakeIds.push(nodeIdMap.get(nodeId));
+        });
+        console.log(graphPathFakeIds);
+
+        let newDistribution = splitArrayIntoChunks(graphPathFakeIds, placement.length);
+        placement.forEach((line, i) => {
+          line.nodes = newDistribution[i];
+        });
+        let constraints = generateConstraints(placement, nodeIdMapReverse);
+
+        try {
+          callLayout(randomize, idealEdgeLength, constraints, prunedGraph, ignoredGraph);
+        } catch (error) {
+          alert("Couldn't process constraints! Please try again!");
           document.getElementById("layoutButton").disabled = false;
           document.getElementById("layoutButton").innerHTML = 'Apply Layout';
         }
-      }).run();
-    } catch (error) {
-      alert("Couldn't process constraints! Please try again!");
-      document.getElementById("layoutButton").disabled = false;
-      document.getElementById("layoutButton").innerHTML = 'Apply Layout';
+      }
     }
   });
 
   document.getElementById('clearButton').addEventListener('click', clearCanvas);
+
+  let callLayout = function(randomize, idealEdgeLength, constraints, prunedGraph, ignoredGraph){
+    cy$1.layout({
+      name: "fcose",
+      randomize: randomize,
+      idealEdgeLength: idealEdgeLength,
+      animationDuration: 2000,
+      relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
+      alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
+      stop: () => {
+        if (cy$1.elements(":selected").length == 0) {
+          prunedGraph.nodes().forEach(node => {
+            let oneDegreeNeighborEdges = node.edgesWith(ignoredGraph);
+            oneDegreeNeighborEdges.forEach((edge, i) => {
+              let neighbor;
+              if (node.id() == edge.source().id()) {
+                neighbor = edge.target();
+              }
+              else {
+                neighbor = edge.source();
+              }
+              if (i % 4 == 0) { // north-west
+                let random1 = Math.random() * 100;
+                let random2 = Math.random() * 100;
+                neighbor.position({ x: node.position().x - random1, y: node.position().y - random2 });
+              } else if (i % 4 == 1) {  // north-east
+                let random1 = Math.random() * 100;
+                let random2 = Math.random() * 100;
+                neighbor.position({ x: node.position().x + random1, y: node.position().y - random2 });
+              } else if (i % 4 == 2) {  // south-east
+                let random1 = Math.random() * 100;
+                let random2 = Math.random() * 100;
+                neighbor.position({ x: node.position().x + random1, y: node.position().y + random2 });
+              } else if (i % 4 == 3) {  // south-west
+                let random1 = Math.random() * 100;
+                let random2 = Math.random() * 100;
+                neighbor.position({ x: node.position().x - random1, y: node.position().y + random2 });
+              }
+            });
+          });
+        }
+        
+        cy$1.layout({
+          name: "fcose",
+          randomize: false,
+          idealEdgeLength: (edge) => {
+            if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
+              if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
+                return 75;
+              else
+                return 150;
+            } else {
+              if (ignoredGraph.has(edge.source()) || ignoredGraph.has(edge.target()))
+                return 50;
+              else
+                return 100;
+            }
+          },
+          relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
+          /* alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined, */initialEnergyOnIncremental: 0.1
+        }).run();
+
+        document.getElementById("layoutButton").disabled = false;
+        document.getElementById("layoutButton").innerHTML = 'Apply Layout';
+      }
+    }).run();
+  };
 
   // remove one degree nodes from graph to make it simpler
   let pruneGraph = function () {

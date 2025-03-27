@@ -109,7 +109,7 @@ let generateMessage = function (graph, description, image) {
               "end": [x5, y5],\n\
               "nodes": ["n7", "n8", "n9"]\n\
           }\n\
-      ],\n\: where x1, y1, x2, y2. etc. are real coordinates. Make sure that the last node of a line is also the first node of the next line (THIS IS IMPORTANT). Other than this condition, a node cannot be on two different lines. You can generate as many line segments as required. For the curved drawings, try to approximate it by using multiple short lines. Consider that x axis increases from left to right and y axis increases from top to bottom. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time and produce answer carefully!' },
+      ],\n\: where x1, y1, x2, y2. etc. are real coordinates. Make sure that the last node of a line is also the first node of the next line (THIS IS IMPORTANT). Other than this condition, a node cannot be on two different lines. Use the shape and orientation exactly as drawn in the image. Do not flip, rotate, or mirror the shape — preserve its direction and flow as it appears (THIS IS IMPORTANT). You can generate as many line segments as required. For the curved drawings, try to approximate it by using multiple short lines. Consider that x axis increases from left to right and y axis increases from top to bottom. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time and produce answer carefully!' },
       {
         type: 'image_url', image_url: { "url": image }
       }
