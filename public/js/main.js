@@ -1,6 +1,6 @@
 import cytoscape from "cytoscape";
 import fcose from 'cytoscape-fcose';
-import { generateConstraints, refineConstraints } from "./constraintManager";
+import { generateConstraints } from "./constraintManager";
 import { cyToTsv, cyToAdjacencyMatrix, findLongestPath, splitArrayIntoChunks } from "./auxiliary";
 import { cy, sampleName } from './menu'; 
 
@@ -28,12 +28,11 @@ document.getElementById("layoutButton").addEventListener("click", async function
     nodeIdMap.set(node.id(), "n" + i);
     nodeIdMapReverse.set("n" + i, node.id());
   });
-  console.log(nodeIdMapReverse);
 
   let pruneResult = pruneGraph();
   let prunedGraph = pruneResult.prunedGraph;
   let ignoredGraph = pruneResult.ignoredGraph;
-  console.log(prunedGraph.nodes().length);
+  console.log("Number of nodes in skeleton graph: " + prunedGraph.nodes().length);
 
   let graphData;
   let randomize = true;
@@ -44,7 +43,6 @@ document.getElementById("layoutButton").addEventListener("click", async function
     randomize = false;
   } else {
     graphData = cyToTsv(prunedGraph, nodeIdMap);
-    console.log(graphData);
   }
 
   let data = {
@@ -56,7 +54,7 @@ document.getElementById("layoutButton").addEventListener("click", async function
   let result = await runLLM(data);
   console.log(result);
   let placement = JSON.parse(result).lines;
-  let constraints = generateConstraints(placement, nodeIdMapReverse);
+  let constraints = generateConstraints(placement, nodeIdMapReverse, nodeIdMap);
   console.log(constraints);
 
   let idealEdgeLength;
@@ -75,21 +73,19 @@ document.getElementById("layoutButton").addEventListener("click", async function
       document.getElementById("layoutButton").innerHTML = 'Apply Layout';
     } 
     else { // make some postprocesssing and give a second chance
-      console.log('here');
-
       let graphPath = findLongestPath(prunedGraph, prunedGraph.nodes()[0]); // TODO: look for a smarter way
-      console.log(graphPath);
+
       let graphPathFakeIds = [];
       graphPath.forEach(nodeId => {
         graphPathFakeIds.push(nodeIdMap.get(nodeId));
       });
-      console.log(graphPathFakeIds);
 
       let newDistribution = splitArrayIntoChunks(graphPathFakeIds, placement.length);
+      console.log("Layout failed! Trying the alternative approach!");
       placement.forEach((line, i) => {
         line.nodes = newDistribution[i];
       });
-      let constraints = generateConstraints(placement, nodeIdMapReverse);
+      let constraints = generateConstraints(placement, nodeIdMapReverse, nodeIdMap);
 
       try {
         callLayout(randomize, idealEdgeLength, constraints, prunedGraph, ignoredGraph);

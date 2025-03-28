@@ -13,7 +13,7 @@ let defaultStylesheet = [
   {
     selector: 'node',
     style: {
-      'label': function( ele ){ return ele.data('label') || ''; },
+      'label': function( ele ){ return ele.data('fakeID') || ''; },
       'text-wrap': 'wrap'
     }
   },
@@ -23,26 +23,26 @@ let cy = window.cy = cytoscape({
   container: document.getElementById('cy'),
   style: defaultStylesheet,
   elements: [
-    { "data": { "id": "n0", "group": "nodes" } },
-    { "data": { "id": "n1", "group": "nodes" } },
-    { "data": { "id": "n2", "group": "nodes" } },
-    { "data": { "id": "n3", "group": "nodes" } },
-    { "data": { "id": "n4", "group": "nodes" } },
-    { "data": { "id": "n5", "group": "nodes" } },
-    { "data": { "id": "n6", "group": "nodes" } },
-    { "data": { "id": "n7", "group": "nodes" } }, // actual until here
-    { "data": { "id": "n8", "group": "nodes" } },
-    { "data": { "id": "n9", "group": "nodes" } },
-    { "data": { "id": "n10", "group": "nodes" } },
-    { "data": { "id": "n11", "group": "nodes" } },
-    { "data": { "id": "n12", "group": "nodes" } },
-    { "data": { "id": "n13", "group": "nodes" } },
-    { "data": { "id": "n14", "group": "nodes" } },
-    { "data": { "id": "n15", "group": "nodes" } },
-    { "data": { "id": "n16", "group": "nodes" } },
-    { "data": { "id": "n17", "group": "nodes" } },
-    { "data": { "id": "n18", "group": "nodes" } },
-    { "data": { "id": "n19", "group": "nodes" } },
+    { "data": { "id": "n0", "group": "nodes", "fakeID": "n0"} },
+    { "data": { "id": "n1", "group": "nodes", "fakeID": "n1" } },
+    { "data": { "id": "n2", "group": "nodes", "fakeID": "n2" } },
+    { "data": { "id": "n3", "group": "nodes", "fakeID": "n3" } },
+    { "data": { "id": "n4", "group": "nodes", "fakeID": "n4" } },
+    { "data": { "id": "n5", "group": "nodes", "fakeID": "n5" } },
+    { "data": { "id": "n6", "group": "nodes", "fakeID": "n6" } },
+    { "data": { "id": "n7", "group": "nodes", "fakeID": "n7" } }, // actual until here
+    { "data": { "id": "n8", "group": "nodes", "fakeID": "n8" } },
+    { "data": { "id": "n9", "group": "nodes", "fakeID": "n9" } },
+    { "data": { "id": "n10", "group": "nodes", "fakeID": "n10" } },
+    { "data": { "id": "n11", "group": "nodes", "fakeID": "n11"} },
+    { "data": { "id": "n12", "group": "nodes", "fakeID": "n12" } },
+    { "data": { "id": "n13", "group": "nodes", "fakeID": "n13" } },
+    { "data": { "id": "n14", "group": "nodes", "fakeID": "n14" } },
+    { "data": { "id": "n15", "group": "nodes", "fakeID": "n15" } },
+    { "data": { "id": "n16", "group": "nodes", "fakeID": "n16" } },
+    { "data": { "id": "n17", "group": "nodes", "fakeID": "n17" } },
+    { "data": { "id": "n18", "group": "nodes", "fakeID": "n17" } },
+    { "data": { "id": "n19", "group": "nodes", "fakeID": "n19" } },
     { "data": { "id": "e0", "source": "n0", "target": "n1", "group": "edges" } },
     { "data": { "id": "e1", "source": "n1", "target": "n2", "group": "edges" } },
     { "data": { "id": "e2", "source": "n2", "target": "n3", "group": "edges" } },
@@ -94,6 +94,8 @@ let loadSample = function (fname, sampleName) {
   }).then(data => new Promise((resolve, reject) => {
     if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
       cy.style(sbgnStylesheet(cytoscape, "purple_green"));
+      cy.style().selector('node').style({'label': function( ele ){ return ele.data('fakeID') || ''; }}).update();
+      
       cy.json({ elements: data });
       cy.nodes().forEach(node => {
         if (!node.data('stateVariables'))
@@ -105,6 +107,9 @@ let loadSample = function (fname, sampleName) {
       cy.style(defaultStylesheet);
       cy.json({ elements: data });
     }
+    cy.nodes().forEach((node, i) => {
+      node.data("fakeID", "n" + i);
+    });
     document.getElementById("fileName").innerHTML = sampleName;
     cy.layout({ "name": "fcose", idealEdgeLength: 100}).run();
     cy.fit();
@@ -130,6 +135,9 @@ document.getElementById("inputFile").addEventListener("change", function (e) {
       cy.graphml({ layoutBy: 'fcose' });
       cy.style(defaultStylesheet);
       cy.graphml(content);
+      cy.nodes().forEach((node, i) => {
+        node.data("fakeID", "n" + i);
+      });
     }
   };
   reader.addEventListener('loadend', function(){

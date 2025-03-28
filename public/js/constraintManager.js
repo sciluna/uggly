@@ -1,33 +1,34 @@
-let generateConstraints = function (placement, nodeIdMapReverse) {
+let generateConstraints = function (placement, nodeIdMapReverse, nodeIdMap) {
   let relativePlacementConstraints = [];
   let verticalAlignments = [];
   let horizontalAlignments = [];
   let direction = "";
+  console.log("Post-processed node arrays:");
   placement.forEach(line => {
     // generate collection from nodes in the line together with their edges
     let lineCollection = generateCollectionFromLine(line, nodeIdMapReverse);
     if (line.end[0] - line.start[0] > 0 && line.end[1] - line.start[1] == 0) {
       direction = "l-r";
       // generate appropriate constraints
-      let constraints = bfs(lineCollection, direction);
+      let constraints = bfs(lineCollection, direction, nodeIdMap);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       horizontalAlignments.push(constraints.alignment);
     } else if (line.end[0] - line.start[0] < 0 && line.end[1] - line.start[1] == 0) {
       direction = "r-l";
       // generate appropriate constraints
-      let constraints = bfs(lineCollection, direction);
+      let constraints = bfs(lineCollection, direction, nodeIdMap);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       horizontalAlignments.push(constraints.alignment);
     } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] == 0) {
       direction = "t-b";
       // generate appropriate constraints
-      let constraints = bfs(lineCollection, direction);
+      let constraints = bfs(lineCollection, direction, nodeIdMap);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       verticalAlignments.push(constraints.alignment);
     } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] == 0) {
       direction = "b-t";
       // generate appropriate constraints
-      let constraints = bfs(lineCollection, direction);
+      let constraints = bfs(lineCollection, direction, nodeIdMap);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
       verticalAlignments.push(constraints.alignment);
     } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] > 0) {
@@ -35,28 +36,28 @@ let generateConstraints = function (placement, nodeIdMapReverse) {
       // generate appropriate constraints
       let lineWidth = Math.abs(line.end[0] - line.start[0]);
       let lineHeight = Math.abs(line.end[1] - line.start[1]);
-      let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
+      let constraints = bfs(lineCollection, direction, nodeIdMap, lineWidth, lineHeight);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
     } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] < 0) {
       direction = "br-tl";
       // generate appropriate constraints
       let lineWidth = Math.abs(line.end[0] - line.start[0]);
       let lineHeight = Math.abs(line.end[1] - line.start[1]);
-      let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
+      let constraints = bfs(lineCollection, direction, nodeIdMap, lineWidth, lineHeight);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
     } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] < 0) {
       direction = "tr-bl";
       // generate appropriate constraints
       let lineWidth = Math.abs(line.end[0] - line.start[0]);
       let lineHeight = Math.abs(line.end[1] - line.start[1]);
-      let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
+      let constraints = bfs(lineCollection, direction, nodeIdMap, lineWidth, lineHeight);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
     } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
       direction = "bl-tr";
       // generate appropriate constraints
       let lineWidth = Math.abs(line.end[0] - line.start[0]);
       let lineHeight = Math.abs(line.end[1] - line.start[1]);
-      let constraints = bfs(lineCollection, direction, lineWidth, lineHeight);
+      let constraints = bfs(lineCollection, direction, nodeIdMap, lineWidth, lineHeight);
       relativePlacementConstraints = relativePlacementConstraints.concat(constraints.relativePlacement);
     }
   });
@@ -96,56 +97,9 @@ let keepOneCommonElement = function(arr1, arr2) {
   }
 
   return [arr1, arr2];
-}
-
-let generateConstraintsForFcose = function (positioning) {
-  let relativePlacementConstraints = [];
-  positioning.forEach(item => {
-    if (item[1] == "above") {
-      relativePlacementConstraints.push({ top: item[0], bottom: item[2] });
-    } else if (item[1] == "below") {
-      relativePlacementConstraints.push({ top: item[2], bottom: item[0] });
-    } else if (item[1] == "left") {
-      relativePlacementConstraints.push({ left: item[0], right: item[2] });
-    } else if (item[1] == "right") {
-      relativePlacementConstraints.push({ left: item[2], right: item[0] });
-    } else if (item[1] == "aboveLeft") {
-      relativePlacementConstraints.push({ top: item[0], bottom: item[2] });
-      relativePlacementConstraints.push({ left: item[0], right: item[2] });
-    } else if (item[1] == "aboveRight") {
-      relativePlacementConstraints.push({ top: item[0], bottom: item[2] });
-      relativePlacementConstraints.push({ left: item[2], right: item[0] });
-    } else if (item[1] == "belowLeft") {
-      relativePlacementConstraints.push({ top: item[2], bottom: item[0] });
-      relativePlacementConstraints.push({ left: item[0], right: item[2] });
-    } else if (item[1] == "belowRight") {
-      relativePlacementConstraints.push({ top: item[2], bottom: item[0] });
-      relativePlacementConstraints.push({ left: item[2], right: item[0] });
-    }
-  });
-
-  return relativePlacementConstraints;
 };
 
-let refineConstraints = function (alignmentConstraint, relativePlacementConstraint) {
-  // alignment: merge arrays if two arrays share a common node id (fCoSE doesn't work if they aren't in compact form)
-  let verticalAlignments = undefined;
-  let horizontalAlignments = undefined;
-  if (alignmentConstraint.vertical) {
-    verticalAlignments = mergeArrays(alignmentConstraint.vertical);
-  }
-  if (alignmentConstraint.horizontal) {
-    horizontalAlignments = mergeArrays(alignmentConstraint.horizontal);
-  }
-  let alignmentConstraints = { vertical: verticalAlignments, horizontal: horizontalAlignments };
-
-  // TO DO: work on refinement of relative placement constraints
-  //
-
-  return { relativePlacementConstraints: relativePlacementConstraint, alignmentConstraints: alignmentConstraints }
-};
-
-let bfs = function (cyCollection, direction, lineWidth, lineHeight) {
+let bfs = function (cyCollection, direction, nodeIdMap, lineWidth, lineHeight) {
   let queue = [];
   let visited = new Set();
   let currentNode = cyCollection[0];
@@ -195,6 +149,11 @@ let bfs = function (cyCollection, direction, lineWidth, lineHeight) {
       }
     }
   }
+  let visitedWithFakeIDs = [];
+  visited.forEach(value => {
+    visitedWithFakeIDs.push(nodeIdMap.get(value));
+  });
+  console.log(visitedWithFakeIDs);
   return { relativePlacement: relativePlacementConstraints, alignment: [...visited] };
 };
 
@@ -235,4 +194,4 @@ let mergeArrays = function (arrays) {
   return arrays;
 };
 
-export { generateConstraints, refineConstraints };
+export { generateConstraints };
