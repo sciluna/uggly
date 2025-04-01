@@ -57963,17 +57963,23 @@
       graphData = cyToTsv(prunedGraph, nodeIdMap);
     }
 
+    const shapeType = document.querySelector('input[name="shapeInput"]:checked').value;
+
     let data = {
       graph: graphData,
       userDescription: userDescription,
-      image: base64Image
+      image: base64Image,
+      shapeType: shapeType
     };
 
     let result = await runLLM(data);
-    console.log(result);
-    let placement = JSON.parse(result).lines;
+    if(shapeType == "imageGrid" || shapeType == "grid") {
+      console.log(result.asciiText);
+    }
+    console.log(result.answer);
+    let placement = JSON.parse(result.answer).lines;
     let constraints = generateConstraints(placement, nodeIdMapReverse, nodeIdMap);
-    console.log(constraints);
+    console.log(placement);
 
     let idealEdgeLength;
     if (sampleName == "glycolysis" || sampleName == "tca_cycle"){

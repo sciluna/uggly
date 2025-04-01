@@ -4,6 +4,7 @@ import { TokenJS } from 'token.js';
 import OpenAI from "openai";
 import path from 'path';
 import cors from 'cors';
+import sharp from 'sharp';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import { prompts } from './prompt/prompt.js'
@@ -33,6 +34,16 @@ app.post('/llm', async (req, res) => {
 		let graph = body["graph"];
 		let description = body["userDescription"];
 		let image = body["image"];
+    let shapeType = body["shapeType"];
+
+    // Convert the base64 string into an Image object
+    let asciiText = await imageToAscii(image, 20)
+      .then((asciiArt) => {
+          return asciiArt;
+      })
+      .catch((err) => {
+          console.error('Error loading image:', err);
+      });
 
 /* 		// Create the Token.js client
 		const client = new TokenJS({
@@ -54,7 +65,7 @@ app.post('/llm', async (req, res) => {
 
     const client = new OpenAI();
 
-		let messagesArray = generateMessage(graph, description, image);
+		let messagesArray = generateMessage(graph, description, image, shapeType, asciiText);
 
 		async function main() {
 			const response = await client.chat.completions.create({
@@ -68,53 +79,22 @@ app.post('/llm', async (req, res) => {
 			console.log(answer);
 			answer = answer.replaceAll('```json', '');
 			answer = answer.replaceAll('```', '');
-			return res.status(200).send(JSON.stringify(answer));
+      let finalAnswer = {answer: answer, asciiText: asciiText};
+			return res.status(200).send(JSON.stringify(finalAnswer));
 		}
 		main();
 	});
 });
 
-let generateMessage = function (graph, description, image) {
+let generateMessage = function (graph, description, image, shapeType, asciiText) {
   let sampleGraph = `n4 n5\nn5 n6\nn6 n7\nn0 n1\nn1 n2\nn2 n3\nn3 n4\n`;
   let systemPrompt = {
     role: 'system', content: 'You are a helpful and professional assistant for mapping the nodes in a given graph to the lines in the given image.'
   };
   console.log(graph);
-
-  let userPrompt = {
-    role: "user",
-    content: [
-      { type: 'text', text: 'I have the following graph: \n' + graph + '. I have drawn a shape in the given image and I want my graph to have a layout where the nodes positioned like the overall shape in this image. Analyze the image, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. While identfying lines try to be consistent with the given image. Also, do not consider slight changes in the direction of the lines since the drawing is made by hand and each line may not be drawn linearly. Assign nodes starting from an appropriate node (You do not have to start with the first node in the input graph, try to select the best starting point). Please generate the required assignments of the nodes in the correct order based on their adjacencies in JSON format as in the following example output: { "explanation": detailed reasoning behind the result, "lines": [\n\
-          {\n\
-              "id": 0,\n\
-              "start": [x1, y1],\n\
-              "end": [x2, y2],\n\
-              "nodes": ["n1", "n2"]\n\
-          },\n\
-          {\n\
-              "id": 1,\n\
-              "start": [x2, y2],\n\
-              "end": [x3, y3],\n\
-              "nodes": ["n2", "n3", "n4", "n5"]\n\
-          }\n\
-          {\n\
-              "id": 2,\n\
-              "start": [x3, y3],\n\
-              "end": [x4, y4],\n\
-              "nodes": ["n5", "n6", "n7"]\n\
-          }\n\
-          {\n\
-              "id": 3,\n\
-              "start": [x4, y4],\n\
-              "end": [x5, y5],\n\
-              "nodes": ["n7", "n8", "n9"]\n\
-          }\n\
-      ],\n\: where x1, y1, x2, y2. etc. are real coordinates. Make sure that the last node of a line is also the first node of the next line (THIS IS IMPORTANT). Other than this condition, a node cannot be on two different lines. Use the shape and orientation exactly as drawn in the image. Do not flip, rotate, or mirror the shape — preserve its direction and flow as it appears (THIS IS IMPORTANT). You can generate as many line segments as required. For the curved drawings, try to approximate it by using multiple short lines. Consider that x axis increases from left to right and y axis increases from top to bottom. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time and produce answer carefully!' },
-      {
-        type: 'image_url', image_url: { "url": image }
-      }
-    ]
-  };
+  console.log(asciiText);
+  let userPrompt = generateUserPrompt(shapeType, graph, image, asciiText);
+  console.log(userPrompt.content[0].text);
 
   let messagesArray = [];
   messagesArray.push(systemPrompt);
@@ -265,5 +245,142 @@ let generateMessage = function (graph, description, image) {
   ];
   return messagesArray;
 };
+
+let generateUserPrompt = function(shapeType, graph, image, asciiText) {
+  if(shapeType == "image") {
+    return {
+      role: "user",
+      content: [
+        { type: 'text', text: 'I have the following graph: \n' + graph + 'I have drawn a shape in the given image and I want my graph to have a layout where the nodes positioned like the overall shape in this image. Analyze the image, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. While identfying lines try to be consistent with the given image. Also, do not consider slight changes in the direction of the lines since the drawing is made by hand and each line may not be drawn linearly. Assign nodes starting from an appropriate node (You do not have to start with the first node in the input graph, try to select the best starting point). Please generate the required assignments of the nodes in the correct order based on their adjacencies in JSON format as in the following example output: \n{ "explanation": detailed reasoning behind the result, \n  "lines": [\n\
+            {\n\
+                "id": 0,\n\
+                "start": [x1, y1],\n\
+                "end": [x2, y2],\n\
+                "nodes": ["n1", "n2"]\n\
+            },\n\
+            {\n\
+                "id": 1,\n\
+                "start": [x2, y2],\n\
+                "end": [x3, y3],\n\
+                "nodes": ["n2", "n3", "n4", "n5"]\n\
+            }\n\
+            {\n\
+                "id": 2,\n\
+                "start": [x3, y3],\n\
+                "end": [x4, y4],\n\
+                "nodes": ["n5", "n6", "n7"]\n\
+            }\n\
+            {\n\
+                "id": 3,\n\
+                "start": [x4, y4],\n\
+                "end": [x5, y5],\n\
+                "nodes": ["n7", "n8", "n9"]\n\
+            }\n\
+        ],\n\where x1, y1, x2, y2. etc. are real coordinates. Make sure that the last node of a line is also the first node of the next line (THIS IS IMPORTANT). Other than this condition, a node cannot be on two different lines. Use the shape and orientation exactly as drawn in the image. Do not flip, rotate, or mirror the shape — preserve its direction and flow as it appears (THIS IS IMPORTANT). You can generate as many line segments as required. For the curved drawings, try to approximate it by using multiple short lines. Consider that x axis increases from left to right and y axis increases from top to bottom. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time and produce answer carefully!' },
+        {
+          type: 'image_url', image_url: { "url": image }
+        }
+      ]
+    };
+  } else if (shapeType == "imageGrid") {
+    return {
+      role: "user",
+      content: [
+        { type: 'text', text: 'I have the following graph: \n' + graph + 'I have drawn a shape in the given image and I want my graph to have a layout where the nodes positioned like the overall shape in this image. To aid your analysis, I am also providing an ASCII grid representation of the image, where "o" represents empty spaces and "x" represents the path of the drawn lines: \n' + asciiText + 'Analyze the image, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. While identfying lines try to be consistent with the given image. Also, do not consider slight changes in the direction of the lines since the drawing is made by hand and each line may not be drawn linearly. Assign nodes starting from an appropriate node (You do not have to start with the first node in the input graph, try to select the best starting point). Please generate the required assignments of the nodes in the correct order based on their adjacencies in JSON format as in the following example output: \n{ "explanation": detailed reasoning behind the result, \n  "lines": [\n\
+            {\n\
+                "id": 0,\n\
+                "start": [x1, y1],\n\
+                "end": [x2, y2],\n\
+                "nodes": ["n1", "n2"]\n\
+            },\n\
+            {\n\
+                "id": 1,\n\
+                "start": [x2, y2],\n\
+                "end": [x3, y3],\n\
+                "nodes": ["n2", "n3", "n4", "n5"]\n\
+            }\n\
+            {\n\
+                "id": 2,\n\
+                "start": [x3, y3],\n\
+                "end": [x4, y4],\n\
+                "nodes": ["n5", "n6", "n7"]\n\
+            }\n\
+            {\n\
+                "id": 3,\n\
+                "start": [x4, y4],\n\
+                "end": [x5, y5],\n\
+                "nodes": ["n7", "n8", "n9"]\n\
+            }\n\
+        ],\n\where x1, y1, x2, y2. etc. are real coordinates. Make sure that the last node of a line is also the first node of the next line (THIS IS IMPORTANT). Other than this condition, a node cannot be on two different lines. Use the shape and orientation exactly as drawn in the image. Do not flip, rotate, or mirror the shape — preserve its direction and flow as it appears (THIS IS IMPORTANT). You can generate as many line segments as required. For the curved drawings, try to approximate it by using multiple short lines. Consider that x axis increases from left to right and y axis increases from top to bottom. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time and produce answer carefully!' },
+        {
+          type: 'image_url', image_url: { "url": image }
+        }
+      ]
+    };
+  } else if (shapeType == "grid") {
+    return {
+      role: "user",
+      content: [
+        { type: 'text', text: 'I have the following graph: \n' + graph + 'I have drawn a shape given in ASCII grid representation where "o" represents empty spaces and "x" represents the path of the drawn lines: \n' + asciiText + 'and I want my graph to have a layout where the nodes positioned like the overall shape in this representation. Analyze the shape, identify the lines and their relationships, and decide how to distribute the graph\'s nodes along the identified lines. While identfying lines try to be consistent with the given image. Do not consider slight changes in the direction of the lines. Assign nodes starting from an appropriate node (You do not have to start with the first node in the input graph, try to select the best starting point). Please generate the required assignments of the nodes in the correct order based on their adjacencies in JSON format as in the following example output: \n{ "explanation": detailed reasoning behind the result, \n  "lines": [\n\
+            {\n\
+                "id": 0,\n\
+                "start": [x1, y1],\n\
+                "end": [x2, y2],\n\
+                "nodes": ["n1", "n2"]\n\
+            },\n\
+            {\n\
+                "id": 1,\n\
+                "start": [x2, y2],\n\
+                "end": [x3, y3],\n\
+                "nodes": ["n2", "n3", "n4", "n5"]\n\
+            }\n\
+            {\n\
+                "id": 2,\n\
+                "start": [x3, y3],\n\
+                "end": [x4, y4],\n\
+                "nodes": ["n5", "n6", "n7"]\n\
+            }\n\
+            {\n\
+                "id": 3,\n\
+                "start": [x4, y4],\n\
+                "end": [x5, y5],\n\
+                "nodes": ["n7", "n8", "n9"]\n\
+            }\n\
+        ],\n\where x1, y1, x2, y2. etc. are real coordinates. Make sure that the last node of a line is also the first node of the next line (THIS IS IMPORTANT). Other than this condition, a node cannot be on two different lines. Use the shape and orientation exactly as drawn in the image. Do not flip, rotate, or mirror the shape — preserve its direction and flow as it appears (THIS IS IMPORTANT). You can generate as many line segments as required. For the curved drawings, try to approximate it by using multiple short lines. Consider that x axis increases from left to right and y axis increases from top to bottom. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time and produce answer carefully!' }
+      ]
+    };
+  }
+};
+
+async function imageToAscii(base64Image, width = 20) {
+  // Convert base64 to a buffer
+  const imageBuffer = Buffer.from(base64Image.split(",")[1], "base64");
+
+  // Process the image with Sharp
+  const { data, info } = await sharp(imageBuffer)
+    .resize({
+        width: 20,
+        fit: 'inside', // Ensures aspect ratio is maintained
+    })
+    .grayscale()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+
+    let asciiArt = '';
+    const threshold = 220; // Adjust if necessary
+
+    for (let i = 0; i < data.length; i++) {
+        const brightness = data[i]; // Since it's grayscale, we only have one channel
+
+        asciiArt += brightness < threshold ? 'x' : 'o';
+
+        // Add a newline at the end of each row
+        if ((i + 1) % info.width === 0) {
+            asciiArt += '\n';
+        }
+    }
+
+  return asciiArt;
+}
 
 export { port, app }

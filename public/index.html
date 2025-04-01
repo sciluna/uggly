@@ -42,7 +42,7 @@
         <span id="fileName" class="text-secondary mt-2 mr-5"></span>
       </div>
     </form>
-    <div class="btn-toolbar mb-3" role="toolbar">
+    <div class="btn-toolbar mb-2" role="toolbar">
       <ul>
         <li>Load a GraphML file or select a sample file</li>
         <li>Draw the shape that will guide your graph's layout</li>
@@ -52,6 +52,19 @@
     </div>
     <div id="shapeInputField">
       <canvas id="drawingCanvas"></canvas><br>
+      Shape input:   
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="shapeInput" id="inlineRadio1" value="image" checked>
+        <label class="form-check-label" for="inlineRadio1">Image</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="shapeInput" id="inlineRadio2" value="imageGrid">
+        <label class="form-check-label" for="inlineRadio2">Image + Grid</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="shapeInput" id="inlineRadio3" value="grid">
+        <label class="form-check-label" for="inlineRadio3">Grid</label>
+      </div><br><br>
       <button id="randomizeButton" class="btn btn-primary btn-sm">Randomize</button>
       <button id="layoutButton" class="btn btn-primary btn-sm">Apply Layout</button>
       <button class="btn btn-info btn-sm float-end" id="clearButton">Clear Drawing</button>
@@ -119,7 +132,7 @@
       ctx.moveTo(lastX, lastY);
       ctx.lineTo(pos.x, pos.y);
       ctx.strokeStyle = 'black';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 10;
       ctx.stroke();
       ctx.closePath();
 
