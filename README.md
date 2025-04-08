@@ -35,3 +35,9 @@ Lastly, run the image from port 8080. If you want to use another port, please ch
 ```
 docker run -e OPENAI_API_KEY=<YOUR-OPENAI-API-KEY> -e GEMINI_API_KEY=<YOUR-GEMINI-API-KEY> -p 8080:8080 uggly
 ```
+
+## Credits
+
+UGGLY uses [Cytoscape.js](https://js.cytoscape.org) for graph visualization and other graph-related operations. [Express](https://expressjs.com/) framework is used for handling HTTP requests. [OpenAI](https://platform.openai.com/) and [Gemini](https://ai.google.dev/) APIs are used via [Token.js](https://docs.tokenjs.ai/) for shape analysis. [sharp](https://sharp.pixelplumbing.com/) is used to extract ASCII representation from the input shape image. [cytoscape-fcose](https://github.com/iVis-at-Bilkent/cytoscape.js-fcose) is used as the layout algorithm.
+
+Third-party libraries used in demo: [Bootstrap](https://getbootstrap.com/), [FileSaver.js](https://github.com/eligrey/FileSaver.js/), [cytoscape-graphml](https://github.com/iVis-at-Bilkent/cytoscape.js-graphml), [cytoscape-sbgn-stylesheet](https://github.com/PathwayCommons/cytoscape-sbgn-stylesheet), [cytoscape-svg](https://github.com/kinimesi/cytoscape-svg) 
