@@ -12,6 +12,7 @@
   "author": "Hasan Balci",
   "license": "MIT",
   "dependencies": {
+    "@techstark/opencv-js": "^4.10.0-release.1",
     "cors": "^2.8.5",
     "cytoscape": "^3.2.0",
     "cytoscape-fcose": "^2.2.0",

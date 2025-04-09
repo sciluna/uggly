@@ -2,42 +2,12 @@
   "nodes": [
     {
       "data": {
-        "id": "glyph9",
-        "bbox": {
-          "x": 88.32469771707692,
-          "y": 53.48323077999954,
-          "w": 65.64990234375,
-          "h": 25
-        },
-        "class": "macromolecule",
-        "label": "hexokinase",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "0",
+        "fakeID": "n0"
       },
       "position": {
-        "x": 88.32469771707692,
-        "y": 53.48323077999954
+        "x": 234.93274709399284,
+        "y": 40.985624346274875
       },
       "group": "nodes",
       "removed": false,
@@ -45,46 +15,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph0",
-        "bbox": {
-          "x": 5.364157995883986,
-          "y": 128.283717413862,
-          "w": 47.91455078125,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "glucose",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "1",
+        "fakeID": "n1"
       },
       "position": {
-        "x": 5.364157995883986,
-        "y": 128.283717413862
+        "x": 317.8354132482275,
+        "y": 69.53355412920449
       },
       "group": "nodes",
       "removed": false,
@@ -92,47 +33,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph6",
-        "bbox": {
-          "x": 5.364157995883986,
-          "y": 183.76409787306358,
-          "w": 25,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "ATP",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "clonemarker": true,
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "2",
+        "fakeID": "n2"
       },
       "position": {
-        "x": 5.364157995883986,
-        "y": 183.76409787306358
+        "x": 345.4225368361174,
+        "y": 18.587598378032
       },
       "group": "nodes",
       "removed": false,
@@ -140,51 +51,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465",
-        "bbox": {
-          "x": 252.88576831157434,
-          "y": 349.62490433906333,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465.1",
-            "x": -70,
-            "y": 0
-          },
-          {
-            "id": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465.2",
-            "x": 70,
-            "y": 0
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "3",
+        "fakeID": "n3"
       },
       "position": {
-        "x": 252.88576831157434,
-        "y": 349.62490433906333
+        "x": 314.4327804683774,
+        "y": -50.23764046803457
       },
       "group": "nodes",
       "removed": false,
@@ -192,47 +69,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph7",
-        "bbox": {
-          "x": 170.7667770493495,
-          "y": 183.76409787306358,
-          "w": 25,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "ADP",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "clonemarker": true,
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "4",
+        "fakeID": "n4"
       },
       "position": {
-        "x": 170.7667770493495,
-        "y": 183.76409787306358
+        "x": 248.00742126963678,
+        "y": 130.4625638180561
       },
       "group": "nodes",
       "removed": false,
@@ -240,47 +87,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph12",
-        "bbox": {
-          "x": 506.2858513347395,
-          "y": 183.76409787306358,
-          "w": 25,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "ADP",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "clonemarker": true,
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "5",
+        "fakeID": "n5"
       },
       "position": {
-        "x": 506.2858513347395,
-        "y": 183.76409787306358
+        "x": -165.46334238458084,
+        "y": -199.0143756537251
       },
       "group": "nodes",
       "removed": false,
@@ -288,47 +105,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph13",
-        "bbox": {
-          "x": 335.76415637028,
-          "y": 183.76409787306358,
-          "w": 25,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "ATP",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "clonemarker": true,
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "6",
+        "fakeID": "n6"
       },
       "position": {
-        "x": 335.76415637028,
-        "y": 183.76409787306358
+        "x": -246.0969766015197,
+        "y": -199.0143756537251
       },
       "group": "nodes",
       "removed": false,
@@ -336,46 +123,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph1",
-        "bbox": {
-          "x": 171.28523743826983,
-          "y": 128.283717413862,
-          "w": 47.91455078125,
-          "h": 36
-        },
-        "class": "simple chemical",
-        "label": "glucose\\n6P",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "7",
+        "fakeID": "n7"
       },
       "position": {
-        "x": 171.28523743826983,
-        "y": 128.283717413862
+        "x": -85.46334238458084,
+        "y": -199.0143756537251
       },
       "group": "nodes",
       "removed": false,
@@ -383,46 +141,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph2",
-        "bbox": {
-          "x": 337.20631688065566,
-          "y": 128.283717413862,
-          "w": 49.12841796875,
-          "h": 36
-        },
-        "class": "simple chemical",
-        "label": "fructose\\n6P",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "8",
+        "fakeID": "n8"
       },
       "position": {
-        "x": 337.20631688065566,
-        "y": 128.283717413862
+        "x": -240.51219569971497,
+        "y": -128.60963974622751
       },
       "group": "nodes",
       "removed": false,
@@ -430,46 +159,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph15",
-        "bbox": {
-          "x": 809.7899455213721,
-          "y": 127.76658024258396,
-          "w": 60.74072265625,
-          "h": 36
-        },
-        "class": "macromolecule",
-        "label": "triose-P\\nisomerase",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "9",
+        "fakeID": "n9"
       },
       "position": {
-        "x": 809.7899455213721,
-        "y": 127.76658024258396
+        "x": 146.9446902949725,
+        "y": 58.15484130517082
       },
       "group": "nodes",
       "removed": false,
@@ -477,46 +177,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph3",
-        "bbox": {
-          "x": 506.2858513347395,
-          "y": 128.283717413862,
-          "w": 49.12841796875,
-          "h": 36
-        },
-        "class": "simple chemical",
-        "label": "fructose\\n1,6P",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "10",
+        "fakeID": "n10"
       },
       "position": {
-        "x": 506.2858513347395,
-        "y": 128.283717413862
+        "x": -43.377514428207746,
+        "y": -244.81227335008634
       },
       "group": "nodes",
       "removed": false,
@@ -524,46 +195,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph17",
-        "bbox": {
-          "x": 253.3772700391366,
-          "y": 53.48323077999954,
-          "w": 65.0322265625,
-          "h": 36
-        },
-        "class": "macromolecule",
-        "label": "glucose-6P\\nisomerase",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "11",
+        "fakeID": "n11"
       },
       "position": {
-        "x": 253.3772700391366,
-        "y": 53.48323077999954
+        "x": 47.903718266692614,
+        "y": -273.72077478054996
       },
       "group": "nodes",
       "removed": false,
@@ -571,51 +213,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221",
-        "bbox": {
-          "x": 699.903859358632,
-          "y": 268.6802795810665,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221.1",
-            "x": 0,
-            "y": 70
-          },
-          {
-            "id": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221.2",
-            "x": 0,
-            "y": -70
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "12",
+        "fakeID": "n12"
       },
       "position": {
-        "x": 699.903859358632,
-        "y": 268.6802795810665
+        "x": -61.111988878869965,
+        "y": -136.05339865389163
       },
       "group": "nodes",
       "removed": false,
@@ -623,46 +231,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph19",
-        "bbox": {
-          "x": 422.03901114058243,
-          "y": 54.26082446783136,
-          "w": 69.3076171875,
-          "h": 36
-        },
-        "class": "macromolecule",
-        "label": "phospho\\nfructokinase",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "13",
+        "fakeID": "n13"
       },
       "position": {
-        "x": 422.03901114058243,
-        "y": 54.26082446783136
+        "x": 105.22890340435029,
+        "y": -192.92876108728618
       },
       "group": "nodes",
       "removed": false,
@@ -670,51 +249,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b",
-        "bbox": {
-          "x": 588.7760580094883,
-          "y": 349.62490433906345,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b.1",
-            "x": -70,
-            "y": 0
-          },
-          {
-            "id": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b.2",
-            "x": 70,
-            "y": 0
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "14",
+        "fakeID": "n14"
       },
       "position": {
-        "x": 588.7760580094883,
-        "y": 349.62490433906345
+        "x": 154.93274709399287,
+        "y": -39.0143756537251
       },
       "group": "nodes",
       "removed": false,
@@ -722,46 +267,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph18",
-        "bbox": {
-          "x": 591.5382207947348,
-          "y": 53.483230779999516,
-          "w": 48.5322265625,
-          "h": 25
-        },
-        "class": "macromolecule",
-        "label": "adolase",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "15",
+        "fakeID": "n15"
       },
       "position": {
-        "x": 591.5382207947348,
-        "y": 53.483230779999516
+        "x": 74.93274709399286,
+        "y": -119.0143756537251
       },
       "group": "nodes",
       "removed": false,
@@ -769,51 +285,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtN_a7dce40d-5759-4cd1-b831-3383eada22c2",
-        "bbox": {
-          "x": 404.1586362278743,
-          "y": 349.62490433906333,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_a7dce40d-5759-4cd1-b831-3383eada22c2.1",
-            "x": -70,
-            "y": 0
-          },
-          {
-            "id": "nwtN_a7dce40d-5759-4cd1-b831-3383eada22c2.2",
-            "x": 70,
-            "y": 0
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "16",
+        "fakeID": "n16"
       },
       "position": {
-        "x": 404.1586362278743,
-        "y": 349.62490433906333
+        "x": 184.88180013598046,
+        "y": 121.83976518163249
       },
       "group": "nodes",
       "removed": false,
@@ -821,46 +303,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph22",
-        "bbox": {
-          "x": 810.9300198297399,
-          "y": 268.13747473904266,
-          "w": 49.11767578125,
-          "h": 25
-        },
-        "class": "macromolecule",
-        "label": "GAPDH",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "17",
+        "fakeID": "n17"
       },
       "position": {
-        "x": 810.9300198297399,
-        "y": 268.13747473904266
+        "x": 60.35002584375427,
+        "y": -221.6987433104512
       },
       "group": "nodes",
       "removed": false,
@@ -868,46 +321,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph4",
-        "bbox": {
-          "x": 700.5047105160871,
-          "y": 194.5868730968662,
-          "w": 43.0107421875,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "GA-3P",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "18",
+        "fakeID": "n18"
       },
       "position": {
-        "x": 700.5047105160871,
-        "y": 194.5868730968662
+        "x": 189.89436472500762,
+        "y": -205.80942183303813
       },
       "group": "nodes",
       "removed": false,
@@ -915,46 +339,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph23",
-        "bbox": {
-          "x": 637.9581980388436,
-          "y": 213.3176721876209,
-          "w": 25,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "Pi",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "19",
+        "fakeID": "n19"
       },
       "position": {
-        "x": 637.9581980388436,
-        "y": 213.3176721876209
+        "x": 3.8391674778677896,
+        "y": -110.13075463561354
       },
       "group": "nodes",
       "removed": false,
@@ -962,46 +357,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph24",
-        "bbox": {
-          "x": 757.943976326979,
-          "y": 213.3176721876209,
-          "w": 33.224609375,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "NAD",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "20",
+        "fakeID": "n20"
       },
       "position": {
-        "x": 757.943976326979,
-        "y": 213.3176721876209
+        "x": -11.880557155389369,
+        "y": -298.9856243462749
       },
       "group": "nodes",
       "removed": false,
@@ -1009,46 +375,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph25",
-        "bbox": {
-          "x": 789.3433789799271,
-          "y": 323.7103344903014,
-          "w": 24.36767578125,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "H+",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "21",
+        "fakeID": "n21"
       },
       "position": {
-        "x": 789.3433789799271,
-        "y": 323.7103344903014
+        "x": -5.067252906007155,
+        "y": -199.0143756537251
       },
       "group": "nodes",
       "removed": false,
@@ -1056,46 +393,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph26",
-        "bbox": {
-          "x": 769.3184840967929,
-          "y": 366.11599424282105,
-          "w": 41.16845703125,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "NADH",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "22",
+        "fakeID": "n22"
       },
       "position": {
-        "x": 769.3184840967929,
-        "y": 366.11599424282105
+        "x": 293.27584317979966,
+        "y": 0.3159991296965998
       },
       "group": "nodes",
       "removed": false,
@@ -1103,46 +411,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph35",
-        "bbox": {
-          "x": 590.2723651417102,
-          "y": 423.945133940345,
-          "w": 39.34765625,
-          "h": 25
-        },
-        "class": "macromolecule",
-        "label": "PGK1",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "23",
+        "fakeID": "n23"
       },
       "position": {
-        "x": 590.2723651417102,
-        "y": 423.945133940345
+        "x": 314.9327470939928,
+        "y": 120.98562434627493
       },
       "group": "nodes",
       "removed": false,
@@ -1150,46 +429,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph36",
-        "bbox": {
-          "x": 404.15863622787424,
-          "y": 423.945133940345,
-          "w": 65.021484375,
-          "h": 25
-        },
-        "class": "macromolecule",
-        "label": "PG mutase",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "24",
+        "fakeID": "n24"
       },
       "position": {
-        "x": 404.15863622787424,
-        "y": 423.945133940345
+        "x": 394.9327470939928,
+        "y": 200.98562434627493
       },
       "group": "nodes",
       "removed": false,
@@ -1197,46 +447,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph37",
-        "bbox": {
-          "x": 252.88576831157434,
-          "y": 423.945133940345,
-          "w": 48.5322265625,
-          "h": 25
-        },
-        "class": "macromolecule",
-        "label": "enolase",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "25",
+        "fakeID": "n25"
       },
       "position": {
-        "x": 252.88576831157434,
-        "y": 423.945133940345
+        "x": 478.4954046548528,
+        "y": 197.42325176819182
       },
       "group": "nodes",
       "removed": false,
@@ -1244,46 +465,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph38",
-        "bbox": {
-          "x": 51.222939763508755,
-          "y": 423.945133940345,
-          "w": 52.18994140625,
-          "h": 36
-        },
-        "class": "macromolecule",
-        "label": "pyruvate\\nkinase",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "26",
+        "fakeID": "n26"
       },
       "position": {
-        "x": 51.222939763508755,
-        "y": 423.945133940345
+        "x": 474.9327470939928,
+        "y": 280.9856243462749
       },
       "group": "nodes",
       "removed": false,
@@ -1291,46 +483,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph21",
-        "bbox": {
-          "x": 700.5047105160871,
-          "y": 349.6249043390634,
-          "w": 51.57763671875,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "1,3 BPG",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "27",
+        "fakeID": "n27"
       },
       "position": {
-        "x": 700.5047105160871,
-        "y": 349.6249043390634
+        "x": 256.16609216398876,
+        "y": -58.13697838480982
       },
       "group": "nodes",
       "removed": false,
@@ -1338,47 +501,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph42",
-        "bbox": {
-          "x": 643.2794398323597,
-          "y": 294.0413095934183,
-          "w": 25,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "ADP",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "clonemarker": true,
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "28",
+        "fakeID": "n28"
       },
       "position": {
-        "x": 643.2794398323597,
-        "y": 294.0413095934183
+        "x": -478.4954046548528,
+        "y": -66.95448926616433
       },
       "group": "nodes",
       "removed": false,
@@ -1386,47 +519,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph41",
-        "bbox": {
-          "x": 506.6389806297966,
-          "y": 294.0413095934183,
-          "w": 25,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "ATP",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "clonemarker": true,
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "29",
+        "fakeID": "n29"
       },
       "position": {
-        "x": 506.6389806297966,
-        "y": 294.0413095934183
+        "x": -407.72614555120833,
+        "y": -127.33054798785042
       },
       "group": "nodes",
       "removed": false,
@@ -1434,51 +537,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtN_e0d4b93b-757a-476c-aa6d-b75c8af79040",
-        "bbox": {
-          "x": 252.88576831157434,
-          "y": 128.283717413862,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_e0d4b93b-757a-476c-aa6d-b75c8af79040.1",
-            "x": -70,
-            "y": 0
-          },
-          {
-            "id": "nwtN_e0d4b93b-757a-476c-aa6d-b75c8af79040.2",
-            "x": 70,
-            "y": 0
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "30",
+        "fakeID": "n30"
       },
       "position": {
-        "x": 252.88576831157434,
-        "y": 128.283717413862
+        "x": -413.55246718445517,
+        "y": -199.0143756537251
       },
       "group": "nodes",
       "removed": false,
@@ -1486,46 +555,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph27",
-        "bbox": {
-          "x": 472.4788658291559,
-          "y": 349.6249043390634,
-          "w": 35.06689453125,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "3 PG",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "31",
+        "fakeID": "n31"
       },
       "position": {
-        "x": 472.4788658291559,
-        "y": 349.6249043390634
+        "x": 205.24957346989737,
+        "y": -41.00980925067196
       },
       "group": "nodes",
       "removed": false,
@@ -1533,51 +573,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b",
-        "bbox": {
-          "x": 421.03513079960703,
-          "y": 128.283717413862,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b.1",
-            "x": -70,
-            "y": 0
-          },
-          {
-            "id": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b.2",
-            "x": 70,
-            "y": 0
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "32",
+        "fakeID": "n32"
       },
       "position": {
-        "x": 421.03513079960703,
-        "y": 128.283717413862
+        "x": -295.5554821881889,
+        "y": -116.26392154318438
       },
       "group": "nodes",
       "removed": false,
@@ -1585,46 +591,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph28",
-        "bbox": {
-          "x": 335.76415637028003,
-          "y": 349.6249043390634,
-          "w": 35.06689453125,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "2 PG",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "33",
+        "fakeID": "n33"
       },
       "position": {
-        "x": 335.76415637028003,
-        "y": 349.6249043390634
+        "x": -350.757778226323,
+        "y": -109.04993388536431
       },
       "group": "nodes",
       "removed": false,
@@ -1632,46 +609,17 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": false,
       "classes": ""
     },
     {
       "data": {
-        "id": "glyph43",
-        "bbox": {
-          "x": 170.7667770493495,
-          "y": 294.0413095934183,
-          "w": 32.61767578125,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "H2O",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
+        "id": "34",
+        "fakeID": "n34"
       },
       "position": {
-        "x": 170.7667770493495,
-        "y": 294.0413095934183
+        "x": -327.6067344249318,
+        "y": -199.0143756537251
       },
       "group": "nodes",
       "removed": false,
@@ -1679,1817 +627,788 @@
       "selectable": true,
       "locked": false,
       "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa",
-        "bbox": {
-          "x": 592.0510197458169,
-          "y": 128.76554194919981,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa.1",
-            "x": -70,
-            "y": 0
-          },
-          {
-            "id": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa.2",
-            "x": 70,
-            "y": 0
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
-      },
-      "position": {
-        "x": 592.0510197458169,
-        "y": 128.76554194919981
-      },
-      "group": "nodes",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "glyph29",
-        "bbox": {
-          "x": 133.40276341382432,
-          "y": 349.6249043390634,
-          "w": 32.0107421875,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "PEP",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
-      },
-      "position": {
-        "x": 133.40276341382432,
-        "y": 349.6249043390634
-      },
-      "group": "nodes",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "glyph39",
-        "bbox": {
-          "x": 103.54901679447991,
-          "y": 294.0413095934183,
-          "w": 25,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "ADP",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "clonemarker": true,
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
-      },
-      "position": {
-        "x": 103.54901679447991,
-        "y": 294.0413095934183
-      },
-      "group": "nodes",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "glyph40",
-        "bbox": {
-          "x": -12.081923360913365,
-          "y": 294.0413095934183,
-          "w": 25,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "ATP",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "clonemarker": true,
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
-      },
-      "position": {
-        "x": -12.081923360913365,
-        "y": 294.0413095934183
-      },
-      "group": "nodes",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3",
-        "bbox": {
-          "x": 51.23460985878643,
-          "y": 349.6249043390634,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3.1",
-            "x": 70,
-            "y": 0
-          },
-          {
-            "id": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3.2",
-            "x": -70,
-            "y": 0
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
-      },
-      "position": {
-        "x": 51.23460985878643,
-        "y": 349.6249043390634
-      },
-      "group": "nodes",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "glyph30",
-        "bbox": {
-          "x": -39.94745709793577,
-          "y": 349.6249043390634,
-          "w": 52.18994140625,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "pyruvate",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
-      },
-      "position": {
-        "x": -39.94745709793577,
-        "y": 349.6249043390634
-      },
-      "group": "nodes",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "glyph5",
-        "bbox": {
-          "x": 700.5047105160871,
-          "y": 53.483230779999516,
-          "w": 44.224609375,
-          "h": 25
-        },
-        "class": "simple chemical",
-        "label": "DHA-P",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "font-size": 11,
-        "font-family": "Helvetica",
-        "font-style": "normal",
-        "font-weight": "normal",
-        "color": "#000",
-        "background-image": "http://newteditor.org/color-scheme-images/blue2_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
-      },
-      "position": {
-        "x": 700.5047105160871,
-        "y": 53.483230779999516
-      },
-      "group": "nodes",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111",
-        "bbox": {
-          "x": 88.32469771707692,
-          "y": 128.283717413862,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111.1",
-            "x": -70,
-            "y": 0
-          },
-          {
-            "id": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111.2",
-            "x": 70,
-            "y": 0
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
-      },
-      "position": {
-        "x": 88.32469771707692,
-        "y": 128.283717413862
-      },
-      "group": "nodes",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "nwtN_81986acb-aa06-40fc-90cd-cc5d0506eae3",
-        "bbox": {
-          "x": 700.5833450728137,
-          "y": 127.76658024258396,
-          "w": 20,
-          "h": 20
-        },
-        "class": "process",
-        "statesandinfos": [],
-        "language": "PD",
-        "border-width": 1.25,
-        "border-color": "#555555",
-        "background-color": "#ffffff",
-        "background-opacity": "1",
-        "background-image-opacity": 1,
-        "text-wrap": "wrap",
-        "border-style": "solid",
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-fit": "cover",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "ports": [
-          {
-            "id": "nwtN_81986acb-aa06-40fc-90cd-cc5d0506eae3.1",
-            "x": 0,
-            "y": -70
-          },
-          {
-            "id": "nwtN_81986acb-aa06-40fc-90cd-cc5d0506eae3.2",
-            "x": 0,
-            "y": 70
-          }
-        ],
-        "infoboxCalculated": true,
-        "auxunitlayouts": {}
-      },
-      "position": {
-        "x": 700.5833450728137,
-        "y": 127.76658024258396
-      },
-      "group": "nodes",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
+      "pannable": false,
       "classes": ""
     }
   ],
   "edges": [
     {
       "data": {
-        "id": "nwtE_58fd4bec-8d1f-4867-8874-91365b189283",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph29",
-        "target": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3",
-        "portsource": "glyph29",
-        "porttarget": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3.1"
+        "id": "487ca763-d57f-47db-ae13-df86d2a2c96a",
+        "source": "0",
+        "target": "1"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_bcc1ee58-5c52-4950-b459-ee1ecee3e8a0",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph39",
-        "target": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3",
-        "portsource": "glyph39",
-        "porttarget": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3.1"
+        "id": "9f7c5982-d157-4987-b718-d1ec66ef1ad6",
+        "source": "0",
+        "target": "2"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_148f1df6-50d5-4fd5-9b7e-f12c734951d3",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph9",
-        "target": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111",
-        "portsource": "glyph9",
-        "porttarget": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111"
+        "id": "2b8a89b0-b3dc-46b0-b5c6-4de35ee2c2b4",
+        "source": "0",
+        "target": "3"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_de477fbf-8efb-4b8e-aefd-4ec752405004",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph0",
-        "target": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111",
-        "portsource": "glyph0",
-        "porttarget": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111.1"
+        "id": "79f43ec2-00ae-4f3e-b2f2-7a84b59ae918",
+        "source": "0",
+        "target": "4"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_334605a2-73bd-4e52-b0eb-de41efbeda4b",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111",
-        "target": "glyph1",
-        "portsource": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111.2",
-        "porttarget": "glyph1"
+        "id": "a0abcd10-c9d8-4a74-85f0-0a63e6e88bb3",
+        "source": "0",
+        "target": "14"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_9db732fa-0625-4c29-a4f7-6146c558c2dc",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph6",
-        "target": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111",
-        "portsource": "glyph6",
-        "porttarget": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111.1"
+        "id": "df95378d-40a5-4135-af42-53eb1040c858",
+        "source": "0",
+        "target": "9"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_73b945a7-5608-45fd-84c1-8e486c02cfc4",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111",
-        "target": "glyph7",
-        "portsource": "nwtN_f72662af-67d4-4ca2-8504-4ca032ddd111.2",
-        "porttarget": "glyph7"
+        "id": "53713b0a-a943-4e23-94b5-26e3bfe7f4ca",
+        "source": "0",
+        "target": "16"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_30045159-f2bd-4bea-b6fa-30e246185213",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b",
-        "target": "glyph12",
-        "portsource": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b.2",
-        "porttarget": "glyph12"
+        "id": "5bc7ccd9-1d50-4dd1-81e8-848e7f87506f",
+        "source": "0",
+        "target": "22"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_f1dcc491-cc7a-457c-a09f-6d3528e76d15",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph13",
-        "target": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b",
-        "portsource": "glyph13",
-        "porttarget": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b.1"
+        "id": "6c2d7aed-f3a2-4fce-9f58-cbd3aa5b5157",
+        "source": "0",
+        "target": "23"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_5054b0da-c5f1-4ba8-b03b-8f03813e1018",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph1",
-        "target": "nwtN_e0d4b93b-757a-476c-aa6d-b75c8af79040",
-        "portsource": "glyph1",
-        "porttarget": "nwtN_e0d4b93b-757a-476c-aa6d-b75c8af79040.1"
+        "id": "0ffc3f06-45bd-49fd-b990-80662cdc0ae8",
+        "source": "0",
+        "target": "27"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_17a4c19e-711d-43f7-b79a-9fd8b0885cb3",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_e0d4b93b-757a-476c-aa6d-b75c8af79040",
-        "target": "glyph2",
-        "portsource": "nwtN_e0d4b93b-757a-476c-aa6d-b75c8af79040.2",
-        "porttarget": "glyph2"
+        "id": "a98a8bc6-a9e9-4200-aa3c-59bb6957d1ae",
+        "source": "0",
+        "target": "31"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_526babb9-453d-43a9-94b7-3dc0baed829d",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph2",
-        "target": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b",
-        "portsource": "glyph2",
-        "porttarget": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b.1"
+        "id": "1f0f95dd-5927-48e4-b549-41b30be079b2",
+        "source": "5",
+        "target": "6"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_34a64b3c-4eb6-4e8a-bc0e-274a40afe630",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b",
-        "target": "glyph3",
-        "portsource": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b.2",
-        "porttarget": "glyph3"
+        "id": "370b6848-be71-4967-987a-1e7decf2bd57",
+        "source": "5",
+        "target": "7"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_c3843f81-5bd6-4417-8645-2df6821e9889",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3",
-        "target": "glyph30",
-        "portsource": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3.2",
-        "porttarget": "glyph30"
+        "id": "8a153a37-07e2-4c94-937b-29efd0956a64",
+        "source": "6",
+        "target": "8"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_24c51c6e-6bac-4c6e-861a-bd408b9b2899",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3",
-        "target": "glyph40",
-        "portsource": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3.2",
-        "porttarget": "glyph40"
+        "id": "c0c5ee30-e42d-4267-b5c7-4de319b330ce",
+        "source": "6",
+        "target": "34"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_2c6eacd3-8749-45d8-8828-d6be28c31938",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph3",
-        "target": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa",
-        "portsource": "glyph3",
-        "porttarget": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa.1"
+        "id": "8438a264-519c-41a9-ba33-671c5229e0d4",
+        "source": "7",
+        "target": "12"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_5cdbc5f8-5c38-4969-8cb4-4746984e94bf",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa",
-        "target": "glyph5",
-        "portsource": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa.2",
-        "porttarget": "glyph5"
+        "id": "61ebd260-31a2-437a-b345-0a5ec9c5884c",
+        "source": "7",
+        "target": "21"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_22fbad82-b4f8-4913-9405-0756f96eb3ff",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa",
-        "target": "glyph4",
-        "portsource": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa.2",
-        "porttarget": "glyph4"
+        "id": "5ad2f2af-cb05-4173-b249-23920ad02072",
+        "source": "8",
+        "target": "34"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_8c7ee891-6257-462b-83d7-9fe84273f2f2",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph17",
-        "target": "nwtN_e0d4b93b-757a-476c-aa6d-b75c8af79040",
-        "portsource": "glyph17",
-        "porttarget": "nwtN_e0d4b93b-757a-476c-aa6d-b75c8af79040"
+        "id": "3eef841e-45dd-42e3-af1e-32ce1d01905e",
+        "source": "10",
+        "target": "11"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_f20091b6-3823-4388-94f0-da0310f7809d",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph19",
-        "target": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b",
-        "portsource": "glyph19",
-        "porttarget": "nwtN_869f3b7c-8740-4a33-adfa-060d21134b4b"
+        "id": "fbb749a5-05e4-40a6-98f5-ee023fc1db33",
+        "source": "10",
+        "target": "12"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_a141bda1-0d23-4c65-be23-f74c9a82700b",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph18",
-        "target": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa",
-        "portsource": "glyph18",
-        "porttarget": "nwtN_935eaa4c-cf04-402e-ae38-bd3e0b4d44fa"
+        "id": "ffe00573-e0b8-4050-adc4-985f4bb655a6",
+        "source": "11",
+        "target": "13"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_0241f9a8-a7ab-4ef2-af20-d95abe9a4830",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph22",
-        "target": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221",
-        "portsource": "glyph22",
-        "porttarget": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221"
+        "id": "db5050ad-0e40-4a53-a621-c4e065620eb5",
+        "source": "11",
+        "target": "21"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_86d8aa37-afdd-4da7-b353-d753a117362e",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph4",
-        "target": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221",
-        "portsource": "glyph4",
-        "porttarget": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221.2"
+        "id": "5a064cc1-8ae2-4ab2-a0ba-562b7cc3081f",
+        "source": "12",
+        "target": "21"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_418a3f25-8d0c-4f92-88a7-01035a2b038d",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221",
-        "target": "glyph21",
-        "portsource": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221.1",
-        "porttarget": "glyph21"
+        "id": "ca197b97-10bf-4250-9758-c8b5f07c14f7",
+        "source": "13",
+        "target": "18"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_cfc5aa19-a643-443d-bce5-a7ede8c955bf",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph23",
-        "target": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221",
-        "portsource": "glyph23",
-        "porttarget": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221.2"
+        "id": "37f4af21-d461-43e9-a003-42ee51ea9a60",
+        "source": "13",
+        "target": "15"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_0a8fe49f-dc07-4f8a-8989-0788895c00ff",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph24",
-        "target": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221",
-        "portsource": "glyph24",
-        "porttarget": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221.2"
+        "id": "137ae060-4074-4e0a-88d5-90564dd4fc2d",
+        "source": "13",
+        "target": "21"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_f90717a8-460d-4580-81df-a39cf32808f7",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221",
-        "target": "glyph25",
-        "portsource": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221.1",
-        "porttarget": "glyph25"
+        "id": "79f54dc8-037e-4aa1-91ee-f47908099392",
+        "source": "14",
+        "target": "15"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_f8c8be72-5bf4-4c69-b795-26c5364a6b23",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221",
-        "target": "glyph26",
-        "portsource": "nwtN_d0207fde-c285-468e-ae82-e4424fe06221.1",
-        "porttarget": "glyph26"
+        "id": "b3c8f0b0-c90b-48c9-8a63-28d26da9d360",
+        "source": "15",
+        "target": "21"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_0cbb5f2b-4c57-4860-9511-19403fe08dbb",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph35",
-        "target": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b",
-        "portsource": "glyph35",
-        "porttarget": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b"
+        "id": "fa4a1827-be79-4803-aa4a-2a9cbfd9b191",
+        "source": "17",
+        "target": "21"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_80cba596-750d-485a-be37-d36239cfbbae",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph36",
-        "target": "nwtN_a7dce40d-5759-4cd1-b831-3383eada22c2",
-        "portsource": "glyph36",
-        "porttarget": "nwtN_a7dce40d-5759-4cd1-b831-3383eada22c2"
+        "id": "0e076ad1-fce5-45c2-8b91-3c5382b9d6c5",
+        "source": "19",
+        "target": "21"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_46ec4d6f-5c48-4c9d-82f3-c360d4629689",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph37",
-        "target": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465",
-        "portsource": "glyph37",
-        "porttarget": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465"
+        "id": "ec79dae8-62c6-4a90-ab70-6bc2fff510f0",
+        "source": "20",
+        "target": "21"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_7c2b989d-19de-4d58-b18b-8015bf5fda8d",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph38",
-        "target": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3",
-        "portsource": "glyph38",
-        "porttarget": "nwtN_658c23cb-1ae8-4551-96bb-3cb97666c5c3"
+        "id": "0721dfd8-491d-47a1-b5db-b58ed977ea88",
+        "source": "23",
+        "target": "24"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_6043a685-dfff-4e4f-8f93-74710c7f5da5",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph21",
-        "target": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b",
-        "portsource": "glyph21",
-        "porttarget": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b.2"
+        "id": "c649da74-c84d-4826-a26e-4e79afa95e3a",
+        "source": "24",
+        "target": "25"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_4e577ac4-9b37-4cbc-abd9-b6c01100c48d",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph42",
-        "target": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b",
-        "portsource": "glyph42",
-        "porttarget": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b.2"
+        "id": "29aadc0d-f989-45fd-8ad1-1ca8ae17e5a2",
+        "source": "24",
+        "target": "26"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_352b757e-8019-4015-8a6d-5c1ac297c2e6",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b",
-        "target": "glyph41",
-        "portsource": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b.1",
-        "porttarget": "glyph41"
+        "id": "6f7ef85c-b42d-4393-a1c5-d0af07ffeb1a",
+        "source": "25",
+        "target": "26"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_36233fec-d687-414e-b4f1-9e83a12f2d3d",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b",
-        "target": "glyph27",
-        "portsource": "nwtN_de58cb60-7cb4-4f81-9485-123d89bb5c6b.1",
-        "porttarget": "glyph27"
+        "id": "3a0a7898-ddc5-43ae-97b6-7add2576f677",
+        "source": "28",
+        "target": "29"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_93129ad3-bff2-47b6-8364-ad69971f6f80",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph27",
-        "target": "nwtN_a7dce40d-5759-4cd1-b831-3383eada22c2",
-        "portsource": "glyph27",
-        "porttarget": "nwtN_a7dce40d-5759-4cd1-b831-3383eada22c2.2"
+        "id": "5a25caec-5fde-4c6c-891d-7798ca62b5fa",
+        "source": "29",
+        "target": "34"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_24058ce2-7bbe-4738-b329-f34ef58ac095",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_a7dce40d-5759-4cd1-b831-3383eada22c2",
-        "target": "glyph28",
-        "portsource": "nwtN_a7dce40d-5759-4cd1-b831-3383eada22c2.1",
-        "porttarget": "glyph28"
+        "id": "73875ce9-0f0e-49cf-8d69-b54df8d32a39",
+        "source": "29",
+        "target": "30"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_f0a4a22f-3f83-4c66-9761-32c201f9e5a4",
-        "class": "consumption",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph28",
-        "target": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465",
-        "portsource": "glyph28",
-        "porttarget": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465.2"
+        "id": "914f56ea-62ec-4a2e-8947-cec8a2fc126c",
+        "source": "30",
+        "target": "34"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_d5725e19-4725-4f22-ac12-fedb4c0617ce",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465",
-        "target": "glyph43",
-        "portsource": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465.1",
-        "porttarget": "glyph43"
+        "id": "413e74bd-e3eb-4543-ba9e-1199570f284d",
+        "source": "32",
+        "target": "34"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
+      "pannable": true,
       "classes": ""
     },
     {
       "data": {
-        "id": "nwtE_322c721b-1233-4684-b436-650c81d5db9a",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465",
-        "target": "glyph29",
-        "portsource": "nwtN_57535509-5a21-4dd0-93c6-cc5545c79465.1",
-        "porttarget": "glyph29"
+        "id": "9108b79b-8a88-48ae-a5d5-5c8b01702307",
+        "source": "33",
+        "target": "34"
       },
-      "position": {},
+      "position": {
+        "x": 0,
+        "y": 0
+      },
       "group": "edges",
       "removed": false,
       "selected": false,
       "selectable": true,
       "locked": false,
       "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "nwtE_ec446baa-ca52-493a-b21a-3bc877c2ddf9",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_81986acb-aa06-40fc-90cd-cc5d0506eae3",
-        "target": "glyph4",
-        "portsource": "nwtN_81986acb-aa06-40fc-90cd-cc5d0506eae3.2",
-        "porttarget": "glyph4"
-      },
-      "position": {},
-      "group": "edges",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "nwtE_2fb09005-3b93-4539-90c9-98c42ad07442",
-        "class": "catalysis",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "glyph15",
-        "target": "nwtN_81986acb-aa06-40fc-90cd-cc5d0506eae3",
-        "portsource": "glyph15",
-        "porttarget": "nwtN_81986acb-aa06-40fc-90cd-cc5d0506eae3"
-      },
-      "position": {},
-      "group": "edges",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
-      "classes": ""
-    },
-    {
-      "data": {
-        "id": "nwtE_93690fe3-cf9c-48e9-927c-cce04ccd8dc5",
-        "class": "production",
-        "bendPointPositions": [],
-        "language": "PD",
-        "line-color": "#555555",
-        "width": 1.25,
-        "background-image": "http://newteditor.org/color-scheme-images/bw1_gradient.png",
-        "background-color": "#ffffff",
-        "background-fit": "cover",
-        "background-opacity": "1",
-        "background-position-x": "50%",
-        "background-position-y": "50%",
-        "background-width": "100%",
-        "background-height": "100%",
-        "cardinality": 0,
-        "source": "nwtN_81986acb-aa06-40fc-90cd-cc5d0506eae3",
-        "target": "glyph5",
-        "portsource": "nwtN_81986acb-aa06-40fc-90cd-cc5d0506eae3.1",
-        "porttarget": "glyph5"
-      },
-      "position": {},
-      "group": "edges",
-      "removed": false,
-      "selected": false,
-      "selectable": true,
-      "locked": false,
-      "grabbable": true,
+      "pannable": true,
       "classes": ""
     }
   ]

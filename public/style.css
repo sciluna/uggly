@@ -13,7 +13,7 @@ hr {
   position: absolute;
   left: 30%;
   top: 8%;
-  bottom: 5%;
+  bottom: 4%;
   right: 1%;
   z-index: 999;
   border-radius: 2px;
@@ -26,7 +26,7 @@ hr {
   position: absolute;
   width: 28%;
   height: 90%;
-  margin-top: 5px;
+  margin-top: 0px;
 }
 
 #shapeInputField {

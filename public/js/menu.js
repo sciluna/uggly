@@ -2,12 +2,14 @@
 import cytoscape from "cytoscape";
 import graphml from "cytoscape-graphml";
 import svg from 'cytoscape-svg';
+import fcose from 'cytoscape-fcose';
 import { saveAs } from 'file-saver';
 import sbgnStylesheet from 'cytoscape-sbgn-stylesheet';
 import jquery from 'jquery';
 
 cytoscape.use(graphml, jquery);
 cytoscape.use(svg);
+cytoscape.use(fcose);
 
 let defaultStylesheet = [
   {
@@ -22,7 +24,7 @@ let defaultStylesheet = [
 let cy = window.cy = cytoscape({
   container: document.getElementById('cy'),
   style: defaultStylesheet,
-  elements: [
+/*   elements: [
     { "data": { "id": "n0", "group": "nodes", "fakeID": "n0"} },
     { "data": { "id": "n1", "group": "nodes", "fakeID": "n1" } },
     { "data": { "id": "n2", "group": "nodes", "fakeID": "n2" } },
@@ -62,7 +64,8 @@ let cy = window.cy = cytoscape({
     { "data": { "id": "e16", "source": "n5", "target": "n17", "group": "edges" } },
     { "data": { "id": "e17", "source": "n6", "target": "n18", "group": "edges" } },
     { "data": { "id": "e18", "source": "n6", "target": "n19", "group": "edges" } }
-  ]
+  ],
+  layout: {name: "fcose", idealEdgeLength: 75} */
 });
 
 let sampleName = "";
@@ -75,8 +78,20 @@ document.getElementById("samples").addEventListener("change", function (event) {
     filename = "sample1.json";
     sampleName = "sample1";
   }
+  if (sample == "sample2") {
+    filename = "sample2.json";
+    sampleName = "sample2";
+  }
+  if (sample == "sample3") {
+    filename = "sample3.json";
+    sampleName = "sample3";
+  }
+  if (sample == "sample4") {
+    filename = "sample4.json";
+    sampleName = "sample4";
+  }
   if (sample == "glycolysis") {
-    filename = "sample2copy.json";
+    filename = "glycolysis.json";
     sampleName = "glycolysis";
   }
   if (sample == "tca_cycle") {
@@ -110,8 +125,8 @@ let loadSample = function (fname, sampleName) {
     cy.nodes().forEach((node, i) => {
       node.data("fakeID", "n" + i);
     });
-    document.getElementById("fileName").innerHTML = sampleName;
-    cy.layout({ "name": "fcose", idealEdgeLength: 100}).run();
+    //document.getElementById("fileName").innerHTML = sampleName;
+    cy.layout({ "name": "fcose", idealEdgeLength: 75}).run();
     cy.fit();
   }))
 };
@@ -138,10 +153,17 @@ document.getElementById("inputFile").addEventListener("change", function (e) {
       cy.nodes().forEach((node, i) => {
         node.data("fakeID", "n" + i);
       });
+    } else if (fileExtension == "json") {
+      cy.json({elements: JSON.parse(content)});
+      cy.style(defaultStylesheet);
+      cy.nodes().forEach((node, i) => {
+        node.data("fakeID", "n" + i);
+      });
+      cy.layout({name: "fcose"}).run();
     }
   };
   reader.addEventListener('loadend', function(){
-    document.getElementById("fileName").innerHTML = file.name;
+    //document.getElementById("fileName").innerHTML = file.name;
   });
   reader.readAsText(file);
   document.getElementById("inputFile").value = null;
