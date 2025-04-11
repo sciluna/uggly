@@ -2,11 +2,11 @@ let generateConstraints = function (placement, idealEdgeLength) {
   let relativePlacementConstraints = [];
   let verticalAlignments = [];
   let horizontalAlignments = [];
-  let direction = "";
+
   console.log("Post-processed node arrays:");
   placement.forEach(line => {
-    if (line.end[0] - line.start[0] > 0 && line.end[1] - line.start[1] == 0) {
-      direction = "l-r";
+    let direction = getLineDirection(line);
+    if (direction == "l-r") {
       // generate appropriate constraints
       let relativePlacement = [];
       line.nodes.forEach((node, i) => {
@@ -16,8 +16,7 @@ let generateConstraints = function (placement, idealEdgeLength) {
       });
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
       horizontalAlignments.push(line.nodes);      
-    } else if (line.end[0] - line.start[0] < 0 && line.end[1] - line.start[1] == 0) {
-      direction = "r-l";
+    } else if (direction == "r-l") {
       // generate appropriate constraints
       let relativePlacement = [];
       line.nodes.forEach((node, i) => {
@@ -27,8 +26,7 @@ let generateConstraints = function (placement, idealEdgeLength) {
       });
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
       horizontalAlignments.push(line.nodes);
-    } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] == 0) {
-      direction = "t-b";
+    } else if (direction == "t-b") {
       // generate appropriate constraints
       let relativePlacement = [];
       line.nodes.forEach((node, i) => {
@@ -38,8 +36,7 @@ let generateConstraints = function (placement, idealEdgeLength) {
       });
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
       verticalAlignments.push(line.nodes);
-    } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] == 0) {
-      direction = "b-t";
+    } else if (direction == "b-t") {
       // generate appropriate constraints
       let relativePlacement = [];
       line.nodes.forEach((node, i) => {
@@ -49,8 +46,7 @@ let generateConstraints = function (placement, idealEdgeLength) {
       });
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
       verticalAlignments.push(line.nodes);
-    } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] > 0) {
-      direction = "tl-br";
+    } else if (direction == "tl-br") {
       // generate appropriate constraints
       let lineWidth = Math.abs(line.end[0] - line.start[0]);
       let lineHeight = Math.abs(line.end[1] - line.start[1]);
@@ -64,8 +60,7 @@ let generateConstraints = function (placement, idealEdgeLength) {
         }
       });
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-    } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] < 0) {
-      direction = "br-tl";
+    } else if (direction == "br-tl") {
       // generate appropriate constraints
       let lineWidth = Math.abs(line.end[0] - line.start[0]);
       let lineHeight = Math.abs(line.end[1] - line.start[1]);
@@ -79,8 +74,7 @@ let generateConstraints = function (placement, idealEdgeLength) {
         }
       });
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-    } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] < 0) {
-      direction = "tr-bl";
+    } else if (direction == "tr-bl") {
       // generate appropriate constraints
       let lineWidth = Math.abs(line.end[0] - line.start[0]);
       let lineHeight = Math.abs(line.end[1] - line.start[1]);
@@ -94,7 +88,7 @@ let generateConstraints = function (placement, idealEdgeLength) {
         }
       });
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-    } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
+    } else if (direction == "bl-tr") {
       direction = "bl-tr";
       // generate appropriate constraints
       let lineWidth = Math.abs(line.end[0] - line.start[0]);
@@ -117,26 +111,37 @@ let generateConstraints = function (placement, idealEdgeLength) {
   if (horizontalAlignments.length) {
     horizontalAlignments = mergeArrays(horizontalAlignments);
   }
-  let refinedConstraints = keepOneCommonElement(verticalAlignments, horizontalAlignments);
-  verticalAlignments = refinedConstraints[0];
-  horizontalAlignments = refinedConstraints[1];
 
   let alignmentConstraints = { vertical: verticalAlignments.length > 0 ? verticalAlignments : undefined, horizontal: horizontalAlignments.length > 0 ? horizontalAlignments : undefined }
 
   return { relativePlacementConstraint: relativePlacementConstraints, alignmentConstraint: alignmentConstraints }
 };
 
-let keepOneCommonElement = function(arr1, arr2) {
-  const common = arr1.filter(val => arr2.includes(val));
-
-  if (common.length > 1) {
-    const [keep] = common;
-
-    arr1 = arr1.filter(val => val === keep || !common.includes(val));
-    arr2 = arr2.filter(val => val === keep || !common.includes(val));
+// calculates line direction
+let getLineDirection = function(line) {
+  let direction = "l-r";
+  if (Math.abs(line.end[1] - line.start[1]) / Math.abs(line.end[0] - line.start[0]) < 0.20) {
+    if (line.end[0] - line.start[0] > 0) {
+      direction = "l-r";
+    } else {
+      direction = "r-l";
+    }
+  } else if (Math.abs(line.end[0] - line.start[0]) / Math.abs(line.end[1] - line.start[1]) < 0.20) {
+    if (line.end[1] - line.start[1] > 0) {
+      direction = "t-b";
+    } else {
+      direction = "b-t";
+    }
+  } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] > 0) {
+    direction = "tl-br";
+  } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] < 0) {
+    direction = "br-tl";
+  } else if (line.end[1] - line.start[1] > 0 && line.end[0] - line.start[0] < 0) {
+    direction = "tr-bl";
+  } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
+    direction = "bl-tr";
   }
-
-  return [arr1, arr2];
+  return direction;
 };
 
 // auxuliary function to merge arrays with duplicates

@@ -1,41 +1,10 @@
-// convert cy graph data to space separated values (name is tsv but inserts space, not tab) 
-let cyToTsv = function (cyElements, nodeIdMap) {
-  let tsvString = "";
-  let edges = cyElements.edges().toArray();
-  shuffleArray(edges);
-  edges.forEach(edge => {
-    let source = edge.source();
-    let target = edge.target();
-    tsvString += nodeIdMap.get(source.id()) + " " + nodeIdMap.get(target.id());
-    tsvString += "\n";
-  });
-  return tsvString;
-};
+import TraceSkeleton  from 'skeleton-tracing-wasm';
+import simplify from 'simplify-js';
 
-let cyToAdjacencyMatrix = function (cyElements, nodeIdMap) {
-  const adjacencyList = {};
-  
-  // Build the adjacency list
-  let edges = cyElements.edges().toArray();
-  shuffleArray(edges);
-  edges.forEach(edge => {
-    let a = edge.source();
-    let b = edge.target();
-    if (!adjacencyList[nodeIdMap.get(a.id())]) adjacencyList[nodeIdMap.get(a.id())] = [];
-    if (!adjacencyList[nodeIdMap.get(b.id())]) adjacencyList[nodeIdMap.get(b.id())] = [];
-    adjacencyList[nodeIdMap.get(a.id())].push(nodeIdMap.get(b.id()));
-    adjacencyList[nodeIdMap.get(b.id())].push(nodeIdMap.get(a.id())); // Since it's an undirected graph
-  });
-
-  return JSON.stringify(adjacencyList);
-};
-
-function shuffleArray(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-  }
-}
+let tracer; 
+document.addEventListener("DOMContentLoaded", async function() {
+  tracer = await TraceSkeleton.load()
+});
 
 function bfsFarthestNode(graph, start) {
   const visited = new Set();
@@ -68,6 +37,7 @@ function bfsFarthestNode(graph, start) {
   return { farthest, parent };
 }
 
+// finds diameter of a graph
 function findDiameter(graph, startNode) {
   const { farthest: end1 } = bfsFarthestNode(graph, startNode);
   const { farthest: end2, parent } = bfsFarthestNode(graph, end1);
@@ -83,6 +53,7 @@ function findDiameter(graph, startNode) {
   return path.reverse(); // from end1 to end2
 }
 
+// splits the given array to chunks proportional to the given sizes in sizes array
 function splitArrayProportionally(array, sizes) {
   if (!sizes.length) return [];
   
@@ -113,7 +84,8 @@ function splitArrayProportionally(array, sizes) {
   return result;
 }
 
-function calculateLineSizes(lines) {
+// calculates the lengths of the given lines
+function calculateLineLengths(lines) {
   let sizes = [];
   lines.forEach(line => {
     let length = Math.sqrt(Math.pow(Math.abs(line.start[0] - line.end[0]), 2) + Math.pow(Math.abs(line.start[1] - line.end[1]), 2));
@@ -223,6 +195,124 @@ function findLongestCycle(graph, cy) {
   return longestCycle;
 }
 
+async function extractLinesWithVision(imageData) {
+  // reverse the coloring for skeleton generation
+  let data = imageData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    // Invert each color channel
+    data[i]     = 255 - data[i];     // Red
+    data[i + 1] = 255 - data[i + 1]; // Green
+    data[i + 2] = 255 - data[i + 2]; // Blue
+  }
+  // generate skeleton
+  let s = tracer.fromImageData(imageData);
+  let polylines = s.polylines;
+  let filteredPolylines = polylines.filter(polyline => polyline.length >= 10);
+  console.log(filteredPolylines);
+  let v = tracer.visualize(s,{scale:1, strokeWidth: 5, rects: false});
+  console.log(v);
+  // simplify the generated lines
+  let tolerance = 5; // Try 1 to 5 depending on how aggressively you want to merge
+  let highQuality = true; // Set to true for highest quality simplification
+  // Convert, simplify, and revert back to [x, y]
+  let simplifiedPolylines = filteredPolylines.map(polyline => {
+    const points = polyline.map(([x, y]) => ({ x, y }));
+    const simplified = simplify(points, tolerance, highQuality);
+    return simplified.map(p => [p.x, p.y]);
+  });
+  s.polylines = simplifiedPolylines;
+  let v2 = tracer.visualize(s,{scale:1, strokeWidth: 5, rects: false});
+  console.log(v2);
+  console.log(simplifiedPolylines);
+  let tempLines = [];
+  simplifiedPolylines.forEach(polylines => {
+    polylines.forEach((polyline, i) => {
+      if (i != polylines.length - 1) {
+        let line = {
+          "start": [polyline[0], polyline[1]],
+          "end": [polylines[i+1][0], polylines[i+1][1]]
+        };
+        tempLines.push(line);
+      }
+    });
+  });
+  console.log("temp: ");
+  console.log(tempLines);
+  let lines = orderLines(tempLines);
+  console.log(lines);
+  return lines;
+}
 
+function orderLines(edges, tolerance = 5) {
+  const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 
-export { cyToTsv, cyToAdjacencyMatrix, findDiameter, findLongestPath, splitArrayProportionally, findLongestCycle, calculateLineSizes };
+  const uniquePoints = [];
+  function findOrCreateNode(pt) {
+    for (let i = 0; i < uniquePoints.length; i++) {
+      if (dist(pt, uniquePoints[i]) <= tolerance) return i;
+    }
+    uniquePoints.push(pt);
+    return uniquePoints.length - 1;
+  }
+
+  // Build graph
+  const graph = new Map();
+  for (const { start, end } of edges) {
+    const a = findOrCreateNode(start);
+    const b = findOrCreateNode(end);
+    if (a === b) continue; // skip self-loop
+    if (!graph.has(a)) graph.set(a, []);
+    if (!graph.has(b)) graph.set(b, []);
+    graph.get(a).push(b);
+    graph.get(b).push(a);
+  }
+
+  // DFS traversal
+  let visited = new Set();
+  let path = [];
+  let foundLoop = false;
+
+  function dfs(current, parent) {
+    visited.add(current);
+    path.push(current);
+
+    for (const neighbor of graph.get(current) || []) {
+      if (neighbor === parent) continue; // don't backtrack
+      if (!visited.has(neighbor)) {
+        dfs(neighbor, current);
+        if (foundLoop) return; // early exit if loop is closed
+      } else if (neighbor === path[0] && path.length > 2) {
+        // loop detected
+        path.push(neighbor); // close loop if needed
+        foundLoop = true;
+        return;
+      }
+    }
+  }
+
+  dfs(0, -1); // start DFS from first node
+  if (!foundLoop) {
+    let startNode = path[path.length - 1];
+    visited = new Set();
+    path = [];
+    foundLoop = false;
+    dfs(startNode, -1);
+  }
+
+  // Convert path from indices to coordinates
+  let orderedPoints = path.map((i) => uniquePoints[i]);
+  let lines = [];
+  orderedPoints.forEach((point, i) => {
+    if (i != orderedPoints.length - 1) {
+      let line = {
+        "start": [point[0], point[1]],
+        "end": [orderedPoints[i+1][0], orderedPoints[i+1][1]]
+      };
+      lines.push(line);
+    }
+  });
+
+  return lines;
+}
+
+export { findDiameter, findLongestPath, splitArrayProportionally, findLongestCycle, calculateLineLengths, extractLinesWithVision, orderLines };

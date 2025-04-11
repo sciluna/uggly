@@ -12,7 +12,6 @@
   "author": "Hasan Balci",
   "license": "MIT",
   "dependencies": {
-    "@techstark/opencv-js": "^4.10.0-release.1",
     "cors": "^2.8.5",
     "cytoscape": "^3.2.0",
     "cytoscape-fcose": "^2.2.0",
@@ -23,8 +22,8 @@
     "express": "^4.19.2",
     "file-saver": "^2.0.5",
     "jquery": "^3.7.1",
-    "openai": "^4.78.1",
     "sharp": "^0.33.5",
+    "simplify-js": "^1.2.4",
     "token.js": "^0.5.4"
   },
   "devDependencies": {

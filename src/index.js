@@ -2,7 +2,6 @@ import express from 'express';
 import { config } from 'dotenv';
 import fs from 'fs';
 import { TokenJS } from 'token.js';
-import OpenAI from "openai";
 import path from 'path';
 import cors from 'cors';
 import sharp from 'sharp';
@@ -34,7 +33,7 @@ app.post('/llm', async (req, res) => {
 		let image = body["image"];
     let llmMode = body["llmMode"];
 
-    // Convert the base64 string into an Image object
+    // Convert the base64 string into ascii grid representation
     let asciiText = await imageToAscii(image, 24)
       .then((asciiArt) => {
           return asciiArt;
@@ -59,15 +58,13 @@ app.post('/llm', async (req, res) => {
       model = "anthropic.claude-3-sonnet-20240229-v1:0";
     }
 
-    //const client = new OpenAI();
-
-		let messagesArray1 = generateMessage1(image, asciiText, lines);
+		let messagesArray = generateMessage(image, asciiText);
 
 		async function main1() {
 			const response = await client.chat.completions.create({
         provider: provider,
 				model: model,
-				messages: messagesArray1,
+				messages: messagesArray,
         top_p: 0.1,
         temperature: 0
 			});
@@ -82,7 +79,7 @@ app.post('/llm', async (req, res) => {
 	});
 });
 
-let generateMessage1 = function (image, asciiText) {
+let generateMessage = function (image, asciiText) {
   let systemPrompt = {
     role: 'system', content: 'You are a helpful and professional assistant for extracting lines from a given image with a hand-drawn shape!'
   };
@@ -103,7 +100,7 @@ let generateMessage1 = function (image, asciiText) {
               "end": [x4, y4],\n\
           }\n\
           ...\n\
-      ],\nwhere x1, y1, x2, y2. etc. are real coordinates. Do not flip, rotate, or mirror the shape — preserve its direction and flow as it appears. Consider that x axis increases from left to right and y axis increases from top to bottom. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time and produce answer carefully!' },
+      ],\nwhere x1, y1, x2, y2. etc. are real coordinates. Consider that x axis increases from left to right and y axis increases from top to bottom. Please DO NOT add any other explanations than the JSON format (THIS IS IMPORTANT). Take your time and produce answer carefully!' },
       {
         type: 'image_url', image_url: { "url": image }
       }

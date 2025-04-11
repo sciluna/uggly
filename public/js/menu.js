@@ -6,6 +6,7 @@ import fcose from 'cytoscape-fcose';
 import { saveAs } from 'file-saver';
 import sbgnStylesheet from 'cytoscape-sbgn-stylesheet';
 import jquery from 'jquery';
+import { applyLayout } from "./main";
 
 cytoscape.use(graphml, jquery);
 cytoscape.use(svg);
@@ -24,7 +25,7 @@ let defaultStylesheet = [
 let cy = window.cy = cytoscape({
   container: document.getElementById('cy'),
   style: defaultStylesheet,
-/*   elements: [
+  elements: [
     { "data": { "id": "n0", "group": "nodes", "fakeID": "n0"} },
     { "data": { "id": "n1", "group": "nodes", "fakeID": "n1" } },
     { "data": { "id": "n2", "group": "nodes", "fakeID": "n2" } },
@@ -65,7 +66,7 @@ let cy = window.cy = cytoscape({
     { "data": { "id": "e17", "source": "n6", "target": "n18", "group": "edges" } },
     { "data": { "id": "e18", "source": "n6", "target": "n19", "group": "edges" } }
   ],
-  layout: {name: "fcose", idealEdgeLength: 75} */
+  layout: {name: "fcose", idealEdgeLength: 75}
 });
 
 let sampleName = "";
@@ -186,5 +187,33 @@ document.getElementById("saveSVG").addEventListener("click", function () {
   let blob = new Blob([svgContent], {type:"image/svg+xml;charset=utf-8"});
   saveAs(blob, "graph.svg");
 });
+
+document.getElementById('clearButton').addEventListener('click', clearCanvas);
+
+// layout operations
+// randomize layout
+document.getElementById("randomizeButton").addEventListener("click", async function () {
+  cy.layout({ name: "random", animate: true, animationDuration: 500 }).run();
+});
+
+// user-guided layout 
+document.getElementById("layoutButton").addEventListener("click", async function () {
+  document.getElementById("layoutButton").innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> Processing...</span>';
+  document.getElementById("layoutButton").disabled = true;
+  // get computation mode
+  const computationMode = document.querySelector('input[name="computationMode"]:checked').value;
+  const base64Image = getBase64Image();
+  let imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
+  await applyLayout(computationMode, base64Image, imageData);
+
+  document.getElementById("layoutButton").disabled = false;
+  document.getElementById("layoutButton").innerHTML = 'Apply Layout';
+});
+
+// function to get the Base64 image from the canvas
+function getBase64Image() {
+  const dataURL = canvas.toDataURL('image/png'); // Default is PNG, but you can specify 'image/jpeg'
+  return dataURL;
+}
 
 export {cy, sampleName};
