@@ -1,4 +1,4 @@
-let generateConstraints = function (placement, idealEdgeLength) {
+let generateConstraints = function (placement, idealEdgeLength, isLoop) {
   let relativePlacementConstraints = [];
   let verticalAlignments = [];
   let horizontalAlignments = [];
@@ -9,99 +9,159 @@ let generateConstraints = function (placement, idealEdgeLength) {
     if (direction == "l-r") {
       // generate appropriate constraints
       let relativePlacement = [];
-      line.nodes.forEach((node, i) => {
-        if (i != line.nodes.length - 1) {
-          relativePlacement.push({left: node, right: line.nodes[i+1]});
-        }
-      });
-      relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-      horizontalAlignments.push(line.nodes);      
+      if (isLoop) {
+        line.nodes.forEach((node, i) => {
+          if (i != line.nodes.length - 1) {
+            relativePlacement.push({left: node, right: line.nodes[i+1]});
+          }
+        });
+        horizontalAlignments.push(line.nodes); 
+      } else {
+        line.nodesAll.forEach((node, i) => {
+          if (line.parent[node] != null) {
+            relativePlacement.push({left: line.parent[node], right: node});
+          }
+        });
+        line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
+        horizontalAlignments.push(line.nodesAll); 
+      }
+      relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);    
     } else if (direction == "r-l") {
       // generate appropriate constraints
       let relativePlacement = [];
-      line.nodes.forEach((node, i) => {
-        if (i != line.nodes.length - 1) {
-          relativePlacement.push({right: node, left: line.nodes[i+1]});
-        }
-      });
+      if (isLoop) {
+        line.nodes.forEach((node, i) => {
+          if (i != line.nodes.length - 1) {
+            relativePlacement.push({right: node, left: line.nodes[i+1]});
+          }
+        });
+        horizontalAlignments.push(line.nodes);
+      } else {
+        line.nodesAll.forEach((node, i) => {
+          if (line.parent[node] != null) {
+            relativePlacement.push({right: line.parent[node], left: node});
+          }
+        });
+        line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
+        horizontalAlignments.push(line.nodesAll);
+      }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-      horizontalAlignments.push(line.nodes);
     } else if (direction == "t-b") {
       // generate appropriate constraints
       let relativePlacement = [];
-      line.nodes.forEach((node, i) => {
-        if (i != line.nodes.length - 1) {
-          relativePlacement.push({top: node, bottom: line.nodes[i+1]});
-        }
-      });
-      relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-      verticalAlignments.push(line.nodes);
+      if (isLoop) {
+        line.nodes.forEach((node, i) => {
+          if (i != line.nodes.length - 1) {
+            relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+          }
+        });
+        verticalAlignments.push(line.nodes);
+      } else {
+        line.nodesAll.forEach((node, i) => {
+          if (line.parent[node] != null) {
+            relativePlacement.push({top: line.parent[node], bottom: node});
+          }
+        });
+        line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
+        verticalAlignments.push(line.nodesAll);
+      }
+      relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement); 
     } else if (direction == "b-t") {
       // generate appropriate constraints
       let relativePlacement = [];
-      line.nodes.forEach((node, i) => {
-        if (i != line.nodes.length - 1) {
-          relativePlacement.push({bottom: node, top: line.nodes[i+1]});
-        }
-      });
+      if (isLoop) {
+        line.nodes.forEach((node, i) => {
+          if (i != line.nodes.length - 1) {
+            relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+          }
+        });
+        verticalAlignments.push(line.nodes);
+      } else {
+        line.nodesAll.forEach((node, i) => {
+          if (line.parent[node] != null) {
+            relativePlacement.push({bottom: line.parent[node], top: node});
+          }
+        });
+        line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
+        verticalAlignments.push(line.nodesAll);
+      }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-      verticalAlignments.push(line.nodes);
     } else if (direction == "tl-br") {
       // generate appropriate constraints
-      let lineWidth = Math.abs(line.end[0] - line.start[0]);
-      let lineHeight = Math.abs(line.end[1] - line.start[1]);
-      let width = lineWidth / (lineWidth + lineHeight) * idealEdgeLength;
-      let height = lineHeight / (lineWidth + lineHeight) * idealEdgeLength;
       let relativePlacement = [];
-      line.nodes.forEach((node, i) => {
-        if (i != line.nodes.length - 1) {
-          relativePlacement.push({left: node, right: line.nodes[i+1]});
-          relativePlacement.push({top: node, bottom: line.nodes[i+1]});
-        }
-      });
+      if (isLoop) {
+        line.nodes.forEach((node, i) => {
+          if (i != line.nodes.length - 1) {
+            relativePlacement.push({left: node, right: line.nodes[i+1]});
+            relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+          }
+        });
+      } else {
+        line.nodesAll.forEach((node, i) => {
+          if (line.parent[node] != null) {
+            relativePlacement.push({left: line.parent[node], right: node});
+            relativePlacement.push({top: line.parent[node], bottom: node});
+          }
+        });
+      }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
     } else if (direction == "br-tl") {
       // generate appropriate constraints
-      let lineWidth = Math.abs(line.end[0] - line.start[0]);
-      let lineHeight = Math.abs(line.end[1] - line.start[1]);
-      let width = lineWidth / (lineWidth + lineHeight) * idealEdgeLength;
-      let height = lineHeight / (lineWidth + lineHeight) * idealEdgeLength;
       let relativePlacement = [];
-      line.nodes.forEach((node, i) => {
-        if (i != line.nodes.length - 1) {
-          relativePlacement.push({right: node, left: line.nodes[i+1]});
-          relativePlacement.push({bottom: node, top: line.nodes[i+1]});
-        }
-      });
+      if (isLoop) {
+        line.nodes.forEach((node, i) => {
+          if (i != line.nodes.length - 1) {
+            relativePlacement.push({right: node, left: line.nodes[i+1]});
+            relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+          }
+        });
+      } else {
+        line.nodesAll.forEach((node, i) => {
+          if (line.parent[node] != null) {
+            relativePlacement.push({right: line.parent[node], left: node});
+            relativePlacement.push({bottom: line.parent[node], top: node});
+          }
+        });
+      }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
     } else if (direction == "tr-bl") {
       // generate appropriate constraints
-      let lineWidth = Math.abs(line.end[0] - line.start[0]);
-      let lineHeight = Math.abs(line.end[1] - line.start[1]);
-      let width = lineWidth / (lineWidth + lineHeight) * idealEdgeLength;
-      let height = lineHeight / (lineWidth + lineHeight) * idealEdgeLength;
       let relativePlacement = [];
-      line.nodes.forEach((node, i) => {
-        if (i != line.nodes.length - 1) {
-          relativePlacement.push({right: node, left: line.nodes[i+1]});
-          relativePlacement.push({top: node, bottom: line.nodes[i+1]});
-        }
-      });
+      if (isLoop) {
+        line.nodes.forEach((node, i) => {
+          if (i != line.nodes.length - 1) {
+            relativePlacement.push({right: node, left: line.nodes[i+1]});
+            relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+          }
+        });
+      } else {
+        line.nodesAll.forEach((node, i) => {
+          if (line.parent[node] != null) {
+            relativePlacement.push({right: line.parent[node], left: node});
+            relativePlacement.push({top: line.parent[node], bottom: node});
+          }
+        });
+      }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
     } else if (direction == "bl-tr") {
       direction = "bl-tr";
       // generate appropriate constraints
-      let lineWidth = Math.abs(line.end[0] - line.start[0]);
-      let lineHeight = Math.abs(line.end[1] - line.start[1]);
-      let width = lineWidth / (lineWidth + lineHeight) * idealEdgeLength;
-      let height = lineHeight / (lineWidth + lineHeight) * idealEdgeLength;
       let relativePlacement = [];
-      line.nodes.forEach((node, i) => {
-        if (i != line.nodes.length - 1) {
-          relativePlacement.push({left: node, right: line.nodes[i+1]});
-          relativePlacement.push({bottom: node, top: line.nodes[i+1]});
-        }
-      });
+      if (isLoop) {
+        line.nodes.forEach((node, i) => {
+          if (i != line.nodes.length - 1) {
+            relativePlacement.push({left: node, right: line.nodes[i+1]});
+            relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+          }
+        });
+      } else {
+        line.nodesAll.forEach((node, i) => {
+          if (line.parent[node] != null) {
+            relativePlacement.push({left: line.parent[node], right: node});
+            relativePlacement.push({bottom: line.parent[node], top: node});
+          }
+        });
+      }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
     }
   });

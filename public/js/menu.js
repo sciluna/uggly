@@ -3,10 +3,12 @@ import cytoscape from "cytoscape";
 import graphml from "cytoscape-graphml";
 import svg from 'cytoscape-svg';
 import fcose from 'cytoscape-fcose';
+import fs from 'fs';
 import { saveAs } from 'file-saver';
 import sbgnStylesheet from 'cytoscape-sbgn-stylesheet';
 import jquery from 'jquery';
 import { applyLayout } from "./main";
+import { runTest } from "./test";
 
 cytoscape.use(graphml, jquery);
 cytoscape.use(svg);
@@ -16,10 +18,18 @@ let defaultStylesheet = [
   {
     selector: 'node',
     style: {
-      'label': function( ele ){ return ele.data('fakeID') || ''; },
-      'text-wrap': 'wrap'
+      //'label': function( ele ){ return ele.data('fakeID') || ''; },
+      'text-wrap': 'wrap',
+      //'background-color': '#e6194B'
     }
   },
+  {
+    selector: 'edge',
+    style: {
+      //'label': function( ele ){ return ele.data('fakeID') || ''; },
+      //'line-color': '#e6194B'
+    }
+  }
 ];
 
 let cy = window.cy = cytoscape({
@@ -91,6 +101,10 @@ document.getElementById("samples").addEventListener("change", function (event) {
     filename = "sample4.json";
     sampleName = "sample4";
   }
+  if (sample == "sample5") {
+    filename = "sample5.json";
+    sampleName = "sample5";
+  }
   if (sample == "glycolysis") {
     filename = "glycolysis.json";
     sampleName = "glycolysis";
@@ -109,8 +123,8 @@ let loadSample = function (fname, sampleName) {
     return res.json();
   }).then(data => new Promise((resolve, reject) => {
     if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
-      cy.style(sbgnStylesheet(cytoscape, "purple_green"));
-      cy.style().selector('node').style({'label': function( ele ){ return ele.data('fakeID') || ''; }}).update();
+      cy.style(sbgnStylesheet(cytoscape, "bluescale"));
+      //cy.style().selector('node').style({'label': function( ele ){ return ele.data('fakeID') || ''; }}).update();
       
       cy.json({ elements: data });
       cy.nodes().forEach(node => {
@@ -129,7 +143,7 @@ let loadSample = function (fname, sampleName) {
     //document.getElementById("fileName").innerHTML = sampleName;
     cy.layout({ "name": "fcose", idealEdgeLength: 75}).run();
     cy.fit();
-  }))
+  }));
 };
 
 // file operations - file upload
@@ -161,6 +175,33 @@ document.getElementById("inputFile").addEventListener("change", function (e) {
         node.data("fakeID", "n" + i);
       });
       cy.layout({name: "fcose"}).run();
+    } else { 
+      let lines = content.split('\n');
+      let nodesSet = new Set();
+      for (let line = 0; line < lines.length; line++) {
+        let nodes = lines[line].split(' ');
+        if(!nodesSet.has(nodes[0])){
+          let node1 = cy.add([
+            { group: 'nodes', data: { id: nodes[0] }, position: { x: 100, y: 100 } }
+          ]);
+          nodesSet.add(nodes[0]);
+        }
+        if(!nodesSet.has(nodes[1])){
+          let node1 = cy.add([
+            { group: 'nodes', data: { id: nodes[1] }, position: { x: 100, y: 100 } }
+          ]);
+          nodesSet.add(nodes[1]);
+        }
+      }
+      for (let line = 0; line < lines.length; line++) {
+        let nodes = lines[line].split(' ');
+        let node1 = cy.getElementById(nodes[0]);
+        let node2 = cy.getElementById(nodes[1]);
+        console.log(node2.id());
+        let edge = cy.add([
+          { group: 'edges', data: { id: nodes[0] + '_' + nodes[1], source: node1.id(), target: node2.id() } }
+        ]);
+      }
     }
   };
   reader.addEventListener('loadend', function(){
@@ -173,17 +214,17 @@ document.getElementById("inputFile").addEventListener("change", function (e) {
 
 // file operations - image download
 document.getElementById("savePNG").addEventListener("click", function () {
-  let pngContent = cy.png({ output: "blob", scale: 2, bg: "#ffffff", full: true });
+  let pngContent = cy.png({ output: "blob", scale: 2, bg: "#ffffff", full: false });
   saveAs(pngContent, "graph.png");
 });
 
 document.getElementById("saveJPG").addEventListener("click", function () {
-  let jpgContent = cy.jpg({ output: "blob", scale: 2, full: true });
+  let jpgContent = cy.jpg({ output: "blob", scale: 2, full: false });
   saveAs(jpgContent, "graph.jpg");
 });
 
 document.getElementById("saveSVG").addEventListener("click", function () {
-  let svgContent = cy.svg({scale: 2, full: true});
+  let svgContent = cy.svg({scale: 2, full: false});
   let blob = new Blob([svgContent], {type:"image/svg+xml;charset=utf-8"});
   saveAs(blob, "graph.svg");
 });
@@ -204,7 +245,7 @@ document.getElementById("layoutButton").addEventListener("click", async function
   const computationMode = document.querySelector('input[name="computationMode"]:checked').value;
   const base64Image = getBase64Image();
   let imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-  await applyLayout(computationMode, base64Image, imageData);
+  await applyLayout(computationMode, base64Image, imageData, true);
 
   document.getElementById("layoutButton").disabled = false;
   document.getElementById("layoutButton").innerHTML = 'Apply Layout';
@@ -215,5 +256,40 @@ function getBase64Image() {
   const dataURL = canvas.toDataURL('image/png'); // Default is PNG, but you can specify 'image/jpeg'
   return dataURL;
 }
+
+function loadImage(imagePath) {
+  let ctx = canvas.getContext('2d');
+
+  //Loading of the home test image - img1
+  let img = new Image();
+
+  //drawing of the test image - img1
+  img.onload = function () {
+      //draw background image
+      ctx.drawImage(img, 0, 0);
+  };
+
+  img.src = imagePath;
+}
+
+// download drawing
+document.getElementById("downloadCanvas").addEventListener("click", async function () {
+  const dataURL = canvas.toDataURL('image/png');
+  const link = document.createElement('a');
+  link.href = dataURL;
+  link.download = 'drawing.png';
+
+  link.click();
+});
+
+// download drawing
+document.getElementById("uploadImage").addEventListener("click", async function () {
+  loadImage("drawing.png");
+});
+
+/* // run test
+document.getElementById("runTest").addEventListener("click", async function () {
+  runTest();
+}); */
 
 export {cy, sampleName};

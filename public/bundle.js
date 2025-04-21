@@ -1,10 +1,10 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('skeleton-tracing-wasm')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'skeleton-tracing-wasm'], factory) :
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('skeleton-tracing-wasm'), require('fs')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'skeleton-tracing-wasm', 'fs'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.bundle = {}, global.TraceSkeleton));
 })(this, (function (exports, TraceSkeleton) { 'use strict';
 
-  let generateConstraints = function (placement, idealEdgeLength) {
+  let generateConstraints = function (placement, idealEdgeLength, isLoop) {
     let relativePlacementConstraints = [];
     let verticalAlignments = [];
     let horizontalAlignments = [];
@@ -15,91 +15,159 @@
       if (direction == "l-r") {
         // generate appropriate constraints
         let relativePlacement = [];
-        line.nodes.forEach((node, i) => {
-          if (i != line.nodes.length - 1) {
-            relativePlacement.push({left: node, right: line.nodes[i+1]});
-          }
-        });
-        relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-        horizontalAlignments.push(line.nodes);      
+        if (isLoop) {
+          line.nodes.forEach((node, i) => {
+            if (i != line.nodes.length - 1) {
+              relativePlacement.push({left: node, right: line.nodes[i+1]});
+            }
+          });
+          horizontalAlignments.push(line.nodes); 
+        } else {
+          line.nodesAll.forEach((node, i) => {
+            if (line.parent[node] != null) {
+              relativePlacement.push({left: line.parent[node], right: node});
+            }
+          });
+          line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
+          horizontalAlignments.push(line.nodesAll); 
+        }
+        relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);    
       } else if (direction == "r-l") {
         // generate appropriate constraints
         let relativePlacement = [];
-        line.nodes.forEach((node, i) => {
-          if (i != line.nodes.length - 1) {
-            relativePlacement.push({right: node, left: line.nodes[i+1]});
-          }
-        });
+        if (isLoop) {
+          line.nodes.forEach((node, i) => {
+            if (i != line.nodes.length - 1) {
+              relativePlacement.push({right: node, left: line.nodes[i+1]});
+            }
+          });
+          horizontalAlignments.push(line.nodes);
+        } else {
+          line.nodesAll.forEach((node, i) => {
+            if (line.parent[node] != null) {
+              relativePlacement.push({right: line.parent[node], left: node});
+            }
+          });
+          line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
+          horizontalAlignments.push(line.nodesAll);
+        }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-        horizontalAlignments.push(line.nodes);
       } else if (direction == "t-b") {
         // generate appropriate constraints
         let relativePlacement = [];
-        line.nodes.forEach((node, i) => {
-          if (i != line.nodes.length - 1) {
-            relativePlacement.push({top: node, bottom: line.nodes[i+1]});
-          }
-        });
-        relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-        verticalAlignments.push(line.nodes);
+        if (isLoop) {
+          line.nodes.forEach((node, i) => {
+            if (i != line.nodes.length - 1) {
+              relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+            }
+          });
+          verticalAlignments.push(line.nodes);
+        } else {
+          line.nodesAll.forEach((node, i) => {
+            if (line.parent[node] != null) {
+              relativePlacement.push({top: line.parent[node], bottom: node});
+            }
+          });
+          line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
+          verticalAlignments.push(line.nodesAll);
+        }
+        relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement); 
       } else if (direction == "b-t") {
         // generate appropriate constraints
         let relativePlacement = [];
-        line.nodes.forEach((node, i) => {
-          if (i != line.nodes.length - 1) {
-            relativePlacement.push({bottom: node, top: line.nodes[i+1]});
-          }
-        });
+        if (isLoop) {
+          line.nodes.forEach((node, i) => {
+            if (i != line.nodes.length - 1) {
+              relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+            }
+          });
+          verticalAlignments.push(line.nodes);
+        } else {
+          line.nodesAll.forEach((node, i) => {
+            if (line.parent[node] != null) {
+              relativePlacement.push({bottom: line.parent[node], top: node});
+            }
+          });
+          line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
+          verticalAlignments.push(line.nodesAll);
+        }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
-        verticalAlignments.push(line.nodes);
       } else if (direction == "tl-br") {
         // generate appropriate constraints
-        Math.abs(line.end[0] - line.start[0]);
-        Math.abs(line.end[1] - line.start[1]);
         let relativePlacement = [];
-        line.nodes.forEach((node, i) => {
-          if (i != line.nodes.length - 1) {
-            relativePlacement.push({left: node, right: line.nodes[i+1]});
-            relativePlacement.push({top: node, bottom: line.nodes[i+1]});
-          }
-        });
+        if (isLoop) {
+          line.nodes.forEach((node, i) => {
+            if (i != line.nodes.length - 1) {
+              relativePlacement.push({left: node, right: line.nodes[i+1]});
+              relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+            }
+          });
+        } else {
+          line.nodesAll.forEach((node, i) => {
+            if (line.parent[node] != null) {
+              relativePlacement.push({left: line.parent[node], right: node});
+              relativePlacement.push({top: line.parent[node], bottom: node});
+            }
+          });
+        }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
       } else if (direction == "br-tl") {
         // generate appropriate constraints
-        Math.abs(line.end[0] - line.start[0]);
-        Math.abs(line.end[1] - line.start[1]);
         let relativePlacement = [];
-        line.nodes.forEach((node, i) => {
-          if (i != line.nodes.length - 1) {
-            relativePlacement.push({right: node, left: line.nodes[i+1]});
-            relativePlacement.push({bottom: node, top: line.nodes[i+1]});
-          }
-        });
+        if (isLoop) {
+          line.nodes.forEach((node, i) => {
+            if (i != line.nodes.length - 1) {
+              relativePlacement.push({right: node, left: line.nodes[i+1]});
+              relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+            }
+          });
+        } else {
+          line.nodesAll.forEach((node, i) => {
+            if (line.parent[node] != null) {
+              relativePlacement.push({right: line.parent[node], left: node});
+              relativePlacement.push({bottom: line.parent[node], top: node});
+            }
+          });
+        }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
       } else if (direction == "tr-bl") {
         // generate appropriate constraints
-        Math.abs(line.end[0] - line.start[0]);
-        Math.abs(line.end[1] - line.start[1]);
         let relativePlacement = [];
-        line.nodes.forEach((node, i) => {
-          if (i != line.nodes.length - 1) {
-            relativePlacement.push({right: node, left: line.nodes[i+1]});
-            relativePlacement.push({top: node, bottom: line.nodes[i+1]});
-          }
-        });
+        if (isLoop) {
+          line.nodes.forEach((node, i) => {
+            if (i != line.nodes.length - 1) {
+              relativePlacement.push({right: node, left: line.nodes[i+1]});
+              relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+            }
+          });
+        } else {
+          line.nodesAll.forEach((node, i) => {
+            if (line.parent[node] != null) {
+              relativePlacement.push({right: line.parent[node], left: node});
+              relativePlacement.push({top: line.parent[node], bottom: node});
+            }
+          });
+        }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
       } else if (direction == "bl-tr") {
         direction = "bl-tr";
         // generate appropriate constraints
-        Math.abs(line.end[0] - line.start[0]);
-        Math.abs(line.end[1] - line.start[1]);
         let relativePlacement = [];
-        line.nodes.forEach((node, i) => {
-          if (i != line.nodes.length - 1) {
-            relativePlacement.push({left: node, right: line.nodes[i+1]});
-            relativePlacement.push({bottom: node, top: line.nodes[i+1]});
-          }
-        });
+        if (isLoop) {
+          line.nodes.forEach((node, i) => {
+            if (i != line.nodes.length - 1) {
+              relativePlacement.push({left: node, right: line.nodes[i+1]});
+              relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+            }
+          });
+        } else {
+          line.nodesAll.forEach((node, i) => {
+            if (line.parent[node] != null) {
+              relativePlacement.push({left: line.parent[node], right: node});
+              relativePlacement.push({bottom: line.parent[node], top: node});
+            }
+          });
+        }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
       }
     });
@@ -318,7 +386,7 @@
     tracer = await TraceSkeleton.load();
   });
 
-  function bfsFarthestNode(graph, start) {
+  function bfsFarthestNode(graph, start, fullGraph) {
     const visited = new Set();
     const queue = [[start, null]];
     const parent = {};
@@ -331,7 +399,12 @@
         parent[node.id()] = from;
         farthest = node;
 
-        let neighborEdges = node.edgesWith(graph);
+        let neighborEdges;
+  /*       if(fullGraph){
+          neighborEdges = node.connectedEdges();
+        } else { */
+          neighborEdges = node.edgesWith(graph);
+  /*       } */
         for (let i = 0; i < neighborEdges.length; i++) {
           let neighborEdge = neighborEdges[i];
           let currentNeighbor;
@@ -349,20 +422,62 @@
     return { farthest, parent };
   }
 
-  // finds diameter of a graph
-  function findDiameter(graph, startNode) {
-    const { farthest: end1 } = bfsFarthestNode(graph, startNode);
-    const { farthest: end2, parent } = bfsFarthestNode(graph, end1);
+  function bfsSplitGraph(graph, start, sizeRatios, fullGraph) {
+    const visited = new Set();
+    const queue = [start];
+    const order = []; // Visit order
+    const parent = {}; // node.id() => parent.id() or null
 
-    // Reconstruct path from end2 to end1 using parent map
-    const path = [];
-    let currentId = end2.id();
-    while (currentId !== null) {
-        path.push(currentId);
-        currentId = parent[currentId];
+    parent[start.id()] = null;
+
+    while (queue.length) {
+      const node = queue.shift();
+      if (visited.has(node.id())) continue;
+
+      visited.add(node.id());
+      order.push(node.id());
+
+      let neighborEdges;
+  /*     if(fullGraph){
+        neighborEdges = node.connectedEdges();
+      } else { */
+        neighborEdges = node.edgesWith(graph);
+  /*     } */
+      for (const edge of neighborEdges) {
+        const neighbor = (node.id() === edge.source().id()) ? edge.target() : edge.source();
+        if (!visited.has(neighbor.id()) && !(neighbor.id() in parent)) {
+          queue.push(neighbor);
+          parent[neighbor.id()] = node.id();
+        }
+      }
     }
 
-    return path.reverse(); // from end1 to end2
+    const totalSize = order.length;
+    const totalRatio = sizeRatios.reduce((a, b) => a + b, 0);
+    const chunks = [];
+
+    let startIdx = 0;
+    for (let i = 0; i < sizeRatios.length; i++) {
+      const ratio = sizeRatios[i];
+      const chunkSize = Math.round((ratio / totalRatio) * totalSize);
+
+      const chunk = order.slice(startIdx, startIdx + chunkSize);
+      chunks.push(chunk);
+      startIdx += chunkSize;
+    }
+
+    // In case of rounding issues, ensure all nodes are included
+    if (startIdx < totalSize) {
+      chunks[chunks.length - 1].push(...order.slice(startIdx));
+    }
+
+    return { chunks, parent };
+  }
+
+  function findCoverage(graph, startNode, sizeRatios, fullGraph) {
+    const { farthest: end1 } = bfsFarthestNode(graph, startNode);
+    const { chunks, parent } = bfsSplitGraph(graph, end1, sizeRatios);
+    return { chunks, parent };
   }
 
   // splits the given array to chunks proportional to the given sizes in sizes array
@@ -406,7 +521,7 @@
     return sizes;
   }
 
-  function findLongestCycle(graph, cy) {
+  function findLongestCycle(graph, cy, fullGraph) {
     let longestCycleLength = 0;
     let longestCycle = [];
     let visited = new Set();
@@ -427,8 +542,12 @@
         path.push(nodeId);
         pathSet.add(nodeId);
         
-        let neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
-
+        let neighborEdges;
+  /*       if (fullGraph) {
+          neighborEdges = cy.getElementById(nodeId).connectedEdges();
+        } else { */
+          neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
+  /*       } */
         for (let i = 0; i < neighborEdges.length; i++) {
           let neighborEdge = neighborEdges[i];
           let currentNeighbor;
@@ -465,8 +584,8 @@
     let s = tracer.fromImageData(imageData);
     let polylines = s.polylines;
     let filteredPolylines = polylines.filter(polyline => polyline.length >= 10);
-    console.log(filteredPolylines);
-    let v = tracer.visualize(s,{scale:1, strokeWidth: 5, rects: false});
+    //console.log(filteredPolylines);
+    let v = tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false, keypoints: false});
     console.log(v);
     // simplify the generated lines
     let tolerance = 5; // Try 1 to 5 depending on how aggressively you want to merge
@@ -478,9 +597,9 @@
       return simplified.map(p => [p.x, p.y]);
     });
     s.polylines = simplifiedPolylines;
-    let v2 = tracer.visualize(s,{scale:1, strokeWidth: 5, rects: false});
+    let v2 = tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false});
     console.log(v2);
-    console.log(simplifiedPolylines);
+   /*  console.log(simplifiedPolylines); */
     let tempLines = [];
     simplifiedPolylines.forEach(polylines => {
       polylines.forEach((polyline, i) => {
@@ -493,8 +612,8 @@
         }
       });
     });
-    console.log("temp: ");
-    console.log(tempLines);
+  /*   console.log("temp: ");
+    console.log(tempLines); */
     let lines = orderLines(tempLines);
     console.log(lines);
     return lines;
@@ -568,7 +687,8 @@
         lines.push(line);
       }
     });
-
+  /*   console.log('lines');
+    console.log(lines); */
     return lines;
   }
 
@@ -58782,10 +58902,18 @@
     {
       selector: 'node',
       style: {
-        'label': function( ele ){ return ele.data('fakeID') || ''; },
-        'text-wrap': 'wrap'
+        //'label': function( ele ){ return ele.data('fakeID') || ''; },
+        'text-wrap': 'wrap',
+        //'background-color': '#e6194B'
       }
     },
+    {
+      selector: 'edge',
+      style: {
+        //'label': function( ele ){ return ele.data('fakeID') || ''; },
+        //'line-color': '#e6194B'
+      }
+    }
   ];
 
   let cy = window.cy = cytoscape$1({
@@ -58857,6 +58985,10 @@
       filename = "sample4.json";
       sampleName = "sample4";
     }
+    if (sample == "sample5") {
+      filename = "sample5.json";
+      sampleName = "sample5";
+    }
     if (sample == "glycolysis") {
       filename = "glycolysis.json";
       sampleName = "glycolysis";
@@ -58875,8 +59007,8 @@
       return res.json();
     }).then(data => new Promise((resolve, reject) => {
       if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
-        cy.style(sbgnStylesheet(cytoscape$1, "purple_green"));
-        cy.style().selector('node').style({'label': function( ele ){ return ele.data('fakeID') || ''; }}).update();
+        cy.style(sbgnStylesheet(cytoscape$1, "bluescale"));
+        //cy.style().selector('node').style({'label': function( ele ){ return ele.data('fakeID') || ''; }}).update();
         
         cy.json({ elements: data });
         cy.nodes().forEach(node => {
@@ -58927,6 +59059,33 @@
           node.data("fakeID", "n" + i);
         });
         cy.layout({name: "fcose"}).run();
+      } else { 
+        let lines = content.split('\n');
+        let nodesSet = new Set();
+        for (let line = 0; line < lines.length; line++) {
+          let nodes = lines[line].split(' ');
+          if(!nodesSet.has(nodes[0])){
+            cy.add([
+              { group: 'nodes', data: { id: nodes[0] }, position: { x: 100, y: 100 } }
+            ]);
+            nodesSet.add(nodes[0]);
+          }
+          if(!nodesSet.has(nodes[1])){
+            cy.add([
+              { group: 'nodes', data: { id: nodes[1] }, position: { x: 100, y: 100 } }
+            ]);
+            nodesSet.add(nodes[1]);
+          }
+        }
+        for (let line = 0; line < lines.length; line++) {
+          let nodes = lines[line].split(' ');
+          let node1 = cy.getElementById(nodes[0]);
+          let node2 = cy.getElementById(nodes[1]);
+          console.log(node2.id());
+          cy.add([
+            { group: 'edges', data: { id: nodes[0] + '_' + nodes[1], source: node1.id(), target: node2.id() } }
+          ]);
+        }
       }
     };
     reader.addEventListener('loadend', function(){
@@ -58939,17 +59098,17 @@
 
   // file operations - image download
   document.getElementById("savePNG").addEventListener("click", function () {
-    let pngContent = cy.png({ output: "blob", scale: 2, bg: "#ffffff", full: true });
+    let pngContent = cy.png({ output: "blob", scale: 2, bg: "#ffffff", full: false });
     FileSaver_minExports.saveAs(pngContent, "graph.png");
   });
 
   document.getElementById("saveJPG").addEventListener("click", function () {
-    let jpgContent = cy.jpg({ output: "blob", scale: 2, full: true });
+    let jpgContent = cy.jpg({ output: "blob", scale: 2, full: false });
     FileSaver_minExports.saveAs(jpgContent, "graph.jpg");
   });
 
   document.getElementById("saveSVG").addEventListener("click", function () {
-    let svgContent = cy.svg({scale: 2, full: true});
+    let svgContent = cy.svg({scale: 2, full: false});
     let blob = new Blob([svgContent], {type:"image/svg+xml;charset=utf-8"});
     FileSaver_minExports.saveAs(blob, "graph.svg");
   });
@@ -58970,7 +59129,7 @@
     const computationMode = document.querySelector('input[name="computationMode"]:checked').value;
     const base64Image = getBase64Image();
     let imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-    await applyLayout(computationMode, base64Image, imageData);
+    await applyLayout(computationMode, base64Image, imageData, true);
 
     document.getElementById("layoutButton").disabled = false;
     document.getElementById("layoutButton").innerHTML = 'Apply Layout';
@@ -58982,21 +59141,52 @@
     return dataURL;
   }
 
+  function loadImage(imagePath) {
+    let ctx = canvas.getContext('2d');
+
+    //Loading of the home test image - img1
+    let img = new Image();
+
+    //drawing of the test image - img1
+    img.onload = function () {
+        //draw background image
+        ctx.drawImage(img, 0, 0);
+    };
+
+    img.src = imagePath;
+  }
+
+  // download drawing
+  document.getElementById("downloadCanvas").addEventListener("click", async function () {
+    const dataURL = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'drawing.png';
+
+    link.click();
+  });
+
+  // download drawing
+  document.getElementById("uploadImage").addEventListener("click", async function () {
+    loadImage("drawing.png");
+  });
+
   let uggly = !(location.hostname === "localhost" || location.hostname === "127.0.0.1");
 
-  let extractLines = async function( computationMode, base64Image, imageData ){
+  let extractLines = async function( computationMode, base64Image, imageData, withAscii ){
     let lines = []; // final lines array
 
     if (computationMode != 'cvbased'){
       let data = {
         image: base64Image,
         llmMode: computationMode,
+        withAscii: withAscii
       };
       let result = await runLLM(data);
-      console.log(result);
+      //console.log(result);
       let tempLines = JSON.parse(result).lines;
-      lines = orderLines(tempLines, 5);
-      console.log(lines);
+      lines = orderLines(tempLines, 3);
+      //console.log(lines);
     } else {
       lines = await extractLinesWithVision(imageData);
     }
@@ -59004,55 +59194,70 @@
     return lines;
   };
 
-  let assignNodesToLines = function( prunedGraph, lines ){
+  let assignNodesToLines = function( prunedGraph, lines, fullGraph ){
     let lineCount = lines.length;
     let lineSizes = calculateLineLengths(lines);
+    let applyIncremental = false;
+    let isLoop = false;
 
     if (lines[0].start[0] == lines[lineCount - 1].end[0] && lines[0].start[1] == lines[lineCount - 1].end[1]) { // in case the drawing is a loop
       let graphPath = findLongestCycle(prunedGraph, cy);
-      console.log(graphPath);
+      //console.log(graphPath);
 
       if (graphPath.length < 2 * Math.sqrt(prunedGraph.nodes().length)) {
-        graphPath = findDiameter(prunedGraph, prunedGraph.nodes()[0]);
+        let { chunks:newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
+        let lastLine = newDistribution[newDistribution.length - 1];
+        lastLine.push(newDistribution[0][0]);
+        lines.forEach((line, i) => {
+          line.nodesAll = newDistribution[i];
+          line.parent = parent;
+        });
+        applyIncremental = false;
+        return {lines, applyIncremental}; 
       }
-    
+      isLoop = true;
       let newDistribution = splitArrayProportionally(graphPath, lineSizes);
       let lastLine = newDistribution[newDistribution.length - 1];
       lastLine.push(newDistribution[0][0]);
-      console.log(newDistribution);
+      //console.log(newDistribution);
 
       lines.forEach((line, i) => {
         line.nodes = newDistribution[i];
       });
 
     } else { // in case the drawing is a path consisting segments
-      let graphPath = findDiameter(prunedGraph, prunedGraph.nodes()[0]);
-    
-      let newDistribution = splitArrayProportionally(graphPath, lineSizes);
-      console.log(newDistribution);
+      let { chunks:newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
       lines.forEach((line, i) => {
-        line.nodes = newDistribution[i];
+        line.nodesAll = newDistribution[i];
+        line.parent = parent;
       });
+      applyIncremental = true;
     }
     // we added nodes array to each line and now returning
-    return lines; 
+    return {lines, applyIncremental, isLoop}; 
   };
 
-  let applyLayout = async function( computationMode, base64Image, imageData ){
+  let applyLayout = async function( computationMode, base64Image, imageData, withAscii){
     let graph = cy.elements();
     let randomize = true;
     let initialEnergyOnIncremental = 0.3;
 
+    let fixedNodeConstraints = [];
     // if there are selected elements, apply incremental layout on selected elements
     if (cy.elements(':selected').length > 0) {
       graph = cy.elements(':selected');
       randomize = false;
       initialEnergyOnIncremental = 0.1;
+      let unselectedNodes = cy.nodes().difference(graph);
+      unselectedNodes.forEach(node => {
+        fixedNodeConstraints.push({nodeId: node.id(), position: {x: node.position().x, y: node.position().y}});
+      });
     }
 
     let pruneResult = pruneGraph(graph);
     let prunedGraph = pruneResult.prunedGraph;
-    console.log("Number of nodes in skeleton graph: " + prunedGraph.nodes().length);
+    let ignoredGraph = pruneResult.ignoredGraph;
+    //console.log("Number of nodes in skeleton graph: " + prunedGraph.nodes().length);
 
     let idealEdgeLength;
     if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
@@ -59068,31 +59273,45 @@
     }
 
     // extract lines either using vision techniques or llms
-    let lines = await extractLines(computationMode, base64Image, imageData);
+    let lines = await extractLines(computationMode, base64Image, imageData, withAscii);
 
     // lines now have assigned nodes
-    lines = assignNodesToLines(prunedGraph, lines);
+    let assignment = assignNodesToLines(prunedGraph, lines);
 
     // generate constraints and apply layout
     let constraints;
     try {
-      constraints = generateConstraints(lines, idealEdgeLength);
+      constraints = generateConstraints(assignment.lines, idealEdgeLength, assignment.isLoop);
+      constraints.fixedNodeConstraint = fixedNodeConstraints;
       console.log(constraints);
-      callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints);
+      callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, assignment.applyIncremental, prunedGraph, ignoredGraph);
     } catch (error) {
       alert("Couldn't process constraints! Please try again!");
     }
   };
 
-  let callLayout = function(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints) {
+  let callLayout = function(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental,prunedGraph, ignoredGraph) {
     cy.layout({
       name: "fcose",
       randomize: randomize,
       idealEdgeLength: idealEdgeLength,
-      animationDuration: 2000,
+      animationDuration: 1500,
+      fixedNodeConstraint: constraints.fixedNodeConstraint.length != 0 ? constraints.fixedNodeConstraint : undefined,
       relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
       alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
       initialEnergyOnIncremental: initialEnergyOnIncremental,
+      stop: () => {      
+        if (applyIncremental) {
+          cy.layout({
+            name: "fcose",
+            randomize: false,
+            animationDuration: 500,
+            idealEdgeLength: idealEdgeLength,
+            fixedNodeConstraint: constraints.fixedNodeConstraint.length != 0 ? constraints.fixedNodeConstraint : undefined,
+            initialEnergyOnIncremental: 0.05
+          }).run();
+        }
+      }
     }).run();
   };
 

@@ -35,6 +35,7 @@
         <option value="sample2">Sample 2</option>
         <option value="sample3">Sample 3</option>
         <option value="sample4">Sample 4</option>
+        <option value="sample5">Sample 5</option>
         <option value="glycolysis">Glycolysis</option>
         <option value="tca_cycle">TCA cycle</option>
       </select>
@@ -49,7 +50,7 @@
     </div>
     <div id="shapeInputField">
       <canvas id="drawingCanvas"></canvas><br>
-      <div class="row" style="font-size: 14;">
+      <div class="row" style="font-size: 14; display: none">
         <div>
           <label for="computationMode" style="padding: 0 3 15 0;"">Image analysis:</label>
           <div class="form-check form-check-inline">
@@ -82,7 +83,9 @@
       <div>
         <button id="randomizeButton" class="btn btn-primary btn-sm">Randomize</button>
         <button id="layoutButton" class="btn btn-primary btn-sm">Apply Layout</button>
-        <button class="btn btn-info btn-sm float-end me-3" id="clearButton">Clear Drawing</button>
+        <button id="downloadCanvas" class="btn btn-primary btn-sm" style="display: none">Download Canvas</button>
+        <button id="uploadImage" class="btn btn-primary btn-sm" style="display: none">Upload Image</button>
+        <button id="clearButton" class="btn btn-info btn-sm float-end me-3">Clear Drawing</button>
       </div>
     </div>
   </div>
