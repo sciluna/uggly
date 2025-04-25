@@ -3,12 +3,11 @@ import cytoscape from "cytoscape";
 import graphml from "cytoscape-graphml";
 import svg from 'cytoscape-svg';
 import fcose from 'cytoscape-fcose';
-import fs from 'fs';
 import { saveAs } from 'file-saver';
 import sbgnStylesheet from 'cytoscape-sbgn-stylesheet';
 import jquery from 'jquery';
 import { applyLayout } from "./main";
-import { runTest } from "./test";
+//import { runTest } from "./test";
 
 cytoscape.use(graphml, jquery);
 cytoscape.use(svg);
@@ -18,19 +17,60 @@ let defaultStylesheet = [
   {
     selector: 'node',
     style: {
-      //'label': function( ele ){ return ele.data('fakeID') || ''; },
       'text-wrap': 'wrap',
-      //'background-color': '#e6194B'
+    }
+  }
+];
+
+let stylesheetCheminfo = [
+  {
+    selector: 'node',
+    style: {
+      'background-color': '#f032e6',
+      'width': 60,
+      'height': 30,
+      'shape': 'rectangle'
     }
   },
   {
     selector: 'edge',
     style: {
-      //'label': function( ele ){ return ele.data('fakeID') || ''; },
-      //'line-color': '#e6194B'
+      'line-color': '#f032e6'
     }
   }
 ];
+
+
+let stylesheetCrime = [
+  {
+    selector: 'node',
+    style: {
+      'background-color': '#911eb4',
+    }
+  },
+  {
+    selector: 'edge',
+    style: {
+      'line-color': '#911eb4'
+    }
+  }
+];
+
+let stylesheetRome = [
+  {
+    selector: 'node',
+    style: {
+      'background-color': '#e6194B',
+    }
+  },
+  {
+    selector: 'edge',
+    style: {
+      'line-color': '#e6194B'
+    }
+  }
+];
+
 
 let cy = window.cy = cytoscape({
   container: document.getElementById('cy'),
@@ -113,8 +153,20 @@ document.getElementById("samples").addEventListener("change", function (event) {
     filename = "tca_cycle.json";
     sampleName = "tca_cycle";
   }
+  if (sample == "cheminfo") {
+    filename = "cheminfo.json";
+    sampleName = "cheminfo";
+  }
+  if (sample == "crime") {
+    filename = "crime.json";
+    sampleName = "crime";
+  }
+  if (sample == "rome") {
+    filename = "rome.json";
+    sampleName = "rome";
+  }
 
-  loadSample('../samples/' + filename, sampleName);
+  loadSample('../src/samples/' + filename, sampleName);
 });
 
 let loadSample = function (fname, sampleName) {
@@ -123,9 +175,11 @@ let loadSample = function (fname, sampleName) {
     return res.json();
   }).then(data => new Promise((resolve, reject) => {
     if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
-      cy.style(sbgnStylesheet(cytoscape, "bluescale"));
-      //cy.style().selector('node').style({'label': function( ele ){ return ele.data('fakeID') || ''; }}).update();
-      
+      if (sampleName == "glycolysis"){
+        cy.style(sbgnStylesheet(cytoscape, "bluescale"));
+      } else {
+        cy.style(sbgnStylesheet(cytoscape, "purple_green"));
+      }
       cy.json({ elements: data });
       cy.nodes().forEach(node => {
         if (!node.data('stateVariables'))
@@ -133,13 +187,19 @@ let loadSample = function (fname, sampleName) {
         if (!node.data('unitsOfInformation'))
           node.data('unitsOfInformation', []);
       });
+    } else if (sampleName && sampleName == "cheminfo") {
+      cy.style(stylesheetCheminfo);
+      cy.json({ elements: data });
+    } else if (sampleName && sampleName == "crime") {
+      cy.style(stylesheetCrime);
+      cy.json({ elements: data });
+    } else if (sampleName && sampleName == "rome") {
+      cy.style(stylesheetRome);
+      cy.json({ elements: data });
     } else {
       cy.style(defaultStylesheet);
       cy.json({ elements: data });
     }
-    cy.nodes().forEach((node, i) => {
-      node.data("fakeID", "n" + i);
-    });
     //document.getElementById("fileName").innerHTML = sampleName;
     cy.layout({ "name": "fcose", idealEdgeLength: 75}).run();
     cy.fit();
@@ -156,6 +216,7 @@ document.getElementById("inputFile").addEventListener("change", function (e) {
   if (!file) {
     alert("Failed to load file");
   }
+
   let fileExtension = file.name.split('.').pop();
   let reader = new FileReader();
   reader.onload = function (e) {
@@ -197,16 +258,12 @@ document.getElementById("inputFile").addEventListener("change", function (e) {
         let nodes = lines[line].split(' ');
         let node1 = cy.getElementById(nodes[0]);
         let node2 = cy.getElementById(nodes[1]);
-        console.log(node2.id());
         let edge = cy.add([
           { group: 'edges', data: { id: nodes[0] + '_' + nodes[1], source: node1.id(), target: node2.id() } }
         ]);
       }
     }
   };
-  reader.addEventListener('loadend', function(){
-    //document.getElementById("fileName").innerHTML = file.name;
-  });
   reader.readAsText(file);
   document.getElementById("inputFile").value = null;
   document.getElementById("samples").value = "";
@@ -241,21 +298,13 @@ document.getElementById("randomizeButton").addEventListener("click", async funct
 document.getElementById("layoutButton").addEventListener("click", async function () {
   document.getElementById("layoutButton").innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> Processing...</span>';
   document.getElementById("layoutButton").disabled = true;
-  // get computation mode
-  const computationMode = document.querySelector('input[name="computationMode"]:checked').value;
-  const base64Image = getBase64Image();
+
   let imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-  await applyLayout(computationMode, base64Image, imageData, true);
+  await applyLayout(imageData);
 
   document.getElementById("layoutButton").disabled = false;
   document.getElementById("layoutButton").innerHTML = 'Apply Layout';
 });
-
-// function to get the Base64 image from the canvas
-function getBase64Image() {
-  const dataURL = canvas.toDataURL('image/png'); // Default is PNG, but you can specify 'image/jpeg'
-  return dataURL;
-}
 
 function loadImage(imagePath) {
   let ctx = canvas.getContext('2d');

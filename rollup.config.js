@@ -5,10 +5,10 @@ import pkg from './package.json' assert { type: "json" };
 
 export default [
 	{
-		input: 'public/js/main.js',
+		input: 'src/js/main.js',
 		output: {
 			name: 'bundle',
-			file: 'public/bundle.js',
+			file: 'src/bundle.js',
 			format: 'umd'
 		},
 		plugins: [

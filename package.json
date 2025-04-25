@@ -1,5 +1,5 @@
 {
-  "name": "ugly",
+  "name": "uggly",
   "version": "1.0.0",
   "description": "",
   "main": "bundle.js",
@@ -9,22 +9,17 @@
     "start": "node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Hasan Balci",
-  "license": "MIT",
+  "author": "Luna Lab",
+  "license": "CC0-1.0",
   "dependencies": {
-    "cors": "^2.8.5",
     "cytoscape": "^3.2.0",
     "cytoscape-fcose": "^2.2.0",
     "cytoscape-graphml": "https://github.com/iVis-at-Bilkent/cytoscape.js-graphml.git#unstable",
     "cytoscape-sbgn-stylesheet": "https://github.com/hasanbalci/cytoscape-sbgn-stylesheet.git",
     "cytoscape-svg": "^0.4.0",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
     "file-saver": "^2.0.5",
     "jquery": "^3.7.1",
-    "sharp": "^0.33.5",
-    "simplify-js": "^1.2.4",
-    "token.js": "^0.5.4"
+    "simplify-js": "^1.2.4"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^26.0.1",

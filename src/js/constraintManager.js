@@ -1,9 +1,8 @@
-let generateConstraints = function (placement, idealEdgeLength, isLoop) {
+let generateConstraints = function (placement, isLoop) {
   let relativePlacementConstraints = [];
   let verticalAlignments = [];
   let horizontalAlignments = [];
 
-  console.log("Post-processed node arrays:");
   placement.forEach(line => {
     let direction = getLineDirection(line);
     if (direction == "l-r") {

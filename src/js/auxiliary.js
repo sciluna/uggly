@@ -19,12 +19,8 @@ function bfsFarthestNode(graph, start, fullGraph) {
       parent[node.id()] = from;
       farthest = node;
 
-      let neighborEdges;
-/*       if(fullGraph){
-        neighborEdges = node.connectedEdges();
-      } else { */
-        neighborEdges = node.edgesWith(graph);
-/*       } */
+      let neighborEdges = node.edgesWith(graph);
+
       for (let i = 0; i < neighborEdges.length; i++) {
         let neighborEdge = neighborEdges[i];
         let currentNeighbor;
@@ -47,7 +43,6 @@ function bfsSplitGraph(graph, start, sizeRatios, fullGraph) {
   const queue = [start];
   const order = []; // Visit order
   const parent = {}; // node.id() => parent.id() or null
-
   parent[start.id()] = null;
 
   while (queue.length) {
@@ -94,37 +89,10 @@ function bfsSplitGraph(graph, start, sizeRatios, fullGraph) {
   return { chunks, parent };
 }
 
-// finds diameter of a graph
-function findDiameter(graph, startNode) {
-  const { farthest: end1 } = bfsFarthestNode(graph, startNode);
-  const { farthest: end2, parent } = bfsFarthestNode(graph, end1);
-
-  // Reconstruct path from end2 to end1 using parent map
-  const path = [];
-  let currentId = end2.id();
-  while (currentId !== null) {
-      path.push(currentId);
-      currentId = parent[currentId];
-  }
-
-  return path.reverse(); // from end1 to end2
-}
-
 function findCoverage(graph, startNode, sizeRatios, fullGraph) {
   const { farthest: end1 } = bfsFarthestNode(graph, startNode, fullGraph);
   const { chunks, parent } = bfsSplitGraph(graph, end1, sizeRatios, fullGraph);
   return { chunks, parent };
-  //const { farthest: end2, parent } = bfsFarthestNode(graph, end1);
-
-  // Reconstruct path from end2 to end1 using parent map
-  const path = [];
-  let currentId = end2.id();
-  while (currentId !== null) {
-      path.push(currentId);
-      currentId = parent[currentId];
-  }
-
-  return path.reverse(); // from end1 to end2
 }
 
 // splits the given array to chunks proportional to the given sizes in sizes array
@@ -168,61 +136,6 @@ function calculateLineLengths(lines) {
   return sizes;
 }
 
-function findLongestPath(graph, cy, fullGraph, maxDepth) {
-  let longestPathLength = 0;
-  let longestPath = [];
-  let visited = new Set();
-
-  function dfs(nodeId, path, pathSet, fullGraph, depth) {
-    // Limit the DFS depth
-    if (depth > maxDepth) {
-      return;
-    }
-    // If we already visited this node in the current path, we stop the DFS
-    if (pathSet.has(nodeId)) {
-      return;
-    }
-    // Add the node to the current path
-    path.push(nodeId);
-    pathSet.add(nodeId);
-
-    // If the current path is longer than the longest path, update
-    if (path.length > longestPathLength) {
-      longestPathLength = path.length;
-      longestPath = [...path]; // Store the longest path found
-    }
-    let neighborEdges;
-    if (fullGraph) {
-      neighborEdges = cy.getElementById(nodeId).connectedEdges();
-    } else {
-      neighborEdges = cy.getElementById(nodeId).connectedEdges().intersection(graph.edges());
-    }
-
-    for (let i = 0; i < neighborEdges.length; i++) {
-      let neighborEdge = neighborEdges[i];
-      let currentNeighbor;
-      if (nodeId == neighborEdge.source().id()) {
-        currentNeighbor = neighborEdge.target();
-      } else {
-        currentNeighbor = neighborEdge.source();
-      }
-      dfs(currentNeighbor.id(), path, pathSet, fullGraph, depth + 1);
-    }
-
-    path.pop();
-    pathSet.delete(nodeId);
-  }
-
-  graph.nodes().forEach(node => {
-    let path = [];
-    let pathSet = new Set(); 
-    visited.clear();
-    dfs(node.id(), path, pathSet, fullGraph, 0);
-  });
-
-  return longestPath;
-}
-
 function findLongestCycle(graph, cy, fullGraph) {
   let longestCycleLength = 0;
   let longestCycle = [];
@@ -244,12 +157,8 @@ function findLongestCycle(graph, cy, fullGraph) {
       path.push(nodeId);
       pathSet.add(nodeId);
       
-      let neighborEdges;
-/*       if (fullGraph) {
-        neighborEdges = cy.getElementById(nodeId).connectedEdges();
-      } else { */
-        neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
-/*       } */
+      let neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
+
       for (let i = 0; i < neighborEdges.length; i++) {
         let neighborEdge = neighborEdges[i];
         let currentNeighbor;
@@ -288,7 +197,7 @@ async function extractLinesWithVision(imageData) {
   let filteredPolylines = polylines.filter(polyline => polyline.length >= 10);
   //console.log(filteredPolylines);
   let v = tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false, keypoints: false});
-  console.log(v);
+  //console.log(v);
   // simplify the generated lines
   let tolerance = 5; // Try 1 to 5 depending on how aggressively you want to merge
   let highQuality = true; // Set to true for highest quality simplification
@@ -300,8 +209,8 @@ async function extractLinesWithVision(imageData) {
   });
   s.polylines = simplifiedPolylines;
   let v2 = tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false});
-  console.log(v2);
- /*  console.log(simplifiedPolylines); */
+  //console.log(v2);
+  //console.log(simplifiedPolylines);
   let tempLines = [];
   simplifiedPolylines.forEach(polylines => {
     polylines.forEach((polyline, i) => {
@@ -314,10 +223,8 @@ async function extractLinesWithVision(imageData) {
       }
     });
   });
-/*   console.log("temp: ");
-  console.log(tempLines); */
+
   let lines = orderLines(tempLines);
-  console.log(lines);
   return lines;
 }
 
@@ -389,8 +296,7 @@ function orderLines(edges, tolerance = 5) {
       lines.push(line);
     }
   });
-/*   console.log('lines');
-  console.log(lines); */
+
   return lines;
 }
 

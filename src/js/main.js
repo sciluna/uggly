@@ -2,25 +2,9 @@ import { generateConstraints } from "./constraintManager";
 import { splitArrayProportionally, findLongestCycle, calculateLineLengths, extractLinesWithVision, orderLines, findCoverage } from "./auxiliary";
 import { cy, sampleName } from './menu'; 
 
-let uggly = !(location.hostname === "localhost" || location.hostname === "127.0.0.1");
+let extractLines = async function (imageData) {
 
-let extractLines = async function( computationMode, base64Image, imageData, withAscii ){
-  let lines = []; // final lines array
-
-  if (computationMode != 'cvbased'){
-    let data = {
-      image: base64Image,
-      llmMode: computationMode,
-      withAscii: withAscii
-    };
-    let result = await runLLM(data);
-    //console.log(result);
-    let tempLines = JSON.parse(result).lines;
-    lines = orderLines(tempLines, 3);
-    //console.log(lines);
-  } else {
-    lines = await extractLinesWithVision(imageData);
-  }
+  let lines = await extractLinesWithVision(imageData);
 
   return lines;
 };
@@ -33,10 +17,9 @@ let assignNodesToLines = function( prunedGraph, lines, fullGraph ){
 
   if (lines[0].start[0] == lines[lineCount - 1].end[0] && lines[0].start[1] == lines[lineCount - 1].end[1]) { // in case the drawing is a loop
     let graphPath = findLongestCycle(prunedGraph, cy);
-    //console.log(graphPath);
 
     if (graphPath.length < 2 * Math.sqrt(prunedGraph.nodes().length)) {
-      let { chunks:newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes, fullGraph);
+      let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes, fullGraph);
       let lastLine = newDistribution[newDistribution.length - 1];
       lastLine.push(newDistribution[0][0]);
       lines.forEach((line, i) => {
@@ -50,14 +33,13 @@ let assignNodesToLines = function( prunedGraph, lines, fullGraph ){
     let newDistribution = splitArrayProportionally(graphPath, lineSizes);
     let lastLine = newDistribution[newDistribution.length - 1];
     lastLine.push(newDistribution[0][0]);
-    //console.log(newDistribution);
 
     lines.forEach((line, i) => {
       line.nodes = newDistribution[i];
     });
 
   } else { // in case the drawing is a path consisting segments
-    let { chunks:newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes, fullGraph);
+    let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes, fullGraph);
     lines.forEach((line, i) => {
       line.nodesAll = newDistribution[i];
       line.parent = parent;
@@ -68,7 +50,7 @@ let assignNodesToLines = function( prunedGraph, lines, fullGraph ){
   return {lines, applyIncremental, isLoop}; 
 };
 
-let applyLayout = async function( computationMode, base64Image, imageData, withAscii){
+let applyLayout = async function(imageData){
   let graph = cy.elements();
   let randomize = true;
   let initialEnergyOnIncremental = 0.3;
@@ -89,8 +71,6 @@ let applyLayout = async function( computationMode, base64Image, imageData, withA
 
   let pruneResult = pruneGraph(graph);
   let prunedGraph = pruneResult.prunedGraph;
-  let ignoredGraph = pruneResult.ignoredGraph;
-  //console.log("Number of nodes in skeleton graph: " + prunedGraph.nodes().length);
 
   let idealEdgeLength;
   if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
@@ -106,7 +86,7 @@ let applyLayout = async function( computationMode, base64Image, imageData, withA
   }
 
   // extract lines either using vision techniques or llms
-  let lines = await extractLines(computationMode, base64Image, imageData, withAscii);
+  let lines = await extractLines(imageData);
 
   // lines now have assigned nodes
   let assignment = assignNodesToLines(prunedGraph, lines, fullGraph);
@@ -114,16 +94,15 @@ let applyLayout = async function( computationMode, base64Image, imageData, withA
   // generate constraints and apply layout
   let constraints;
   try {
-    constraints = generateConstraints(assignment.lines, idealEdgeLength, assignment.isLoop);
+    constraints = generateConstraints(assignment.lines, assignment.isLoop);
     constraints.fixedNodeConstraint = fixedNodeConstraints;
-    console.log(constraints);
-    callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, assignment.applyIncremental, prunedGraph, ignoredGraph);
+    callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, assignment.applyIncremental);
   } catch (error) {
     alert("Couldn't process constraints! Please try again!");
   }
 };
 
-let callLayout = function(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental,prunedGraph, ignoredGraph) {
+let callLayout = function(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental) {
   cy.layout({
     name: "fcose",
     randomize: randomize,
@@ -172,32 +151,6 @@ let pruneGraph = function (graph) {
   let ignoredGraph = cy.elements().difference(prunedGraph);
 
   return { prunedGraph, ignoredGraph };
-};
-
-let runLLM = async function (data) {
-	let url = "http://localhost:8080/llm/";
-	if (uggly) {
-		url = "http://ec2-3-87-167-56.compute-1.amazonaws.com/llm/";
-	}
-  const settings = {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'text/plain'
-    },
-    body: JSON.stringify(data)
-  };
-
-  let res = await fetch(url, settings)
-    .then(response => response.json())
-    .then(result => {
-      return result;
-    })
-    .catch(e => {
-      console.log("Error!");
-    });
-
-  return res;
 };
 
 export { applyLayout };

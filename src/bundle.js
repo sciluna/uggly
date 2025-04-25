@@ -1,15 +1,14 @@
 (function (global, factory) {
-  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('skeleton-tracing-wasm'), require('fs')) :
-  typeof define === 'function' && define.amd ? define(['exports', 'skeleton-tracing-wasm', 'fs'], factory) :
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('skeleton-tracing-wasm')) :
+  typeof define === 'function' && define.amd ? define(['exports', 'skeleton-tracing-wasm'], factory) :
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.bundle = {}, global.TraceSkeleton));
 })(this, (function (exports, TraceSkeleton) { 'use strict';
 
-  let generateConstraints = function (placement, idealEdgeLength, isLoop) {
+  let generateConstraints = function (placement, isLoop) {
     let relativePlacementConstraints = [];
     let verticalAlignments = [];
     let horizontalAlignments = [];
 
-    console.log("Post-processed node arrays:");
     placement.forEach(line => {
       let direction = getLineDirection(line);
       if (direction == "l-r") {
@@ -399,12 +398,8 @@
         parent[node.id()] = from;
         farthest = node;
 
-        let neighborEdges;
-  /*       if(fullGraph){
-          neighborEdges = node.connectedEdges();
-        } else { */
-          neighborEdges = node.edgesWith(graph);
-  /*       } */
+        let neighborEdges = node.edgesWith(graph);
+
         for (let i = 0; i < neighborEdges.length; i++) {
           let neighborEdge = neighborEdges[i];
           let currentNeighbor;
@@ -427,7 +422,6 @@
     const queue = [start];
     const order = []; // Visit order
     const parent = {}; // node.id() => parent.id() or null
-
     parent[start.id()] = null;
 
     while (queue.length) {
@@ -542,12 +536,8 @@
         path.push(nodeId);
         pathSet.add(nodeId);
         
-        let neighborEdges;
-  /*       if (fullGraph) {
-          neighborEdges = cy.getElementById(nodeId).connectedEdges();
-        } else { */
-          neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
-  /*       } */
+        let neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
+
         for (let i = 0; i < neighborEdges.length; i++) {
           let neighborEdge = neighborEdges[i];
           let currentNeighbor;
@@ -585,8 +575,8 @@
     let polylines = s.polylines;
     let filteredPolylines = polylines.filter(polyline => polyline.length >= 10);
     //console.log(filteredPolylines);
-    let v = tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false, keypoints: false});
-    console.log(v);
+    tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false, keypoints: false});
+    //console.log(v);
     // simplify the generated lines
     let tolerance = 5; // Try 1 to 5 depending on how aggressively you want to merge
     let highQuality = true; // Set to true for highest quality simplification
@@ -597,9 +587,9 @@
       return simplified.map(p => [p.x, p.y]);
     });
     s.polylines = simplifiedPolylines;
-    let v2 = tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false});
-    console.log(v2);
-   /*  console.log(simplifiedPolylines); */
+    tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false});
+    //console.log(v2);
+    //console.log(simplifiedPolylines);
     let tempLines = [];
     simplifiedPolylines.forEach(polylines => {
       polylines.forEach((polyline, i) => {
@@ -612,10 +602,8 @@
         }
       });
     });
-  /*   console.log("temp: ");
-    console.log(tempLines); */
+
     let lines = orderLines(tempLines);
-    console.log(lines);
     return lines;
   }
 
@@ -687,8 +675,7 @@
         lines.push(line);
       }
     });
-  /*   console.log('lines');
-    console.log(lines); */
+
     return lines;
   }
 
@@ -58893,6 +58880,7 @@
   var jquery = /*@__PURE__*/getDefaultExportFromCjs$1(jqueryExports);
 
   // menu operations
+  //import { runTest } from "./test";
 
   cytoscape$1.use(graphml, jquery);
   cytoscape$1.use(svg);
@@ -58902,19 +58890,60 @@
     {
       selector: 'node',
       style: {
-        //'label': function( ele ){ return ele.data('fakeID') || ''; },
         'text-wrap': 'wrap',
-        //'background-color': '#e6194B'
+      }
+    }
+  ];
+
+  let stylesheetCheminfo = [
+    {
+      selector: 'node',
+      style: {
+        'background-color': '#f032e6',
+        'width': 60,
+        'height': 30,
+        'shape': 'rectangle'
       }
     },
     {
       selector: 'edge',
       style: {
-        //'label': function( ele ){ return ele.data('fakeID') || ''; },
-        //'line-color': '#e6194B'
+        'line-color': '#f032e6'
       }
     }
   ];
+
+
+  let stylesheetCrime = [
+    {
+      selector: 'node',
+      style: {
+        'background-color': '#911eb4',
+      }
+    },
+    {
+      selector: 'edge',
+      style: {
+        'line-color': '#911eb4'
+      }
+    }
+  ];
+
+  let stylesheetRome = [
+    {
+      selector: 'node',
+      style: {
+        'background-color': '#e6194B',
+      }
+    },
+    {
+      selector: 'edge',
+      style: {
+        'line-color': '#e6194B'
+      }
+    }
+  ];
+
 
   let cy = window.cy = cytoscape$1({
     container: document.getElementById('cy'),
@@ -58997,8 +59026,20 @@
       filename = "tca_cycle.json";
       sampleName = "tca_cycle";
     }
+    if (sample == "cheminfo") {
+      filename = "cheminfo.json";
+      sampleName = "cheminfo";
+    }
+    if (sample == "crime") {
+      filename = "crime.json";
+      sampleName = "crime";
+    }
+    if (sample == "rome") {
+      filename = "rome.json";
+      sampleName = "rome";
+    }
 
-    loadSample('../samples/' + filename, sampleName);
+    loadSample('../src/samples/' + filename, sampleName);
   });
 
   let loadSample = function (fname, sampleName) {
@@ -59007,9 +59048,11 @@
       return res.json();
     }).then(data => new Promise((resolve, reject) => {
       if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
-        cy.style(sbgnStylesheet(cytoscape$1, "bluescale"));
-        //cy.style().selector('node').style({'label': function( ele ){ return ele.data('fakeID') || ''; }}).update();
-        
+        if (sampleName == "glycolysis"){
+          cy.style(sbgnStylesheet(cytoscape$1, "bluescale"));
+        } else {
+          cy.style(sbgnStylesheet(cytoscape$1, "purple_green"));
+        }
         cy.json({ elements: data });
         cy.nodes().forEach(node => {
           if (!node.data('stateVariables'))
@@ -59017,13 +59060,19 @@
           if (!node.data('unitsOfInformation'))
             node.data('unitsOfInformation', []);
         });
+      } else if (sampleName && sampleName == "cheminfo") {
+        cy.style(stylesheetCheminfo);
+        cy.json({ elements: data });
+      } else if (sampleName && sampleName == "crime") {
+        cy.style(stylesheetCrime);
+        cy.json({ elements: data });
+      } else if (sampleName && sampleName == "rome") {
+        cy.style(stylesheetRome);
+        cy.json({ elements: data });
       } else {
         cy.style(defaultStylesheet);
         cy.json({ elements: data });
       }
-      cy.nodes().forEach((node, i) => {
-        node.data("fakeID", "n" + i);
-      });
       //document.getElementById("fileName").innerHTML = sampleName;
       cy.layout({ "name": "fcose", idealEdgeLength: 75}).run();
       cy.fit();
@@ -59040,6 +59089,7 @@
     if (!file) {
       alert("Failed to load file");
     }
+
     let fileExtension = file.name.split('.').pop();
     let reader = new FileReader();
     reader.onload = function (e) {
@@ -59081,16 +59131,12 @@
           let nodes = lines[line].split(' ');
           let node1 = cy.getElementById(nodes[0]);
           let node2 = cy.getElementById(nodes[1]);
-          console.log(node2.id());
           cy.add([
             { group: 'edges', data: { id: nodes[0] + '_' + nodes[1], source: node1.id(), target: node2.id() } }
           ]);
         }
       }
     };
-    reader.addEventListener('loadend', function(){
-      //document.getElementById("fileName").innerHTML = file.name;
-    });
     reader.readAsText(file);
     document.getElementById("inputFile").value = null;
     document.getElementById("samples").value = "";
@@ -59125,21 +59171,13 @@
   document.getElementById("layoutButton").addEventListener("click", async function () {
     document.getElementById("layoutButton").innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> Processing...</span>';
     document.getElementById("layoutButton").disabled = true;
-    // get computation mode
-    const computationMode = document.querySelector('input[name="computationMode"]:checked').value;
-    const base64Image = getBase64Image();
+
     let imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-    await applyLayout(computationMode, base64Image, imageData, true);
+    await applyLayout(imageData);
 
     document.getElementById("layoutButton").disabled = false;
     document.getElementById("layoutButton").innerHTML = 'Apply Layout';
   });
-
-  // function to get the Base64 image from the canvas
-  function getBase64Image() {
-    const dataURL = canvas.toDataURL('image/png'); // Default is PNG, but you can specify 'image/jpeg'
-    return dataURL;
-  }
 
   function loadImage(imagePath) {
     let ctx = canvas.getContext('2d');
@@ -59171,25 +59209,9 @@
     loadImage("drawing.png");
   });
 
-  let uggly = !(location.hostname === "localhost" || location.hostname === "127.0.0.1");
+  let extractLines = async function (imageData) {
 
-  let extractLines = async function( computationMode, base64Image, imageData, withAscii ){
-    let lines = []; // final lines array
-
-    if (computationMode != 'cvbased'){
-      let data = {
-        image: base64Image,
-        llmMode: computationMode,
-        withAscii: withAscii
-      };
-      let result = await runLLM(data);
-      //console.log(result);
-      let tempLines = JSON.parse(result).lines;
-      lines = orderLines(tempLines, 3);
-      //console.log(lines);
-    } else {
-      lines = await extractLinesWithVision(imageData);
-    }
+    let lines = await extractLinesWithVision(imageData);
 
     return lines;
   };
@@ -59202,10 +59224,9 @@
 
     if (lines[0].start[0] == lines[lineCount - 1].end[0] && lines[0].start[1] == lines[lineCount - 1].end[1]) { // in case the drawing is a loop
       let graphPath = findLongestCycle(prunedGraph, cy);
-      //console.log(graphPath);
 
       if (graphPath.length < 2 * Math.sqrt(prunedGraph.nodes().length)) {
-        let { chunks:newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
+        let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
         let lastLine = newDistribution[newDistribution.length - 1];
         lastLine.push(newDistribution[0][0]);
         lines.forEach((line, i) => {
@@ -59219,14 +59240,13 @@
       let newDistribution = splitArrayProportionally(graphPath, lineSizes);
       let lastLine = newDistribution[newDistribution.length - 1];
       lastLine.push(newDistribution[0][0]);
-      //console.log(newDistribution);
 
       lines.forEach((line, i) => {
         line.nodes = newDistribution[i];
       });
 
     } else { // in case the drawing is a path consisting segments
-      let { chunks:newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
+      let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
       lines.forEach((line, i) => {
         line.nodesAll = newDistribution[i];
         line.parent = parent;
@@ -59237,7 +59257,7 @@
     return {lines, applyIncremental, isLoop}; 
   };
 
-  let applyLayout = async function( computationMode, base64Image, imageData, withAscii){
+  let applyLayout = async function(imageData){
     let graph = cy.elements();
     let randomize = true;
     let initialEnergyOnIncremental = 0.3;
@@ -59256,8 +59276,6 @@
 
     let pruneResult = pruneGraph(graph);
     let prunedGraph = pruneResult.prunedGraph;
-    let ignoredGraph = pruneResult.ignoredGraph;
-    //console.log("Number of nodes in skeleton graph: " + prunedGraph.nodes().length);
 
     let idealEdgeLength;
     if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
@@ -59273,7 +59291,7 @@
     }
 
     // extract lines either using vision techniques or llms
-    let lines = await extractLines(computationMode, base64Image, imageData, withAscii);
+    let lines = await extractLines(imageData);
 
     // lines now have assigned nodes
     let assignment = assignNodesToLines(prunedGraph, lines);
@@ -59281,16 +59299,15 @@
     // generate constraints and apply layout
     let constraints;
     try {
-      constraints = generateConstraints(assignment.lines, idealEdgeLength, assignment.isLoop);
+      constraints = generateConstraints(assignment.lines, assignment.isLoop);
       constraints.fixedNodeConstraint = fixedNodeConstraints;
-      console.log(constraints);
-      callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, assignment.applyIncremental, prunedGraph, ignoredGraph);
+      callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, assignment.applyIncremental);
     } catch (error) {
       alert("Couldn't process constraints! Please try again!");
     }
   };
 
-  let callLayout = function(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental,prunedGraph, ignoredGraph) {
+  let callLayout = function(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental) {
     cy.layout({
       name: "fcose",
       randomize: randomize,
@@ -59339,32 +59356,6 @@
     let ignoredGraph = cy.elements().difference(prunedGraph);
 
     return { prunedGraph, ignoredGraph };
-  };
-
-  let runLLM = async function (data) {
-  	let url = "http://localhost:8080/llm/";
-  	if (uggly) {
-  		url = "http://ec2-3-87-167-56.compute-1.amazonaws.com/llm/";
-  	}
-    const settings = {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'text/plain'
-      },
-      body: JSON.stringify(data)
-    };
-
-    let res = await fetch(url, settings)
-      .then(response => response.json())
-      .then(result => {
-        return result;
-      })
-      .catch(e => {
-        console.log("Error!");
-      });
-
-    return res;
   };
 
   exports.applyLayout = applyLayout;
