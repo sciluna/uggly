@@ -1,4 +1,4 @@
-{
+glycolysis = {
   "nodes": [
     {
       "data": {

@@ -58992,91 +58992,60 @@
     layout: {name: "fcose", idealEdgeLength: 75}
   });
 
-  let sampleName = "";
+  // Sample File Changer
+  let sampleFileNames = {
+    "sample1" : sample1,
+    "sample2" : sample2,
+    "sample3" : sample3,
+    "sample4" : sample4,    
+    "sample5" : sample5,
+    "glycolysis" : glycolysis,
+    "tca_cycle" : tca_cycle,
+    "cheminfo" : cheminfo,
+    "crime" : crime,
+    "rome" : rome
+  };
 
   // file operations - samples
   document.getElementById("samples").addEventListener("change", function (event) {
     let sample = event.target.value;
-    let filename = "";
-    if (sample == "sample1") {
-      filename = "sample1.json";
-      sampleName = "sample1";
-    }
-    if (sample == "sample2") {
-      filename = "sample2.json";
-      sampleName = "sample2";
-    }
-    if (sample == "sample3") {
-      filename = "sample3.json";
-      sampleName = "sample3";
-    }
-    if (sample == "sample4") {
-      filename = "sample4.json";
-      sampleName = "sample4";
-    }
-    if (sample == "sample5") {
-      filename = "sample5.json";
-      sampleName = "sample5";
-    }
-    if (sample == "glycolysis") {
-      filename = "glycolysis.json";
-      sampleName = "glycolysis";
-    }
-    if (sample == "tca_cycle") {
-      filename = "tca_cycle.json";
-      sampleName = "tca_cycle";
-    }
-    if (sample == "cheminfo") {
-      filename = "cheminfo.json";
-      sampleName = "cheminfo";
-    }
-    if (sample == "crime") {
-      filename = "crime.json";
-      sampleName = "crime";
-    }
-    if (sample == "rome") {
-      filename = "rome.json";
-      sampleName = "rome";
-    }
+    let json = sampleFileNames[sample];
 
-    loadSample('../src/samples/' + filename, sampleName);
+    loadSample(json, sample);
   });
 
-  let loadSample = function (fname, sampleName) {
+  let loadSample = function (json, sampleName) {
     cy.remove(cy.elements());
-    fetch(fname).then(function (res) {
-      return res.json();
-    }).then(data => new Promise((resolve, reject) => {
-      if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
-        if (sampleName == "glycolysis"){
-          cy.style(sbgnStylesheet(cytoscape$1, "bluescale"));
-        } else {
-          cy.style(sbgnStylesheet(cytoscape$1, "purple_green"));
-        }
-        cy.json({ elements: data });
-        cy.nodes().forEach(node => {
-          if (!node.data('stateVariables'))
-            node.data('stateVariables', []);
-          if (!node.data('unitsOfInformation'))
-            node.data('unitsOfInformation', []);
-        });
-      } else if (sampleName && sampleName == "cheminfo") {
-        cy.style(stylesheetCheminfo);
-        cy.json({ elements: data });
-      } else if (sampleName && sampleName == "crime") {
-        cy.style(stylesheetCrime);
-        cy.json({ elements: data });
-      } else if (sampleName && sampleName == "rome") {
-        cy.style(stylesheetRome);
-        cy.json({ elements: data });
+
+    if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
+      if (sampleName == "glycolysis"){
+        cy.style(sbgnStylesheet(cytoscape$1, "bluescale"));
       } else {
-        cy.style(defaultStylesheet);
-        cy.json({ elements: data });
+        cy.style(sbgnStylesheet(cytoscape$1, "purple_green"));
       }
-      //document.getElementById("fileName").innerHTML = sampleName;
-      cy.layout({ "name": "fcose", idealEdgeLength: 75}).run();
-      cy.fit();
-    }));
+      cy.json({ elements: json });
+      cy.nodes().forEach(node => {
+        if (!node.data('stateVariables'))
+          node.data('stateVariables', []);
+        if (!node.data('unitsOfInformation'))
+          node.data('unitsOfInformation', []);
+      });
+    } else if (sampleName && sampleName == "cheminfo") {
+      cy.style(stylesheetCheminfo);
+      cy.json({ elements: json });
+    } else if (sampleName && sampleName == "crime") {
+      cy.style(stylesheetCrime);
+      cy.json({ elements: json });
+    } else if (sampleName && sampleName == "rome") {
+      cy.style(stylesheetRome);
+      cy.json({ elements: json });
+    } else {
+      cy.style(defaultStylesheet);
+      cy.json({ elements: json });
+    }
+
+    cy.layout({ "name": "fcose", idealEdgeLength: 75}).run();
+    cy.fit();
   };
 
   // file operations - file upload
@@ -59278,15 +59247,7 @@
     let prunedGraph = pruneResult.prunedGraph;
 
     let idealEdgeLength;
-    if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
-      idealEdgeLength = function(edge) {
-        if(edge.source().degree() == 1 || edge.target().degree() == 1) {
-          return 75;
-        } else {
-          return 200;
-        }
-      };
-    } else {
+    {
       idealEdgeLength = 50;
     }
 
