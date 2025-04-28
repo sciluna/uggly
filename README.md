@@ -2,7 +2,7 @@
 
 User-guided force-directed graph layout is a layout approach that lets users specify their desired layout structure by drawing sketches (e.g., rectangle, L-shape). Our method leverages a well-established image analysis technique, skeletonization (i.e., medial axis transform), to interpret the user sketch and uses the extracted structural information to guide force-directed layout algorithms with placement constraint support. It works well for small to medium-sized graphs and generates visually effective layouts aligned with user intent.
 
-Click [here](https://sciluna.github.io/uggly/index.html) for a demo.
+Click [here](https://sciluna.github.io/uggly/demo/index.html) for a demo.
 
 Here is a video tutorial:
 

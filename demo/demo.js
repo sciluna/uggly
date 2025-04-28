@@ -1,18 +1,3 @@
-// menu operations
-import cytoscape from "cytoscape";
-import graphml from "cytoscape-graphml";
-import svg from 'cytoscape-svg';
-import fcose from 'cytoscape-fcose';
-import { saveAs } from 'file-saver';
-import sbgnStylesheet from 'cytoscape-sbgn-stylesheet';
-import jquery from 'jquery';
-import { applyLayout } from "./main";
-//import { runTest } from "./test";
-
-cytoscape.use(graphml, jquery);
-cytoscape.use(svg);
-cytoscape.use(fcose);
-
 let defaultStylesheet = [
   {
     selector: 'node',
@@ -139,6 +124,7 @@ let sampleName = "";
 document.getElementById("samples").addEventListener("change", function (event) {
   let sample = event.target.value;
   let json = sampleFileNames[sample];
+  sampleName = sample;
 
   loadSample(json, sample);
 });
@@ -148,9 +134,9 @@ let loadSample = function (json, sampleName) {
 
   if (sampleName && (sampleName == "glycolysis" || sampleName == "tca_cycle")) {
     if (sampleName == "glycolysis"){
-      cy.style(sbgnStylesheet(cytoscape, "bluescale"));
+      cy.style(cytoscapeSbgnStylesheet(cytoscape, "bluescale"));
     } else {
-      cy.style(sbgnStylesheet(cytoscape, "purple_green"));
+      cy.style(cytoscapeSbgnStylesheet(cytoscape, "purple_green"));
     }
     cy.json({ elements: json });
     cy.nodes().forEach(node => {
@@ -271,11 +257,76 @@ document.getElementById("layoutButton").addEventListener("click", async function
   document.getElementById("layoutButton").disabled = true;
 
   let imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
-  await applyLayout(imageData);
+  let subset = undefined;
+  if (cy.elements(':selected').length > 0) {
+    subset = cy.elements(':selected');
+  }
+
+  let result = await uggly.generateConstraints({cy: cy, imageData: imageData, subset: subset});
+  let constraints = result.constraints;
+  let applyIncremental = result.applyIncremental;
+
+  await applyLayout(constraints, applyIncremental);
 
   document.getElementById("layoutButton").disabled = false;
   document.getElementById("layoutButton").innerHTML = 'Apply Layout';
 });
+
+async function applyLayout(constraints, applyIncremental) {
+  let randomize = true;
+  let initialEnergyOnIncremental = 0.3;
+
+  // if there are selected elements, apply incremental layout on selected elements
+  if (cy.elements(':selected').length > 0) {
+    randomize = false;
+    initialEnergyOnIncremental = 0.1;
+  }
+
+  let idealEdgeLength;
+  // apply different ideal edge length for these samples
+  if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
+    idealEdgeLength = function(edge) {
+      if(edge.source().degree() == 1 || edge.target().degree() == 1) {
+        return 75;
+      } else {
+        return 200;
+      }
+    };
+  } else {
+    idealEdgeLength = 50;
+  }
+
+  try {
+    callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental);
+  } catch (error) {
+    alert("Couldn't process constraints! Please try again!");
+  }
+}
+
+function callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental) {
+  cy.layout({
+    name: "fcose",
+    randomize: randomize,
+    idealEdgeLength: idealEdgeLength,
+    animationDuration: 1500,
+    fixedNodeConstraint: constraints.fixedNodeConstraint.length != 0 ? constraints.fixedNodeConstraint : undefined,
+    relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
+    alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
+    initialEnergyOnIncremental: initialEnergyOnIncremental,
+    stop: () => {      
+      if (applyIncremental) {
+        cy.layout({
+          name: "fcose",
+          randomize: false,
+          animationDuration: 500,
+          idealEdgeLength: idealEdgeLength,
+          fixedNodeConstraint: constraints.fixedNodeConstraint.length != 0 ? constraints.fixedNodeConstraint : undefined,
+          initialEnergyOnIncremental: 0.05
+        }).run();
+      }
+    }
+  }).run();
+};
 
 function loadImage(imagePath) {
   let ctx = canvas.getContext('2d');
@@ -306,10 +357,3 @@ document.getElementById("downloadCanvas").addEventListener("click", async functi
 document.getElementById("uploadImage").addEventListener("click", async function () {
   loadImage("drawing.png");
 });
-
-/* // run test
-document.getElementById("runTest").addEventListener("click", async function () {
-  runTest();
-}); */
-
-export {cy, sampleName};

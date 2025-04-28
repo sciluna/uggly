@@ -2,7 +2,9 @@
   "name": "uggly",
   "version": "1.0.0",
   "description": "",
-  "main": "bundle.js",
+  "main": "dist/bundle.cjs.js",
+  "module": "dist/bundle.esm.js",
+  "browser": "dist/bundle.umd.js",
   "type": "module",
   "scripts": {
     "build": "rollup -c",
@@ -13,12 +15,6 @@
   "license": "CC0-1.0",
   "dependencies": {
     "cytoscape": "^3.2.0",
-    "cytoscape-fcose": "^2.2.0",
-    "cytoscape-graphml": "https://github.com/iVis-at-Bilkent/cytoscape.js-graphml.git#unstable",
-    "cytoscape-sbgn-stylesheet": "https://github.com/hasanbalci/cytoscape-sbgn-stylesheet.git",
-    "cytoscape-svg": "^0.4.0",
-    "file-saver": "^2.0.5",
-    "jquery": "^3.7.1",
     "simplify-js": "^1.2.4"
   },
   "devDependencies": {

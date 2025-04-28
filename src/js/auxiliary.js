@@ -1,12 +1,7 @@
-import TraceSkeleton  from 'skeleton-tracing-wasm';
+import tracer from '../../lib/trace_skeleton.min.js';
 import simplify from 'simplify-js';
 
-let tracer; 
-document.addEventListener("DOMContentLoaded", async function() {
-  tracer = await TraceSkeleton.load()
-});
-
-function bfsFarthestNode(graph, start, fullGraph) {
+function bfsFarthestNode(graph, start) {
   const visited = new Set();
   const queue = [[start, null]];
   const parent = {};
@@ -38,7 +33,7 @@ function bfsFarthestNode(graph, start, fullGraph) {
   return { farthest, parent };
 }
 
-function bfsSplitGraph(graph, start, sizeRatios, fullGraph) {
+function bfsSplitGraph(graph, start, sizeRatios) {
   const visited = new Set();
   const queue = [start];
   const order = []; // Visit order
@@ -89,9 +84,9 @@ function bfsSplitGraph(graph, start, sizeRatios, fullGraph) {
   return { chunks, parent };
 }
 
-function findCoverage(graph, startNode, sizeRatios, fullGraph) {
-  const { farthest: end1 } = bfsFarthestNode(graph, startNode, fullGraph);
-  const { chunks, parent } = bfsSplitGraph(graph, end1, sizeRatios, fullGraph);
+function findCoverage(graph, startNode, sizeRatios) {
+  const { farthest: end1 } = bfsFarthestNode(graph, startNode);
+  const { chunks, parent } = bfsSplitGraph(graph, end1, sizeRatios);
   return { chunks, parent };
 }
 
@@ -136,7 +131,7 @@ function calculateLineLengths(lines) {
   return sizes;
 }
 
-function findLongestCycle(graph, cy, fullGraph) {
+function findLongestCycle(graph, cy) {
   let longestCycleLength = 0;
   let longestCycle = [];
   let visited = new Set();

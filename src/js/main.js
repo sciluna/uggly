@@ -1,6 +1,5 @@
-import { generateConstraints } from "./constraintManager";
+import { computeConstraints } from "./constraintManager";
 import { splitArrayProportionally, findLongestCycle, calculateLineLengths, extractLinesWithVision, orderLines, findCoverage } from "./auxiliary";
-import { cy, sampleName } from './menu'; 
 
 let extractLines = async function (imageData) {
 
@@ -9,7 +8,7 @@ let extractLines = async function (imageData) {
   return lines;
 };
 
-let assignNodesToLines = function( prunedGraph, lines, fullGraph ){
+let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
   let lineCount = lines.length;
   let lineSizes = calculateLineLengths(lines);
   let applyIncremental = false;
@@ -18,8 +17,9 @@ let assignNodesToLines = function( prunedGraph, lines, fullGraph ){
   if (lines[0].start[0] == lines[lineCount - 1].end[0] && lines[0].start[1] == lines[lineCount - 1].end[1]) { // in case the drawing is a loop
     let graphPath = findLongestCycle(prunedGraph, cy);
 
-    if (graphPath.length < 2 * Math.sqrt(prunedGraph.nodes().length)) {
-      let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes, fullGraph);
+    let cycleThold = cycleThreshold ? cycleThreshold : 2 * Math.sqrt(prunedGraph.nodes().length);
+    if (graphPath.length < cycleThold) {
+      let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
       let lastLine = newDistribution[newDistribution.length - 1];
       lastLine.push(newDistribution[0][0]);
       lines.forEach((line, i) => {
@@ -39,7 +39,7 @@ let assignNodesToLines = function( prunedGraph, lines, fullGraph ){
     });
 
   } else { // in case the drawing is a path consisting segments
-    let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes, fullGraph);
+    let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
     lines.forEach((line, i) => {
       line.nodesAll = newDistribution[i];
       line.parent = parent;
@@ -50,85 +50,36 @@ let assignNodesToLines = function( prunedGraph, lines, fullGraph ){
   return {lines, applyIncremental, isLoop}; 
 };
 
-let applyLayout = async function(imageData){
+let generateConstraints = async function(cy, imageData, subset, slopeThreshold, cycleThreshold){
   let graph = cy.elements();
-  let randomize = true;
-  let initialEnergyOnIncremental = 0.3;
-  let fullGraph = true;
 
   let fixedNodeConstraints = [];
   // if there are selected elements, apply incremental layout on selected elements
-  if (cy.elements(':selected').length > 0) {
-    graph = cy.elements(':selected');
-    randomize = false;
-    initialEnergyOnIncremental = 0.1;
-    fullGraph = false;
+  if (subset) {
+    graph = subset;
     let unselectedNodes = cy.nodes().difference(graph);
     unselectedNodes.forEach(node => {
       fixedNodeConstraints.push({nodeId: node.id(), position: {x: node.position().x, y: node.position().y}});
     });
   }
 
-  let pruneResult = pruneGraph(graph);
+  let pruneResult = pruneGraph(cy, graph);
   let prunedGraph = pruneResult.prunedGraph;
-
-  let idealEdgeLength;
-  if (sampleName == "glycolysis" || sampleName == "tca_cycle"){
-    idealEdgeLength = function(edge) {
-      if(edge.source().degree() == 1 || edge.target().degree() == 1) {
-        return 75;
-      } else {
-        return 200;
-      }
-    };
-  } else {
-    idealEdgeLength = 50;
-  }
 
   // extract lines either using vision techniques or llms
   let lines = await extractLines(imageData);
 
   // lines now have assigned nodes
-  let assignment = assignNodesToLines(prunedGraph, lines, fullGraph);
+  let assignment = assignNodesToLines(prunedGraph, lines, cycleThreshold);
 
-  // generate constraints and apply layout
-  let constraints;
-  try {
-    constraints = generateConstraints(assignment.lines, assignment.isLoop);
-    constraints.fixedNodeConstraint = fixedNodeConstraints;
-    callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, assignment.applyIncremental);
-  } catch (error) {
-    alert("Couldn't process constraints! Please try again!");
-  }
-};
+  let constraints = computeConstraints(assignment.lines, assignment.isLoop, slopeThreshold);
+  constraints.fixedNodeConstraint = fixedNodeConstraints;
 
-let callLayout = function(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental) {
-  cy.layout({
-    name: "fcose",
-    randomize: randomize,
-    idealEdgeLength: idealEdgeLength,
-    animationDuration: 1500,
-    fixedNodeConstraint: constraints.fixedNodeConstraint.length != 0 ? constraints.fixedNodeConstraint : undefined,
-    relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
-    alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
-    initialEnergyOnIncremental: initialEnergyOnIncremental,
-    stop: () => {      
-      if (applyIncremental) {
-        cy.layout({
-          name: "fcose",
-          randomize: false,
-          animationDuration: 500,
-          idealEdgeLength: idealEdgeLength,
-          fixedNodeConstraint: constraints.fixedNodeConstraint.length != 0 ? constraints.fixedNodeConstraint : undefined,
-          initialEnergyOnIncremental: 0.05
-        }).run();
-      }
-    }
-  }).run();
+  return {constraints: constraints, applyIncremental: assignment.applyIncremental};
 };
 
 // remove one degree nodes from graph to make it simpler
-let pruneGraph = function (graph) {
+let pruneGraph = function (cy, graph) {
   let prunedGraph = cy.collection();
   let oneDegreeNodes = cy.collection();
   graph.nodes().forEach(node => {
@@ -153,4 +104,4 @@ let pruneGraph = function (graph) {
   return { prunedGraph, ignoredGraph };
 };
 
-export { applyLayout };
+export { generateConstraints };

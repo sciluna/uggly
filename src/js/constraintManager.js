@@ -1,10 +1,10 @@
-let generateConstraints = function (placement, isLoop) {
+let computeConstraints = function (placement, isLoop, slopeThreshold) {
   let relativePlacementConstraints = [];
   let verticalAlignments = [];
   let horizontalAlignments = [];
 
   placement.forEach(line => {
-    let direction = getLineDirection(line);
+    let direction = getLineDirection(line, slopeThreshold);
     if (direction == "l-r") {
       // generate appropriate constraints
       let relativePlacement = [];
@@ -177,15 +177,15 @@ let generateConstraints = function (placement, isLoop) {
 };
 
 // calculates line direction
-let getLineDirection = function(line) {
+let getLineDirection = function(line, slopeThreshold = 0.20) {
   let direction = "l-r";
-  if (Math.abs(line.end[1] - line.start[1]) / Math.abs(line.end[0] - line.start[0]) < 0.20) {
+  if (Math.abs(line.end[1] - line.start[1]) / Math.abs(line.end[0] - line.start[0]) < slopeThreshold) {
     if (line.end[0] - line.start[0] > 0) {
       direction = "l-r";
     } else {
       direction = "r-l";
     }
-  } else if (Math.abs(line.end[0] - line.start[0]) / Math.abs(line.end[1] - line.start[1]) < 0.20) {
+  } else if (Math.abs(line.end[0] - line.start[0]) / Math.abs(line.end[1] - line.start[1]) < slopeThreshold) {
     if (line.end[1] - line.start[1] > 0) {
       direction = "t-b";
     } else {
@@ -240,4 +240,4 @@ let mergeArrays = function (arrays) {
   return arrays;
 };
 
-export { generateConstraints };
+export { computeConstraints };
