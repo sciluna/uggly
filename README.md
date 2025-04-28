@@ -8,7 +8,82 @@ Here is a video tutorial:
 
 https://github.com/user-attachments/assets/0f4eac7a-4a78-41b8-8089-660c36cb884f
 
+## Dependencies
+  
+  * Cytoscape.js ^3.2.0
+  * [Skeleton Tracing](https://github.com/LingDong-/skeleton-tracing)
+  * Simplify.js ^1.2.4
+
 ## Usage instructions
+
+Download the library:
+ * via npm: `npm install uggly`,
+ * via bower: `bower install uggly`, or
+ * via direct download in the repository (probably from a tag).
+
+Import the library as appropriate for your project:
+
+ES import:
+
+```js
+import uggly from 'uggly';
+```
+
+CommonJS require:
+
+```js
+const uggly = require('uggly');
+```
+
+For plain HTML/JS, just add the following:
+```
+<script src="https://unpkg.com/uggly/dist/bundle.umd.js"></script>
+```
+
+Then to generate the required placement constraints, call 
+```js
+let result = await uggly.generateConstraints({...});
+```
+
+## API
+
+`uggly.generateConstraints(options)`
+
+To generate the required placement constraints based on the given graph and image data.
+
+When calling the `generateConstraints` function, the following options are supported:
+
+```js
+let options = {
+  // cy instance that the algorithm will apply (required)
+  cy: cyInstance,
+  // an ImageData object returned from CanvasRenderingContext2D: getImageData() method (required)
+  imageData: imageData, 
+  // a cy collection that contains graph elements that the algorithm will apply
+  // if it is undefined, then algorithm applies to whole graph
+  subset: undefined, 
+  // slope threshold to capture the horizontal and vertical line segments more efficiently
+  // higher value gives more flexibility
+  slopeThreshold: 0.2, 
+  // you can provide a number or a function which takes cy as the input and returns a value
+  // if it is undefined, then algorithm applies 2 * Math.sqrt(|V|)
+  cycleThreshold: undefined
+};
+```
+
+`generateConstraints` function returns a JS object 
+```js
+{
+  constraints: {  // constraints compatible with fCoSE layout algorithm
+    relativePlacementConstraint: ...,
+    alignmentConstraint: ...,
+    fixedNodeConstraint: ...
+  },
+  applyIncremental: true/false  // This is a recommendation whether to apply a second incremental layout after applying a layout with constraints. (see demo)
+}
+```
+
+After constraints are generated, they can be used as options in the layout algorithm as shown in the [demo](https://github.com/sciluna/uggly/blob/main/demo/demo.js).
 
 ## Test with LLMs
 
