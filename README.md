@@ -6,7 +6,7 @@ Click [here](https://sciluna.github.io/uggly/demo/index.html) for a demo.
 
 Here is a video tutorial:
 
-https://github.com/user-attachments/assets/0f4eac7a-4a78-41b8-8089-660c36cb884f
+https://github.com/user-attachments/assets/21c3380e-7239-41cb-86d6-a2e0b76a1876
 
 ## Dependencies
   
