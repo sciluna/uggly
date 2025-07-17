@@ -8,6 +8,10 @@ Here is a video tutorial:
 
 https://github.com/user-attachments/assets/21c3380e-7239-41cb-86d6-a2e0b76a1876
 
+Please cite the following paper when you use this algorithm:
+
+Balci, H., & Luna, A. (2025). User-Guided Force-Directed Graph Layout. arXiv preprint arXiv:2506.15860. doi: [10.48550/arXiv.2506.15860](https://doi.org/10.48550/arXiv.2506.15860)
+
 ## Dependencies
   
   * Cytoscape.js ^3.2.0
