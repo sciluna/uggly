@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Balci"
+  given-names: "Hasan"
+  orcid: "https://orcid.org/0000-0001-8319-7758"
+- family-names: "Luna"
+  given-names: "Augustin"
+  orcid: "https://orcid.org/0000-0001-5709-371X"
+title: "uggly"
+version: 1.0.0
+date-released: 2025-04-30
+url: "https://github.com/sciluna/uggly"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: "Balci"
+    given-names: "Hasan"
+    orcid: "https://orcid.org/0000-0001-8319-7758"
+  - family-names: "Luna"
+    given-names: "Augustin"
+    orcid: "https://orcid.org/0000-0001-5709-371X"
+  doi: "10.48550/arXiv.2506.15860"
+  journal: "arXiv"
+  title: "User-Guided Force-Directed Graph Layout"
+  month: 6
+  year: 2025
