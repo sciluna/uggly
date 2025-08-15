@@ -256,23 +256,25 @@ document.getElementById("layoutButton").addEventListener("click", async function
   document.getElementById("layoutButton").innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only"> Processing...</span>';
   document.getElementById("layoutButton").disabled = true;
 
+  let layoutName = document.querySelector('input[name="layoutName"]:checked').value;
+  let slopeThreshold = document.getElementById("slopeThreshold").value;
   let imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
   let subset = undefined;
   if (cy.elements(':selected').length > 0) {
     subset = cy.elements(':selected');
   }
 
-  let result = await uggly.generateConstraints({cy: cy, imageData: imageData, subset: subset});
+  let result = await uggly.generateConstraints({cy: cy, imageData: imageData, subset: subset, slopeThreshold: slopeThreshold});
   let constraints = result.constraints;
   let applyIncremental = result.applyIncremental;
 
-  await applyLayout(constraints, applyIncremental);
+  await applyLayout(layoutName, constraints, applyIncremental);
 
   document.getElementById("layoutButton").disabled = false;
   document.getElementById("layoutButton").innerHTML = 'Apply Layout';
 });
 
-async function applyLayout(constraints, applyIncremental) {
+async function applyLayout(layoutName, constraints, applyIncremental) {
   let randomize = true;
   let initialEnergyOnIncremental = 0.3;
 
@@ -296,19 +298,80 @@ async function applyLayout(constraints, applyIncremental) {
     idealEdgeLength = 50;
   }
 
-  try {
-    callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental);
-  } catch (error) {
-    alert("Couldn't process constraints! Please try again!");
+  if (layoutName == "fcose") {  // call fCoSE layout
+    try {
+      callFcoseLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental);
+    } catch (error) {
+      alert("Couldn't process constraints! Please try again!");
+    }
+  } else {  // call CoLa layout
+    try {
+      constraints = convertToColaConstraints(constraints);  // convert constraints to CoLa format
+      callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental);
+    } catch (error) {
+      alert("Couldn't process constraints! Please try again!");
+    }    
   }
 }
 
-function callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental) {
+function convertToColaConstraints(constraints) {
+  let colaConstraints = {};
+  // process alignment constraints - first vertical then horizontal
+  if (constraints.alignmentConstraint.vertical || constraints.alignmentConstraint.horizontal) {
+    colaConstraints.alignment = {};
+  }
+  if (constraints.alignmentConstraint.vertical) {
+    colaConstraints.alignment.vertical = [];
+    constraints.alignmentConstraint.vertical.forEach(verticalAlignment => {
+      let colaVerticalAlignment = [];
+      verticalAlignment.forEach(nodeId => {
+        colaVerticalAlignment.push({node: cy.getElementById(nodeId)});
+      });
+      colaConstraints.alignment.vertical.push(colaVerticalAlignment);
+    });
+  }
+
+  if (constraints.alignmentConstraint.horizontal) {
+    colaConstraints.alignment.horizontal = [];
+    constraints.alignmentConstraint.horizontal.forEach(horizontalAlignment => {
+      let colaHorizontalAlignment = [];
+      horizontalAlignment.forEach(nodeId => {
+        colaHorizontalAlignment.push({node: cy.getElementById(nodeId)});
+      });
+      colaConstraints.alignment.horizontal.push(colaHorizontalAlignment);
+    });
+  }
+
+  // process relative placement constraints
+  if (constraints.relativePlacementConstraint) {
+    colaConstraints.gapInequalities = [];
+    constraints.relativePlacementConstraint.forEach(constraint => {
+      let colaConstraint;  
+      if (constraint.left) {
+        colaConstraint = {"axis": "x", "left": cy.getElementById(constraint.left), "right": cy.getElementById(constraint.right), "gap": cy.getElementById(constraint.left).width() / 2 + cy.getElementById(constraint.right).width() / 2 + 50, "equality": false};
+      } else {
+        colaConstraint = {"axis": "y", "left": cy.getElementById(constraint.top), "right": cy.getElementById(constraint.bottom), "gap": cy.getElementById(constraint.top).height() / 2 + cy.getElementById(constraint.bottom).height() / 2 + 50, "equality": false};
+      }
+      colaConstraints.gapInequalities.push(colaConstraint);
+    });
+  }
+
+  // process fixed node constraints - cola gets fixed nodes by looking their locked status
+  if (constraints.fixedNodeConstraint) {
+    constraints.fixedNodeConstraint.forEach(constraint => {
+      cy.getElementById(constraint.nodeId).lock();
+    });
+  }
+
+  return colaConstraints;
+}
+
+function callFcoseLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental) {
   cy.layout({
     name: "fcose",
     randomize: randomize,
     idealEdgeLength: idealEdgeLength,
-    animationDuration: 1500,
+    animationDuration: 1000,
     fixedNodeConstraint: constraints.fixedNodeConstraint.length != 0 ? constraints.fixedNodeConstraint : undefined,
     relativePlacementConstraint: constraints.relativePlacementConstraint ? constraints.relativePlacementConstraint : undefined,
     alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
@@ -322,6 +385,39 @@ function callLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, cons
           idealEdgeLength: idealEdgeLength,
           fixedNodeConstraint: constraints.fixedNodeConstraint.length != 0 ? constraints.fixedNodeConstraint : undefined,
           initialEnergyOnIncremental: 0.05
+        }).run();
+      }
+    }
+  }).run();
+};
+
+function callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental) {
+  cy.layout({
+    name: "cola",
+    randomize: randomize,
+    animate: true,
+    handleDisconnected: false,
+    maxSimulationTime: 1500,
+    convergenceThreshold: 0.01,
+    nodeSpacing: 20,
+    edgeLength: idealEdgeLength,
+    alignment: constraints.alignment,
+    gapInequalities: constraints.gapInequalities,
+    unconstrIter: 10,
+    userConstIter: 15,
+    allConstIter: 20,
+    stop: () => {
+      if (applyIncremental) {
+        cy.layout({
+          name: "cola",
+          randomize: false,
+          animate: true,
+          handleDisconnected: false,
+          maxSimulationTime: 500,
+          convergenceThreshold: 0.01,
+          nodeSpacing: 20,
+          edgeLength: idealEdgeLength,
+          allConstIter: 10
         }).run();
       }
     }
