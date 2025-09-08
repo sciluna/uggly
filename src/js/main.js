@@ -1,9 +1,9 @@
 import { computeConstraints } from "./constraintManager";
-import { splitArrayProportionally, findLongestCycle, calculateLineLengths, extractLinesWithVision, orderLines, findCoverage } from "./auxiliary";
+import { splitArrayProportionally, findLongestCycle, calculateLineLengths, extractLinesWithVision, findCoverage, rotateLinesClockwise, reorderLines, findNodeBottom } from "./auxiliary";
 
-let extractLines = async function (imageData) {
+let extractLines = async function (imageData, connectionTolerance) {
 
-  let lines = await extractLinesWithVision(imageData);
+  let lines = await extractLinesWithVision(imageData, connectionTolerance);
 
   return lines;
 };
@@ -16,7 +16,6 @@ let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
 
   if (lines[0].start[0] == lines[lineCount - 1].end[0] && lines[0].start[1] == lines[lineCount - 1].end[1]) { // in case the drawing is a loop
     let graphPath = findLongestCycle(prunedGraph, cy);
-
     let cycleThold = cycleThreshold ? cycleThreshold : 2 * Math.sqrt(prunedGraph.nodes().length);
     if (graphPath.length < cycleThold) {
       let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
@@ -30,6 +29,8 @@ let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
       return {lines, applyIncremental}; 
     }
     isLoop = true;
+    lines = rotateLinesClockwise(lines);
+    lineSizes = calculateLineLengths(lines);
     let newDistribution = splitArrayProportionally(graphPath, lineSizes);
     let lastLine = newDistribution[newDistribution.length - 1];
     lastLine.push(newDistribution[0][0]);
@@ -39,7 +40,10 @@ let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
     });
 
   } else { // in case the drawing is a path consisting segments
-    let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
+    lines = reorderLines(lines);
+    lineSizes = calculateLineLengths(lines);
+    let nodeAtBottom = findNodeBottom(prunedGraph);
+    let { chunks: newDistribution, parent } = findCoverage(prunedGraph, nodeAtBottom, lineSizes);
     lines.forEach((line, i) => {
       line.nodesAll = newDistribution[i];
       line.parent = parent;
@@ -50,7 +54,7 @@ let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
   return {lines, applyIncremental, isLoop}; 
 };
 
-let generateConstraints = async function(cy, imageData, subset, slopeThreshold, cycleThreshold){
+let generateConstraints = async function(cy, imageData, subset, slopeThreshold, cycleThreshold, connectionTolerance){
   let graph = cy.elements();
 
   let fixedNodeConstraints = [];
@@ -67,7 +71,7 @@ let generateConstraints = async function(cy, imageData, subset, slopeThreshold, 
   let prunedGraph = pruneResult.prunedGraph;
 
   // extract lines either using vision techniques or llms
-  let lines = await extractLines(imageData);
+  let lines = await extractLines(imageData, connectionTolerance);
 
   // lines now have assigned nodes
   let assignment = assignNodesToLines(prunedGraph, lines, cycleThreshold);
@@ -87,7 +91,7 @@ let pruneGraph = function (cy, graph) {
       oneDegreeNodes.merge(node);
     }
   });
-  if (oneDegreeNodes.length == 2) {
+  if ((oneDegreeNodes.length == 2 && graph.nodes().length == 3) || (graph.nodes().length == 2)) {  // in case it is a 3-node or 2-node line graph
     prunedGraph = graph;
   } else {
     graph.nodes().forEach(node => {

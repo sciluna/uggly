@@ -13,7 +13,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
   <!-- Cytoscape -->
-  <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+  <script src="https://unpkg.com/cytoscape@3.31.0/dist/cytoscape.min.js"></script>
   <!-- Cytoscape fcose extension -->
   <script src="https://unpkg.com/layout-base/layout-base.js"></script> 
   <script src="https://unpkg.com/cose-base/cose-base.js"></script>
@@ -83,7 +83,7 @@
     <div id="shapeInputField">
       <h5>Layout Options</h5>
       <div style="font-size: 15;">
-        <label for="layoutName" style="padding: 0 3 3 0; width: 150px;">Layout Type:</label>
+        <label for="layoutName" style="padding: 0 3 3 0; width: 175px;">Layout Type:</label>
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" name="layoutName" id="layoutName1" value="fcose" checked>
           <label class="form-check-label" for="layoutName1">fCoSE</label>
@@ -92,9 +92,19 @@
           <input class="form-check-input" type="radio" name="layoutName" id="layoutName2" value="cola">
           <label class="form-check-label" for="layoutName2">CoLa</label>
         </div><br>
-        <label for="slopeThreshold" style="padding: 10 3 15 0;  width: 150px;">Slope Threshold:</label>
+        <div class="form-check form-check-inline d-flex" style="padding: 5 0 0 0px;">
+          <label for="applyPolishing" class="form-check-label me-4" style="width: 175px;">
+            Apply Polishing:
+          </label>
+          <input id="applyPolishing" class="form-check-input" type="checkbox" style="margin-left: -20.5px;" checked>
+        </div>
+        <label for="slopeThreshold" style="padding: 10 3 3 0; width: 175px;">Slope Threshold:</label>
         <div class="form-check form-check-inline" style="padding-left: 0;">
-          <input id="slopeThreshold" class="form-control form-control-sm" type="number" value="0.20" step="0.01" min="0" max="1">
+          <input id="slopeThreshold" class="form-control form-control-sm" type="number" value="0.15" step="0.01" min="0" max="1">
+        </div><br>
+        <label for="connectionTolerance" style="padding: 10 3 15 0;  width: 175px;">Connection Tolerance:</label>
+        <div class="form-check form-check-inline" style="padding-left: 0;">
+          <input id="connectionTolerance" class="form-control form-control-sm" type="number" value="10" step="1" min="0" max="500">
         </div>
       </div>
       <canvas id="drawingCanvas"></canvas><br>

@@ -257,24 +257,26 @@ document.getElementById("layoutButton").addEventListener("click", async function
   document.getElementById("layoutButton").disabled = true;
 
   let layoutName = document.querySelector('input[name="layoutName"]:checked').value;
-  let slopeThreshold = document.getElementById("slopeThreshold").value;
+  let applyPolishing = document.getElementById('applyPolishing').checked;
+  let slopeThreshold = parseFloat(document.getElementById("slopeThreshold").value);
+  let connectionTolerance = parseInt(document.getElementById("connectionTolerance").value);
   let imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
   let subset = undefined;
   if (cy.elements(':selected').length > 0) {
     subset = cy.elements(':selected');
   }
 
-  let result = await uggly.generateConstraints({cy: cy, imageData: imageData, subset: subset, slopeThreshold: slopeThreshold});
+  let result = await uggly.generateConstraints({cy: cy, imageData: imageData, subset: subset, slopeThreshold: slopeThreshold, connectionTolerance: connectionTolerance});
   let constraints = result.constraints;
   let applyIncremental = result.applyIncremental;
 
-  await applyLayout(layoutName, constraints, applyIncremental);
+  await applyLayout(layoutName, constraints, applyIncremental, applyPolishing);
 
   document.getElementById("layoutButton").disabled = false;
   document.getElementById("layoutButton").innerHTML = 'Apply Layout';
 });
 
-async function applyLayout(layoutName, constraints, applyIncremental) {
+async function applyLayout(layoutName, constraints, applyIncremental, applyPolishing) {
   let randomize = true;
   let initialEnergyOnIncremental = 0.3;
 
@@ -300,14 +302,14 @@ async function applyLayout(layoutName, constraints, applyIncremental) {
 
   if (layoutName == "fcose") {  // call fCoSE layout
     try {
-      callFcoseLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental);
+      callFcoseLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental, applyPolishing);
     } catch (error) {
       alert("Couldn't process constraints! Please try again!");
     }
   } else {  // call CoLa layout
     try {
       constraints = convertToColaConstraints(constraints);  // convert constraints to CoLa format
-      callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental);
+      callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental, applyPolishing);
     } catch (error) {
       alert("Couldn't process constraints! Please try again!");
     }    
@@ -348,9 +350,9 @@ function convertToColaConstraints(constraints) {
     constraints.relativePlacementConstraint.forEach(constraint => {
       let colaConstraint;  
       if (constraint.left) {
-        colaConstraint = {"axis": "x", "left": cy.getElementById(constraint.left), "right": cy.getElementById(constraint.right), "gap": cy.getElementById(constraint.left).width() / 2 + cy.getElementById(constraint.right).width() / 2 + 50, "equality": false};
+        colaConstraint = {"axis": "x", "left": cy.getElementById(constraint.left), "right": cy.getElementById(constraint.right), "gap": constraint.gap? constraint.gap : cy.getElementById(constraint.left).width() / 2 + cy.getElementById(constraint.right).width() / 2 + 50, "equality": false};
       } else {
-        colaConstraint = {"axis": "y", "left": cy.getElementById(constraint.top), "right": cy.getElementById(constraint.bottom), "gap": cy.getElementById(constraint.top).height() / 2 + cy.getElementById(constraint.bottom).height() / 2 + 50, "equality": false};
+        colaConstraint = {"axis": "y", "left": cy.getElementById(constraint.top), "right": cy.getElementById(constraint.bottom), "gap": constraint.gap? constraint.gap : cy.getElementById(constraint.top).height() / 2 + cy.getElementById(constraint.bottom).height() / 2 + 50, "equality": false};
       }
       colaConstraints.gapInequalities.push(colaConstraint);
     });
@@ -366,7 +368,7 @@ function convertToColaConstraints(constraints) {
   return colaConstraints;
 }
 
-function callFcoseLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental) {
+function callFcoseLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental, applyPolishing) {
   cy.layout({
     name: "fcose",
     randomize: randomize,
@@ -377,7 +379,7 @@ function callFcoseLayout(randomize, idealEdgeLength, initialEnergyOnIncremental,
     alignmentConstraint: constraints.alignmentConstraint ? constraints.alignmentConstraint : undefined,
     initialEnergyOnIncremental: initialEnergyOnIncremental,
     stop: () => {      
-      if (applyIncremental) {
+      if (applyIncremental && applyPolishing) {
         cy.layout({
           name: "fcose",
           randomize: false,
@@ -391,7 +393,7 @@ function callFcoseLayout(randomize, idealEdgeLength, initialEnergyOnIncremental,
   }).run();
 };
 
-function callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental) {
+function callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, constraints, applyIncremental, applyPolishing) {
   cy.layout({
     name: "cola",
     randomize: randomize,
@@ -407,7 +409,7 @@ function callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, 
     userConstIter: 15,
     allConstIter: 20,
     stop: () => {
-      if (applyIncremental) {
+      if (applyIncremental && applyPolishing) {
         cy.layout({
           name: "cola",
           randomize: false,
@@ -420,6 +422,7 @@ function callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, 
           allConstIter: 10
         }).run();
       }
+      cy.nodes().unlock();
     }
   }).run();
 };

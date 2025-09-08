@@ -4,7 +4,9 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
   let horizontalAlignments = [];
 
   placement.forEach(line => {
-    let direction = getLineDirection(line, slopeThreshold);
+    let directionInfo = getLineDirection(line, slopeThreshold);
+    let direction = directionInfo.direction;
+    let angle = directionInfo.angle;
     if (direction == "l-r") {
       // generate appropriate constraints
       let relativePlacement = [];
@@ -98,8 +100,8 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       } else {
         line.nodesAll.forEach((node, i) => {
           if (line.parent[node] != null) {
-            relativePlacement.push({left: line.parent[node], right: node});
-            relativePlacement.push({top: line.parent[node], bottom: node});
+            relativePlacement.push({left: line.parent[node], right: node, gap: Math.cos(angle) * 80});
+            relativePlacement.push({top: line.parent[node], bottom: node, gap: Math.sin(angle) * 80});
           }
         });
       }
@@ -117,8 +119,8 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       } else {
         line.nodesAll.forEach((node, i) => {
           if (line.parent[node] != null) {
-            relativePlacement.push({right: line.parent[node], left: node});
-            relativePlacement.push({bottom: line.parent[node], top: node});
+            relativePlacement.push({right: line.parent[node], left: node, gap: Math.cos(angle) * 80});
+            relativePlacement.push({bottom: line.parent[node], top: node, gap: Math.sin(angle) * 80});
           }
         });
       }
@@ -136,8 +138,8 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       } else {
         line.nodesAll.forEach((node, i) => {
           if (line.parent[node] != null) {
-            relativePlacement.push({right: line.parent[node], left: node});
-            relativePlacement.push({top: line.parent[node], bottom: node});
+            relativePlacement.push({right: line.parent[node], left: node, gap: Math.cos(angle) * 80});
+            relativePlacement.push({top: line.parent[node], bottom: node, gap: Math.sin(angle) * 80});
           }
         });
       }
@@ -156,8 +158,8 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       } else {
         line.nodesAll.forEach((node, i) => {
           if (line.parent[node] != null) {
-            relativePlacement.push({left: line.parent[node], right: node});
-            relativePlacement.push({bottom: line.parent[node], top: node});
+            relativePlacement.push({left: line.parent[node], right: node, gap: Math.cos(angle) * 80});
+            relativePlacement.push({bottom: line.parent[node], top: node, gap: Math.sin(angle) * 80});
           }
         });
       }
@@ -177,8 +179,9 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
 };
 
 // calculates line direction
-let getLineDirection = function(line, slopeThreshold = 0.20) {
+let getLineDirection = function(line, slopeThreshold = 0.15) {
   let direction = "l-r";
+  let angle = Math.atan(Math.abs(line.end[1] - line.start[1]) / Math.abs(line.end[0] - line.start[0]));
   if (Math.abs(line.end[1] - line.start[1]) / Math.abs(line.end[0] - line.start[0]) < slopeThreshold) {
     if (line.end[0] - line.start[0] > 0) {
       direction = "l-r";
@@ -200,7 +203,7 @@ let getLineDirection = function(line, slopeThreshold = 0.20) {
   } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
     direction = "bl-tr";
   }
-  return direction;
+  return {direction, angle};
 };
 
 // auxuliary function to merge arrays with duplicates
@@ -513,6 +516,72 @@ function calculateLineLengths(lines) {
   return sizes;
 }
 
+// find node at bottom of the graph
+function findNodeBottom (prunedGraph) {
+  let nodes = prunedGraph.nodes();
+  let maxYIndex = 0;
+  let maxY = nodes[0].position().y; // y is index 1
+
+  for (let i = 1; i < nodes.length; i++) {
+    let y = nodes[i].position().y;
+    if (y > maxY) {
+      maxY = y;
+      maxYIndex = i;
+    }
+  }
+  return nodes[maxYIndex];
+}
+
+// rotates line array so that the line whose start point is at top (lowest y value) comes first
+function reorderLines(lines) {
+  if (lines.length === 0) return lines;
+
+  if (lines[0].start[1] > lines[lines.length - 1].end[1]) {
+    lines = lines
+      .map(line => ({ start: line.end, end: line.start })) // flip each line
+      .reverse(); // reverse order
+  }
+  return lines;
+}
+
+// rotates line array so that the line whose start point is at top (lowest y value) comes first
+function rotateLinesClockwise(lines) {
+  if (lines.length === 0) return lines;
+
+  // find index of line whose start has the lowest y
+  let minYIndex = 0;
+  let minY = lines[0].start[1]; // y is index 1
+
+  for (let i = 1; i < lines.length; i++) {
+    let y = lines[i].start[1];
+    if (y < minY) {
+      minY = y;
+      minYIndex = i;
+    }
+  }
+
+  // rotate array so that line with lowest start.y comes first
+  let rotated = lines.slice(minYIndex).concat(lines.slice(0, minYIndex));
+
+  // check polygon orientation (using start points)
+  let points = rotated.map(line => line.start);
+  let area = 0;
+  for (let i = 0; i < points.length; i++) {
+    let [x1, y1] = points[i];
+    let [x2, y2] = points[(i + 1) % points.length];
+    area += (x1 * y2 - x2 * y1);
+  }
+
+  // if counter-clockwise, reverse to make clockwise
+  if (area < 0) {
+    rotated = rotated
+      .map(line => ({ start: line.end, end: line.start })) // flip each line
+      .reverse(); // reverse order
+  }
+
+  return rotated;
+}
+
 function findLongestCycle(graph, cy) {
   let longestCycleLength = 0;
   let longestCycle = [];
@@ -556,10 +625,48 @@ function findLongestCycle(graph, cy) {
     dfs(nodeId, nodeId, [], new Set());
   });
 
+  // Rotate cycle so the node with lowest y (top node) is first
+  if (longestCycle.length > 0) {
+    let minYIndex = 0;
+    let minY = cy.getElementById(longestCycle[0]).position('y');
+
+    for (let i = 1; i < longestCycle.length; i++) {
+      let y = cy.getElementById(longestCycle[i]).position('y');
+      if (y < minY) {
+        minY = y;
+        minYIndex = i;
+      }
+    }
+
+    // Rotate cycle so minY node comes first
+    longestCycle = longestCycle.slice(minYIndex).concat(longestCycle.slice(0, minYIndex));
+
+    // Check orientation using shoelace formula
+    let points = longestCycle.map(id => {
+      let pos = cy.getElementById(id).position();
+      return [pos.x, pos.y];
+    });
+
+    let area = 0;
+    for (let i = 0; i < points.length; i++) {
+      let [x1, y1] = points[i];
+      let [x2, y2] = points[(i + 1) % points.length];
+      area += (x1 * y2 - x2 * y1);
+    }
+
+    // For screen coords (y grows downward):
+    // area > 0 → CW, area < 0 → CCW
+    longestCycle.push(longestCycle[0]); 
+    if (area < 0) {
+      longestCycle.reverse();
+    }
+    longestCycle.pop(longestCycle[longestCycle.length - 1]); 
+  }
+
   return longestCycle;
 }
 
-async function extractLinesWithVision(imageData) {
+async function extractLinesWithVision(imageData, connectionTolerance) {
   // reverse the coloring for skeleton generation
   let data = imageData.data;
   for (let i = 0; i < data.length; i += 4) {
@@ -576,7 +683,7 @@ async function extractLinesWithVision(imageData) {
   tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false, keypoints: false});
   //console.log(v);
   // simplify the generated lines
-  let tolerance = 5; // Try 1 to 5 depending on how aggressively you want to merge
+  let tolerance = 4; // Try 1 to 5 depending on how aggressively you want to merge
   let highQuality = true; // Set to true for highest quality simplification
   // Convert, simplify, and revert back to [x, y]
   let simplifiedPolylines = filteredPolylines.map(polyline => {
@@ -601,17 +708,18 @@ async function extractLinesWithVision(imageData) {
     });
   });
 
-  let lines = orderLines(tempLines);
+  let lines = orderLines(tempLines, connectionTolerance);
+  //console.log(lines);
   return lines;
 }
 
-function orderLines(edges, tolerance = 5) {
+function orderLines(edges, connectionTolerance = 5) {
   const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 
   const uniquePoints = [];
   function findOrCreateNode(pt) {
     for (let i = 0; i < uniquePoints.length; i++) {
-      if (dist(pt, uniquePoints[i]) <= tolerance) return i;
+      if (dist(pt, uniquePoints[i]) <= connectionTolerance) return i;
     }
     uniquePoints.push(pt);
     return uniquePoints.length - 1;
@@ -677,9 +785,9 @@ function orderLines(edges, tolerance = 5) {
   return lines;
 }
 
-let extractLines = async function (imageData) {
+let extractLines = async function (imageData, connectionTolerance) {
 
-  let lines = await extractLinesWithVision(imageData);
+  let lines = await extractLinesWithVision(imageData, connectionTolerance);
 
   return lines;
 };
@@ -692,7 +800,6 @@ let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
 
   if (lines[0].start[0] == lines[lineCount - 1].end[0] && lines[0].start[1] == lines[lineCount - 1].end[1]) { // in case the drawing is a loop
     let graphPath = findLongestCycle(prunedGraph, cy);
-
     let cycleThold = cycleThreshold ? cycleThreshold : 2 * Math.sqrt(prunedGraph.nodes().length);
     if (graphPath.length < cycleThold) {
       let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
@@ -706,6 +813,8 @@ let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
       return {lines, applyIncremental}; 
     }
     isLoop = true;
+    lines = rotateLinesClockwise(lines);
+    lineSizes = calculateLineLengths(lines);
     let newDistribution = splitArrayProportionally(graphPath, lineSizes);
     let lastLine = newDistribution[newDistribution.length - 1];
     lastLine.push(newDistribution[0][0]);
@@ -715,7 +824,10 @@ let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
     });
 
   } else { // in case the drawing is a path consisting segments
-    let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
+    lines = reorderLines(lines);
+    lineSizes = calculateLineLengths(lines);
+    let nodeAtBottom = findNodeBottom(prunedGraph);
+    let { chunks: newDistribution, parent } = findCoverage(prunedGraph, nodeAtBottom, lineSizes);
     lines.forEach((line, i) => {
       line.nodesAll = newDistribution[i];
       line.parent = parent;
@@ -726,7 +838,7 @@ let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
   return {lines, applyIncremental, isLoop}; 
 };
 
-let generateConstraints = async function(cy, imageData, subset, slopeThreshold, cycleThreshold){
+let generateConstraints = async function(cy, imageData, subset, slopeThreshold, cycleThreshold, connectionTolerance){
   let graph = cy.elements();
 
   let fixedNodeConstraints = [];
@@ -743,7 +855,7 @@ let generateConstraints = async function(cy, imageData, subset, slopeThreshold, 
   let prunedGraph = pruneResult.prunedGraph;
 
   // extract lines either using vision techniques or llms
-  let lines = await extractLines(imageData);
+  let lines = await extractLines(imageData, connectionTolerance);
 
   // lines now have assigned nodes
   let assignment = assignNodesToLines(prunedGraph, lines, cycleThreshold);
@@ -763,7 +875,7 @@ let pruneGraph = function (cy, graph) {
       oneDegreeNodes.merge(node);
     }
   });
-  if (oneDegreeNodes.length == 2) {
+  if ((oneDegreeNodes.length == 2 && graph.nodes().length == 3) || (graph.nodes().length == 2)) {  // in case it is a 3-node or 2-node line graph
     prunedGraph = graph;
   } else {
     graph.nodes().forEach(node => {
@@ -788,9 +900,10 @@ uggly.generateConstraints = function(options){
   let cy = options.cy;
   let imageData = options.imageData;
   let subset = options.subset || undefined;
-  let slopeThreshold = options.slopeThreshold || 0.2;
+  let slopeThreshold = options.slopeThreshold || 0.15;
   let cycleThreshold = optFn( options.cycleThreshold, cy ) || undefined;
-  return generateConstraints(cy, imageData, subset, slopeThreshold, cycleThreshold);
+  let connectionTolerance = options.connectionTolerance || 10;
+  return generateConstraints(cy, imageData, subset, slopeThreshold, cycleThreshold, connectionTolerance);
 };
 
 // Make uggly available globally if running in browser

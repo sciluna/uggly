@@ -131,6 +131,72 @@ function calculateLineLengths(lines) {
   return sizes;
 }
 
+// find node at bottom of the graph
+function findNodeBottom (prunedGraph) {
+  let nodes = prunedGraph.nodes();
+  let maxYIndex = 0;
+  let maxY = nodes[0].position().y; // y is index 1
+
+  for (let i = 1; i < nodes.length; i++) {
+    let y = nodes[i].position().y;
+    if (y > maxY) {
+      maxY = y;
+      maxYIndex = i;
+    }
+  }
+  return nodes[maxYIndex];
+}
+
+// rotates line array so that the line whose start point is at top (lowest y value) comes first
+function reorderLines(lines) {
+  if (lines.length === 0) return lines;
+
+  if (lines[0].start[1] > lines[lines.length - 1].end[1]) {
+    lines = lines
+      .map(line => ({ start: line.end, end: line.start })) // flip each line
+      .reverse(); // reverse order
+  }
+  return lines;
+}
+
+// rotates line array so that the line whose start point is at top (lowest y value) comes first
+function rotateLinesClockwise(lines) {
+  if (lines.length === 0) return lines;
+
+  // find index of line whose start has the lowest y
+  let minYIndex = 0;
+  let minY = lines[0].start[1]; // y is index 1
+
+  for (let i = 1; i < lines.length; i++) {
+    let y = lines[i].start[1];
+    if (y < minY) {
+      minY = y;
+      minYIndex = i;
+    }
+  }
+
+  // rotate array so that line with lowest start.y comes first
+  let rotated = lines.slice(minYIndex).concat(lines.slice(0, minYIndex));
+
+  // check polygon orientation (using start points)
+  let points = rotated.map(line => line.start);
+  let area = 0;
+  for (let i = 0; i < points.length; i++) {
+    let [x1, y1] = points[i];
+    let [x2, y2] = points[(i + 1) % points.length];
+    area += (x1 * y2 - x2 * y1);
+  }
+
+  // if counter-clockwise, reverse to make clockwise
+  if (area < 0) {
+    rotated = rotated
+      .map(line => ({ start: line.end, end: line.start })) // flip each line
+      .reverse(); // reverse order
+  }
+
+  return rotated;
+}
+
 function findLongestCycle(graph, cy) {
   let longestCycleLength = 0;
   let longestCycle = [];
@@ -174,10 +240,48 @@ function findLongestCycle(graph, cy) {
     dfs(nodeId, nodeId, [], new Set());
   });
 
+  // Rotate cycle so the node with lowest y (top node) is first
+  if (longestCycle.length > 0) {
+    let minYIndex = 0;
+    let minY = cy.getElementById(longestCycle[0]).position('y');
+
+    for (let i = 1; i < longestCycle.length; i++) {
+      let y = cy.getElementById(longestCycle[i]).position('y');
+      if (y < minY) {
+        minY = y;
+        minYIndex = i;
+      }
+    }
+
+    // Rotate cycle so minY node comes first
+    longestCycle = longestCycle.slice(minYIndex).concat(longestCycle.slice(0, minYIndex));
+
+    // Check orientation using shoelace formula
+    let points = longestCycle.map(id => {
+      let pos = cy.getElementById(id).position();
+      return [pos.x, pos.y];
+    });
+
+    let area = 0;
+    for (let i = 0; i < points.length; i++) {
+      let [x1, y1] = points[i];
+      let [x2, y2] = points[(i + 1) % points.length];
+      area += (x1 * y2 - x2 * y1);
+    }
+
+    // For screen coords (y grows downward):
+    // area > 0 → CW, area < 0 → CCW
+    longestCycle.push(longestCycle[0]); 
+    if (area < 0) {
+      longestCycle.reverse();
+    }
+    longestCycle.pop(longestCycle[longestCycle.length - 1]); 
+  }
+
   return longestCycle;
 }
 
-async function extractLinesWithVision(imageData) {
+async function extractLinesWithVision(imageData, connectionTolerance) {
   // reverse the coloring for skeleton generation
   let data = imageData.data;
   for (let i = 0; i < data.length; i += 4) {
@@ -194,7 +298,7 @@ async function extractLinesWithVision(imageData) {
   let v = tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false, keypoints: false});
   //console.log(v);
   // simplify the generated lines
-  let tolerance = 5; // Try 1 to 5 depending on how aggressively you want to merge
+  let tolerance = 4; // Try 1 to 5 depending on how aggressively you want to merge
   let highQuality = true; // Set to true for highest quality simplification
   // Convert, simplify, and revert back to [x, y]
   let simplifiedPolylines = filteredPolylines.map(polyline => {
@@ -219,17 +323,18 @@ async function extractLinesWithVision(imageData) {
     });
   });
 
-  let lines = orderLines(tempLines);
+  let lines = orderLines(tempLines, connectionTolerance);
+  //console.log(lines);
   return lines;
 }
 
-function orderLines(edges, tolerance = 5) {
+function orderLines(edges, connectionTolerance = 5) {
   const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
 
   const uniquePoints = [];
   function findOrCreateNode(pt) {
     for (let i = 0; i < uniquePoints.length; i++) {
-      if (dist(pt, uniquePoints[i]) <= tolerance) return i;
+      if (dist(pt, uniquePoints[i]) <= connectionTolerance) return i;
     }
     uniquePoints.push(pt);
     return uniquePoints.length - 1;
@@ -295,4 +400,4 @@ function orderLines(edges, tolerance = 5) {
   return lines;
 }
 
-export { splitArrayProportionally, findLongestCycle, calculateLineLengths, extractLinesWithVision, orderLines, findCoverage };
+export { splitArrayProportionally, findLongestCycle, calculateLineLengths, extractLinesWithVision, findCoverage, rotateLinesClockwise, reorderLines, findNodeBottom };

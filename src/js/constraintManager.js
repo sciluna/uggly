@@ -4,7 +4,9 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
   let horizontalAlignments = [];
 
   placement.forEach(line => {
-    let direction = getLineDirection(line, slopeThreshold);
+    let directionInfo = getLineDirection(line, slopeThreshold);
+    let direction = directionInfo.direction;
+    let angle = directionInfo.angle;
     if (direction == "l-r") {
       // generate appropriate constraints
       let relativePlacement = [];
@@ -98,8 +100,8 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       } else {
         line.nodesAll.forEach((node, i) => {
           if (line.parent[node] != null) {
-            relativePlacement.push({left: line.parent[node], right: node});
-            relativePlacement.push({top: line.parent[node], bottom: node});
+            relativePlacement.push({left: line.parent[node], right: node, gap: Math.cos(angle) * 80});
+            relativePlacement.push({top: line.parent[node], bottom: node, gap: Math.sin(angle) * 80});
           }
         });
       }
@@ -117,8 +119,8 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       } else {
         line.nodesAll.forEach((node, i) => {
           if (line.parent[node] != null) {
-            relativePlacement.push({right: line.parent[node], left: node});
-            relativePlacement.push({bottom: line.parent[node], top: node});
+            relativePlacement.push({right: line.parent[node], left: node, gap: Math.cos(angle) * 80});
+            relativePlacement.push({bottom: line.parent[node], top: node, gap: Math.sin(angle) * 80});
           }
         });
       }
@@ -136,8 +138,8 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       } else {
         line.nodesAll.forEach((node, i) => {
           if (line.parent[node] != null) {
-            relativePlacement.push({right: line.parent[node], left: node});
-            relativePlacement.push({top: line.parent[node], bottom: node});
+            relativePlacement.push({right: line.parent[node], left: node, gap: Math.cos(angle) * 80});
+            relativePlacement.push({top: line.parent[node], bottom: node, gap: Math.sin(angle) * 80});
           }
         });
       }
@@ -156,8 +158,8 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       } else {
         line.nodesAll.forEach((node, i) => {
           if (line.parent[node] != null) {
-            relativePlacement.push({left: line.parent[node], right: node});
-            relativePlacement.push({bottom: line.parent[node], top: node});
+            relativePlacement.push({left: line.parent[node], right: node, gap: Math.cos(angle) * 80});
+            relativePlacement.push({bottom: line.parent[node], top: node, gap: Math.sin(angle) * 80});
           }
         });
       }
@@ -177,8 +179,9 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
 };
 
 // calculates line direction
-let getLineDirection = function(line, slopeThreshold = 0.20) {
+let getLineDirection = function(line, slopeThreshold = 0.15) {
   let direction = "l-r";
+  let angle = Math.atan(Math.abs(line.end[1] - line.start[1]) / Math.abs(line.end[0] - line.start[0]));
   if (Math.abs(line.end[1] - line.start[1]) / Math.abs(line.end[0] - line.start[0]) < slopeThreshold) {
     if (line.end[0] - line.start[0] > 0) {
       direction = "l-r";
@@ -200,7 +203,7 @@ let getLineDirection = function(line, slopeThreshold = 0.20) {
   } else if (line.end[1] - line.start[1] < 0 && line.end[0] - line.start[0] > 0) {
     direction = "bl-tr";
   }
-  return direction;
+  return {direction, angle};
 };
 
 // auxuliary function to merge arrays with duplicates

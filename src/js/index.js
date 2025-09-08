@@ -7,9 +7,10 @@ uggly.generateConstraints = function(options){
   let cy = options.cy;
   let imageData = options.imageData;
   let subset = options.subset || undefined;
-  let slopeThreshold = options.slopeThreshold || 0.2;
+  let slopeThreshold = options.slopeThreshold || 0.15;
   let cycleThreshold = optFn( options.cycleThreshold, cy ) || undefined;
-  return generateConstraints(cy, imageData, subset, slopeThreshold, cycleThreshold);
+  let connectionTolerance = options.connectionTolerance || 10;
+  return generateConstraints(cy, imageData, subset, slopeThreshold, cycleThreshold, connectionTolerance);
 }
 
 // Make uggly available globally if running in browser
