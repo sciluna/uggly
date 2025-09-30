@@ -1,4 +1,5 @@
 import { generateConstraints } from "./main";
+//import { runTest } from "./test_runtime";
 let uggly = function () {
 
 };
@@ -7,11 +8,14 @@ uggly.generateConstraints = function(options){
   let cy = options.cy;
   let imageData = options.imageData;
   let subset = options.subset || undefined;
+  let idealEdgeLength = options.idealEdgeLength || 50;
   let slopeThreshold = options.slopeThreshold || 0.15;
   let cycleThreshold = optFn( options.cycleThreshold, cy ) || undefined;
-  let connectionTolerance = options.connectionTolerance || 10;
-  return generateConstraints(cy, imageData, subset, slopeThreshold, cycleThreshold, connectionTolerance);
+  let connectionTolerance = options.connectionTolerance || 20;
+  return generateConstraints(cy, imageData, subset, idealEdgeLength, slopeThreshold, cycleThreshold, connectionTolerance);
 }
+
+//uggly.runTest = runTest; // for test purposes
 
 // Make uggly available globally if running in browser
 if (typeof window !== 'undefined') {

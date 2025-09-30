@@ -1,4 +1,4 @@
-let computeConstraints = function (placement, isLoop, slopeThreshold) {
+let computeConstraints = function (placement, isLoop, idealEdgeLength, slopeThreshold) {
   let relativePlacementConstraints = [];
   let verticalAlignments = [];
   let horizontalAlignments = [];
@@ -19,11 +19,10 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
         horizontalAlignments.push(line.nodes); 
       } else {
         line.nodesAll.forEach((node, i) => {
-          if (line.parent[node] != null) {
+          if (line.parent[node] != null && i != 0) {
             relativePlacement.push({left: line.parent[node], right: node});
           }
         });
-        line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
         horizontalAlignments.push(line.nodesAll); 
       }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);    
@@ -39,11 +38,10 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
         horizontalAlignments.push(line.nodes);
       } else {
         line.nodesAll.forEach((node, i) => {
-          if (line.parent[node] != null) {
+          if (line.parent[node] != null && i != 0) {
             relativePlacement.push({right: line.parent[node], left: node});
           }
         });
-        line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
         horizontalAlignments.push(line.nodesAll);
       }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
@@ -59,11 +57,10 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
         verticalAlignments.push(line.nodes);
       } else {
         line.nodesAll.forEach((node, i) => {
-          if (line.parent[node] != null) {
+          if (line.parent[node] != null && i != 0) {
             relativePlacement.push({top: line.parent[node], bottom: node});
           }
         });
-        line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
         verticalAlignments.push(line.nodesAll);
       }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement); 
@@ -79,11 +76,10 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
         verticalAlignments.push(line.nodes);
       } else {
         line.nodesAll.forEach((node, i) => {
-          if (line.parent[node] != null) {
+          if (line.parent[node] != null && i != 0) {
             relativePlacement.push({bottom: line.parent[node], top: node});
           }
         });
-        line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
         verticalAlignments.push(line.nodesAll);
       }
       relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
@@ -91,17 +87,23 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       // generate appropriate constraints
       let relativePlacement = [];
       if (isLoop) {
-        line.nodes.forEach((node, i) => {
+        line.nodes.forEach((nodeId, i) => {
           if (i != line.nodes.length - 1) {
-            relativePlacement.push({left: node, right: line.nodes[i+1]});
-            relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+            let node = cy.getElementById(nodeId);
+            let nextNode = cy.getElementById(line.nodes[i+1]);
+            let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+            relativePlacement.push({left: nodeId, right: line.nodes[i+1], gap: gapResult[0]});
+            relativePlacement.push({top: nodeId, bottom: line.nodes[i+1], gap: gapResult[1]});
           }
         });
       } else {
-        line.nodesAll.forEach((node, i) => {
-          if (line.parent[node] != null) {
-            relativePlacement.push({left: line.parent[node], right: node, gap: Math.cos(angle) * 80});
-            relativePlacement.push({top: line.parent[node], bottom: node, gap: Math.sin(angle) * 80});
+        line.nodesAll.forEach((nodeId, i) => {
+          if (line.parent[nodeId] != null && i != 0) {
+            let node = cy.getElementById(line.parent[nodeId]);
+            let nextNode = cy.getElementById(nodeId);
+            let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+            relativePlacement.push({left: line.parent[nodeId], right: nodeId, gap: gapResult[0]});
+            relativePlacement.push({top: line.parent[nodeId], bottom: nodeId, gap: gapResult[1]});
           }
         });
       }
@@ -110,17 +112,23 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       // generate appropriate constraints
       let relativePlacement = [];
       if (isLoop) {
-        line.nodes.forEach((node, i) => {
+        line.nodes.forEach((nodeId, i) => {
           if (i != line.nodes.length - 1) {
-            relativePlacement.push({right: node, left: line.nodes[i+1]});
-            relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+            let node = cy.getElementById(nodeId);
+            let nextNode = cy.getElementById(line.nodes[i+1]);
+            let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+            relativePlacement.push({right: nodeId, left: line.nodes[i+1], gap: gapResult[0]});
+            relativePlacement.push({bottom: nodeId, top: line.nodes[i+1], gap: gapResult[1]});
           }
         });
       } else {
-        line.nodesAll.forEach((node, i) => {
-          if (line.parent[node] != null) {
-            relativePlacement.push({right: line.parent[node], left: node, gap: Math.cos(angle) * 80});
-            relativePlacement.push({bottom: line.parent[node], top: node, gap: Math.sin(angle) * 80});
+        line.nodesAll.forEach((nodeId, i) => {
+          if (line.parent[nodeId] != null && i != 0) {
+            let node = cy.getElementById(line.parent[nodeId]);
+            let nextNode = cy.getElementById(nodeId);
+            let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+            relativePlacement.push({right: line.parent[nodeId], left: nodeId, gap: gapResult[0]});
+            relativePlacement.push({bottom: line.parent[nodeId], top: nodeId, gap: gapResult[1]});
           }
         });
       }
@@ -129,17 +137,23 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       // generate appropriate constraints
       let relativePlacement = [];
       if (isLoop) {
-        line.nodes.forEach((node, i) => {
+        line.nodes.forEach((nodeId, i) => {
           if (i != line.nodes.length - 1) {
-            relativePlacement.push({right: node, left: line.nodes[i+1]});
-            relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+            let node = cy.getElementById(nodeId);
+            let nextNode = cy.getElementById(line.nodes[i+1]);
+            let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+            relativePlacement.push({right: nodeId, left: line.nodes[i+1], gap: gapResult[0]});
+            relativePlacement.push({top: nodeId, bottom: line.nodes[i+1], gap: gapResult[1]});
           }
         });
       } else {
-        line.nodesAll.forEach((node, i) => {
-          if (line.parent[node] != null) {
-            relativePlacement.push({right: line.parent[node], left: node, gap: Math.cos(angle) * 80});
-            relativePlacement.push({top: line.parent[node], bottom: node, gap: Math.sin(angle) * 80});
+        line.nodesAll.forEach((nodeId, i) => {
+          if (line.parent[nodeId] != null && i != 0) {
+            let node = cy.getElementById(line.parent[nodeId]);
+            let nextNode = cy.getElementById(nodeId);
+            let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+            relativePlacement.push({right: line.parent[nodeId], left: nodeId, gap: gapResult[0]});
+            relativePlacement.push({top: line.parent[nodeId], bottom: nodeId, gap: gapResult[1]});
           }
         });
       }
@@ -149,17 +163,23 @@ let computeConstraints = function (placement, isLoop, slopeThreshold) {
       // generate appropriate constraints
       let relativePlacement = [];
       if (isLoop) {
-        line.nodes.forEach((node, i) => {
+        line.nodes.forEach((nodeId, i) => {
           if (i != line.nodes.length - 1) {
-            relativePlacement.push({left: node, right: line.nodes[i+1]});
-            relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+            let node = cy.getElementById(nodeId);
+            let nextNode = cy.getElementById(line.nodes[i+1]);
+            let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+            relativePlacement.push({left: nodeId, right: line.nodes[i+1], gap: gapResult[0]});
+            relativePlacement.push({bottom: nodeId, top: line.nodes[i+1], gap: gapResult[1]});
           }
         });
       } else {
-        line.nodesAll.forEach((node, i) => {
-          if (line.parent[node] != null) {
-            relativePlacement.push({left: line.parent[node], right: node, gap: Math.cos(angle) * 80});
-            relativePlacement.push({bottom: line.parent[node], top: node, gap: Math.sin(angle) * 80});
+        line.nodesAll.forEach((nodeId, i) => {
+          if (line.parent[nodeId] != null && i != 0) {
+            let node = cy.getElementById(line.parent[nodeId]);
+            let nextNode = cy.getElementById(nodeId);
+            let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+            relativePlacement.push({left: line.parent[nodeId], right: nodeId, gap: gapResult[0]});
+            relativePlacement.push({bottom: line.parent[nodeId], top: nodeId, gap: gapResult[1]});
           }
         });
       }
@@ -204,6 +224,15 @@ let getLineDirection = function(line, slopeThreshold = 0.15) {
     direction = "bl-tr";
   }
   return {direction, angle};
+};
+
+let calculateGaps = function(node1, node2, idealEdgeLength, angle) {
+  let r1 = Math.min((node1.width() / 2) / Math.cos(angle), (node1.height() / 2) / Math.sin(angle));
+  let r2 = Math.min((node2.width() / 2) / Math.cos(angle), (node2.height() / 2) / Math.sin(angle));
+  let gapX = (r1 + r2 + idealEdgeLength) * Math.cos(angle);
+  let gapY = (r1 + r2 + idealEdgeLength) * Math.sin(angle);
+
+  return [gapX, gapY];
 };
 
 // auxuliary function to merge arrays with duplicates

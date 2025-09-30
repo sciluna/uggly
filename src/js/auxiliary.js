@@ -1,7 +1,7 @@
 import tracer from '../../lib/trace_skeleton.min.js';
 import simplify from 'simplify-js';
 
-function bfsFarthestNode(graph, start) {
+function bfsFarthestNode(graph, start, isSubset) {
   const visited = new Set();
   const queue = [[start, null]];
   const parent = {};
@@ -14,7 +14,12 @@ function bfsFarthestNode(graph, start) {
       parent[node.id()] = from;
       farthest = node;
 
-      let neighborEdges = node.edgesWith(graph);
+      let neighborEdges;
+      if (isSubset) {
+        neighborEdges = node.edgesWith(graph);
+      } else {
+        neighborEdges = node.neighborhood().edges();
+      }
 
       for (let i = 0; i < neighborEdges.length; i++) {
         let neighborEdge = neighborEdges[i];
@@ -63,17 +68,40 @@ function bfsSplitGraph(graph, start, sizeRatios) {
   }
 
   const totalSize = order.length;
-  const totalRatio = sizeRatios.reduce((a, b) => a + b, 0);
+  let totalRatio = sizeRatios.reduce((a, b) => a + b, 0);
   const chunks = [];
 
   let startIdx = 0;
+  let oldChunkSize = 0;
+  let oldRatio = 0;
+  let remaining = totalSize;
   for (let i = 0; i < sizeRatios.length; i++) {
     const ratio = sizeRatios[i];
-    const chunkSize = Math.round((ratio / totalRatio) * totalSize);
-
-    const chunk = order.slice(startIdx, startIdx + chunkSize);
+    const chunkSize = Math.round((ratio / totalRatio) * remaining);
+    let chunk;
+    if(i == 0) {
+      chunk = order.slice(startIdx, startIdx + chunkSize);     
+    } else {
+      if(chunkSize > oldChunkSize) {
+        chunks[i-1] = chunks[i-1].concat(order.slice(startIdx, startIdx + 1));
+        chunk = order.slice(startIdx, startIdx + chunkSize); 
+      } else if(chunkSize == oldChunkSize) {
+        if (ratio > oldRatio) {
+          chunk = order.slice(startIdx - 1, startIdx + chunkSize);
+        } else {
+          chunks[i-1] = chunks[i-1].concat(order.slice(startIdx, startIdx + 1));
+          chunk = order.slice(startIdx, startIdx + chunkSize);
+        }
+      } else {
+        chunk = order.slice(startIdx - 1, startIdx + chunkSize);
+      }
+    }
     chunks.push(chunk);
+    remaining -= chunkSize;
+    totalRatio -= ratio;
     startIdx += chunkSize;
+    oldChunkSize = chunkSize;
+    oldRatio = ratio;
   }
 
   // In case of rounding issues, ensure all nodes are included
@@ -84,8 +112,8 @@ function bfsSplitGraph(graph, start, sizeRatios) {
   return { chunks, parent };
 }
 
-function findCoverage(graph, startNode, sizeRatios) {
-  const { farthest: end1 } = bfsFarthestNode(graph, startNode);
+function findCoverage(graph, startNode, sizeRatios, isSubset) {
+  const { farthest: end1 } = bfsFarthestNode(graph, startNode, isSubset);
   const { chunks, parent } = bfsSplitGraph(graph, end1, sizeRatios);
   return { chunks, parent };
 }
@@ -197,7 +225,7 @@ function rotateLinesClockwise(lines) {
   return rotated;
 }
 
-function findLongestCycle(graph, cy) {
+function findLongestCycle(graph, cy, isSubset) {
   let longestCycleLength = 0;
   let longestCycle = [];
   let visited = new Set();
@@ -218,7 +246,12 @@ function findLongestCycle(graph, cy) {
       path.push(nodeId);
       pathSet.add(nodeId);
       
-      let neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
+      let neighborEdges;
+      if (isSubset) {
+        neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
+      } else {
+        neighborEdges = cy.getElementById(nodeId).neighborhood().edges();
+      }
 
       for (let i = 0; i < neighborEdges.length; i++) {
         let neighborEdge = neighborEdges[i];
@@ -298,7 +331,7 @@ async function extractLinesWithVision(imageData, connectionTolerance) {
   let v = tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false, keypoints: false});
   //console.log(v);
   // simplify the generated lines
-  let tolerance = 4; // Try 1 to 5 depending on how aggressively you want to merge
+  let tolerance = 5; // Try 1 to 5 depending on how aggressively you want to merge
   let highQuality = true; // Set to true for highest quality simplification
   // Convert, simplify, and revert back to [x, y]
   let simplifiedPolylines = filteredPolylines.map(polyline => {

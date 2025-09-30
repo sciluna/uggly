@@ -4,7 +4,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.uggly = factory());
 })(this, (function () { 'use strict';
 
-  let computeConstraints = function (placement, isLoop, slopeThreshold) {
+  let computeConstraints = function (placement, isLoop, idealEdgeLength, slopeThreshold) {
     let relativePlacementConstraints = [];
     let verticalAlignments = [];
     let horizontalAlignments = [];
@@ -25,11 +25,10 @@
           horizontalAlignments.push(line.nodes); 
         } else {
           line.nodesAll.forEach((node, i) => {
-            if (line.parent[node] != null) {
+            if (line.parent[node] != null && i != 0) {
               relativePlacement.push({left: line.parent[node], right: node});
             }
           });
-          line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
           horizontalAlignments.push(line.nodesAll); 
         }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);    
@@ -45,11 +44,10 @@
           horizontalAlignments.push(line.nodes);
         } else {
           line.nodesAll.forEach((node, i) => {
-            if (line.parent[node] != null) {
+            if (line.parent[node] != null && i != 0) {
               relativePlacement.push({right: line.parent[node], left: node});
             }
           });
-          line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
           horizontalAlignments.push(line.nodesAll);
         }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
@@ -65,11 +63,10 @@
           verticalAlignments.push(line.nodes);
         } else {
           line.nodesAll.forEach((node, i) => {
-            if (line.parent[node] != null) {
+            if (line.parent[node] != null && i != 0) {
               relativePlacement.push({top: line.parent[node], bottom: node});
             }
           });
-          line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
           verticalAlignments.push(line.nodesAll);
         }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement); 
@@ -85,11 +82,10 @@
           verticalAlignments.push(line.nodes);
         } else {
           line.nodesAll.forEach((node, i) => {
-            if (line.parent[node] != null) {
+            if (line.parent[node] != null && i != 0) {
               relativePlacement.push({bottom: line.parent[node], top: node});
             }
           });
-          line.parent[line.nodesAll[0]] != null ? line.nodesAll.unshift(line.parent[line.nodesAll[0]]) : line.nodesAll;
           verticalAlignments.push(line.nodesAll);
         }
         relativePlacementConstraints = relativePlacementConstraints.concat(relativePlacement);
@@ -97,17 +93,23 @@
         // generate appropriate constraints
         let relativePlacement = [];
         if (isLoop) {
-          line.nodes.forEach((node, i) => {
+          line.nodes.forEach((nodeId, i) => {
             if (i != line.nodes.length - 1) {
-              relativePlacement.push({left: node, right: line.nodes[i+1]});
-              relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+              let node = cy.getElementById(nodeId);
+              let nextNode = cy.getElementById(line.nodes[i+1]);
+              let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+              relativePlacement.push({left: nodeId, right: line.nodes[i+1], gap: gapResult[0]});
+              relativePlacement.push({top: nodeId, bottom: line.nodes[i+1], gap: gapResult[1]});
             }
           });
         } else {
-          line.nodesAll.forEach((node, i) => {
-            if (line.parent[node] != null) {
-              relativePlacement.push({left: line.parent[node], right: node, gap: Math.cos(angle) * 80});
-              relativePlacement.push({top: line.parent[node], bottom: node, gap: Math.sin(angle) * 80});
+          line.nodesAll.forEach((nodeId, i) => {
+            if (line.parent[nodeId] != null && i != 0) {
+              let node = cy.getElementById(line.parent[nodeId]);
+              let nextNode = cy.getElementById(nodeId);
+              let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+              relativePlacement.push({left: line.parent[nodeId], right: nodeId, gap: gapResult[0]});
+              relativePlacement.push({top: line.parent[nodeId], bottom: nodeId, gap: gapResult[1]});
             }
           });
         }
@@ -116,17 +118,23 @@
         // generate appropriate constraints
         let relativePlacement = [];
         if (isLoop) {
-          line.nodes.forEach((node, i) => {
+          line.nodes.forEach((nodeId, i) => {
             if (i != line.nodes.length - 1) {
-              relativePlacement.push({right: node, left: line.nodes[i+1]});
-              relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+              let node = cy.getElementById(nodeId);
+              let nextNode = cy.getElementById(line.nodes[i+1]);
+              let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+              relativePlacement.push({right: nodeId, left: line.nodes[i+1], gap: gapResult[0]});
+              relativePlacement.push({bottom: nodeId, top: line.nodes[i+1], gap: gapResult[1]});
             }
           });
         } else {
-          line.nodesAll.forEach((node, i) => {
-            if (line.parent[node] != null) {
-              relativePlacement.push({right: line.parent[node], left: node, gap: Math.cos(angle) * 80});
-              relativePlacement.push({bottom: line.parent[node], top: node, gap: Math.sin(angle) * 80});
+          line.nodesAll.forEach((nodeId, i) => {
+            if (line.parent[nodeId] != null && i != 0) {
+              let node = cy.getElementById(line.parent[nodeId]);
+              let nextNode = cy.getElementById(nodeId);
+              let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+              relativePlacement.push({right: line.parent[nodeId], left: nodeId, gap: gapResult[0]});
+              relativePlacement.push({bottom: line.parent[nodeId], top: nodeId, gap: gapResult[1]});
             }
           });
         }
@@ -135,17 +143,23 @@
         // generate appropriate constraints
         let relativePlacement = [];
         if (isLoop) {
-          line.nodes.forEach((node, i) => {
+          line.nodes.forEach((nodeId, i) => {
             if (i != line.nodes.length - 1) {
-              relativePlacement.push({right: node, left: line.nodes[i+1]});
-              relativePlacement.push({top: node, bottom: line.nodes[i+1]});
+              let node = cy.getElementById(nodeId);
+              let nextNode = cy.getElementById(line.nodes[i+1]);
+              let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+              relativePlacement.push({right: nodeId, left: line.nodes[i+1], gap: gapResult[0]});
+              relativePlacement.push({top: nodeId, bottom: line.nodes[i+1], gap: gapResult[1]});
             }
           });
         } else {
-          line.nodesAll.forEach((node, i) => {
-            if (line.parent[node] != null) {
-              relativePlacement.push({right: line.parent[node], left: node, gap: Math.cos(angle) * 80});
-              relativePlacement.push({top: line.parent[node], bottom: node, gap: Math.sin(angle) * 80});
+          line.nodesAll.forEach((nodeId, i) => {
+            if (line.parent[nodeId] != null && i != 0) {
+              let node = cy.getElementById(line.parent[nodeId]);
+              let nextNode = cy.getElementById(nodeId);
+              let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+              relativePlacement.push({right: line.parent[nodeId], left: nodeId, gap: gapResult[0]});
+              relativePlacement.push({top: line.parent[nodeId], bottom: nodeId, gap: gapResult[1]});
             }
           });
         }
@@ -155,17 +169,23 @@
         // generate appropriate constraints
         let relativePlacement = [];
         if (isLoop) {
-          line.nodes.forEach((node, i) => {
+          line.nodes.forEach((nodeId, i) => {
             if (i != line.nodes.length - 1) {
-              relativePlacement.push({left: node, right: line.nodes[i+1]});
-              relativePlacement.push({bottom: node, top: line.nodes[i+1]});
+              let node = cy.getElementById(nodeId);
+              let nextNode = cy.getElementById(line.nodes[i+1]);
+              let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+              relativePlacement.push({left: nodeId, right: line.nodes[i+1], gap: gapResult[0]});
+              relativePlacement.push({bottom: nodeId, top: line.nodes[i+1], gap: gapResult[1]});
             }
           });
         } else {
-          line.nodesAll.forEach((node, i) => {
-            if (line.parent[node] != null) {
-              relativePlacement.push({left: line.parent[node], right: node, gap: Math.cos(angle) * 80});
-              relativePlacement.push({bottom: line.parent[node], top: node, gap: Math.sin(angle) * 80});
+          line.nodesAll.forEach((nodeId, i) => {
+            if (line.parent[nodeId] != null && i != 0) {
+              let node = cy.getElementById(line.parent[nodeId]);
+              let nextNode = cy.getElementById(nodeId);
+              let gapResult = calculateGaps(node, nextNode, idealEdgeLength, angle);
+              relativePlacement.push({left: line.parent[nodeId], right: nodeId, gap: gapResult[0]});
+              relativePlacement.push({bottom: line.parent[nodeId], top: nodeId, gap: gapResult[1]});
             }
           });
         }
@@ -210,6 +230,15 @@
       direction = "bl-tr";
     }
     return {direction, angle};
+  };
+
+  let calculateGaps = function(node1, node2, idealEdgeLength, angle) {
+    let r1 = Math.min((node1.width() / 2) / Math.cos(angle), (node1.height() / 2) / Math.sin(angle));
+    let r2 = Math.min((node2.width() / 2) / Math.cos(angle), (node2.height() / 2) / Math.sin(angle));
+    let gapX = (r1 + r2 + idealEdgeLength) * Math.cos(angle);
+    let gapY = (r1 + r2 + idealEdgeLength) * Math.sin(angle);
+
+    return [gapX, gapY];
   };
 
   // auxuliary function to merge arrays with duplicates
@@ -392,7 +421,7 @@
   var simplifyExports = simplify$1.exports;
   var simplify = /*@__PURE__*/getDefaultExportFromCjs(simplifyExports);
 
-  function bfsFarthestNode(graph, start) {
+  function bfsFarthestNode(graph, start, isSubset) {
     const visited = new Set();
     const queue = [[start, null]];
     const parent = {};
@@ -405,7 +434,12 @@
         parent[node.id()] = from;
         farthest = node;
 
-        let neighborEdges = node.edgesWith(graph);
+        let neighborEdges;
+        if (isSubset) {
+          neighborEdges = node.edgesWith(graph);
+        } else {
+          neighborEdges = node.neighborhood().edges();
+        }
 
         for (let i = 0; i < neighborEdges.length; i++) {
           let neighborEdge = neighborEdges[i];
@@ -454,17 +488,40 @@
     }
 
     const totalSize = order.length;
-    const totalRatio = sizeRatios.reduce((a, b) => a + b, 0);
+    let totalRatio = sizeRatios.reduce((a, b) => a + b, 0);
     const chunks = [];
 
     let startIdx = 0;
+    let oldChunkSize = 0;
+    let oldRatio = 0;
+    let remaining = totalSize;
     for (let i = 0; i < sizeRatios.length; i++) {
       const ratio = sizeRatios[i];
-      const chunkSize = Math.round((ratio / totalRatio) * totalSize);
-
-      const chunk = order.slice(startIdx, startIdx + chunkSize);
+      const chunkSize = Math.round((ratio / totalRatio) * remaining);
+      let chunk;
+      if(i == 0) {
+        chunk = order.slice(startIdx, startIdx + chunkSize);     
+      } else {
+        if(chunkSize > oldChunkSize) {
+          chunks[i-1] = chunks[i-1].concat(order.slice(startIdx, startIdx + 1));
+          chunk = order.slice(startIdx, startIdx + chunkSize); 
+        } else if(chunkSize == oldChunkSize) {
+          if (ratio > oldRatio) {
+            chunk = order.slice(startIdx - 1, startIdx + chunkSize);
+          } else {
+            chunks[i-1] = chunks[i-1].concat(order.slice(startIdx, startIdx + 1));
+            chunk = order.slice(startIdx, startIdx + chunkSize);
+          }
+        } else {
+          chunk = order.slice(startIdx - 1, startIdx + chunkSize);
+        }
+      }
       chunks.push(chunk);
+      remaining -= chunkSize;
+      totalRatio -= ratio;
       startIdx += chunkSize;
+      oldChunkSize = chunkSize;
+      oldRatio = ratio;
     }
 
     // In case of rounding issues, ensure all nodes are included
@@ -475,8 +532,8 @@
     return { chunks, parent };
   }
 
-  function findCoverage(graph, startNode, sizeRatios) {
-    const { farthest: end1 } = bfsFarthestNode(graph, startNode);
+  function findCoverage(graph, startNode, sizeRatios, isSubset) {
+    const { farthest: end1 } = bfsFarthestNode(graph, startNode, isSubset);
     const { chunks, parent } = bfsSplitGraph(graph, end1, sizeRatios);
     return { chunks, parent };
   }
@@ -588,7 +645,7 @@
     return rotated;
   }
 
-  function findLongestCycle(graph, cy) {
+  function findLongestCycle(graph, cy, isSubset) {
     let longestCycleLength = 0;
     let longestCycle = [];
     let visited = new Set();
@@ -609,7 +666,12 @@
         path.push(nodeId);
         pathSet.add(nodeId);
         
-        let neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
+        let neighborEdges;
+        if (isSubset) {
+          neighborEdges = cy.getElementById(nodeId).edgesWith(graph);
+        } else {
+          neighborEdges = cy.getElementById(nodeId).neighborhood().edges();
+        }
 
         for (let i = 0; i < neighborEdges.length; i++) {
           let neighborEdge = neighborEdges[i];
@@ -689,7 +751,7 @@
     tracer.visualize(s,{scale:1, strokeWidth: 6, rects: false, keypoints: false});
     //console.log(v);
     // simplify the generated lines
-    let tolerance = 4; // Try 1 to 5 depending on how aggressively you want to merge
+    let tolerance = 5; // Try 1 to 5 depending on how aggressively you want to merge
     let highQuality = true; // Set to true for highest quality simplification
     // Convert, simplify, and revert back to [x, y]
     let simplifiedPolylines = filteredPolylines.map(polyline => {
@@ -798,17 +860,17 @@
     return lines;
   };
 
-  let assignNodesToLines = function( prunedGraph, lines, cycleThreshold ){
+  let assignNodesToLines = function( prunedGraph, lines, cycleThreshold, isSubset ){
     let lineCount = lines.length;
     let lineSizes = calculateLineLengths(lines);
     let applyIncremental = false;
     let isLoop = false;
 
     if (lines[0].start[0] == lines[lineCount - 1].end[0] && lines[0].start[1] == lines[lineCount - 1].end[1]) { // in case the drawing is a loop
-      let graphPath = findLongestCycle(prunedGraph, cy);
+      let graphPath = findLongestCycle(prunedGraph, cy, isSubset);
       let cycleThold = cycleThreshold ? cycleThreshold : 2 * Math.sqrt(prunedGraph.nodes().length);
       if (graphPath.length < cycleThold) {
-        let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes);
+        let { chunks: newDistribution, parent } = findCoverage(prunedGraph, prunedGraph.nodes()[0], lineSizes, isSubset);
         let lastLine = newDistribution[newDistribution.length - 1];
         lastLine.push(newDistribution[0][0]);
         lines.forEach((line, i) => {
@@ -833,7 +895,7 @@
       lines = reorderLines(lines);
       lineSizes = calculateLineLengths(lines);
       let nodeAtBottom = findNodeBottom(prunedGraph);
-      let { chunks: newDistribution, parent } = findCoverage(prunedGraph, nodeAtBottom, lineSizes);
+      let { chunks: newDistribution, parent } = findCoverage(prunedGraph, nodeAtBottom, lineSizes, isSubset);
       lines.forEach((line, i) => {
         line.nodesAll = newDistribution[i];
         line.parent = parent;
@@ -844,9 +906,9 @@
     return {lines, applyIncremental, isLoop}; 
   };
 
-  let generateConstraints = async function(cy, imageData, subset, slopeThreshold, cycleThreshold, connectionTolerance){
+  let generateConstraints = async function(cy, imageData, subset, idealEdgeLength, slopeThreshold, cycleThreshold, connectionTolerance){
     let graph = cy.elements();
-
+    let isSubset = false;
     let fixedNodeConstraints = [];
     // if there are selected elements, apply incremental layout on selected elements
     if (subset) {
@@ -855,40 +917,58 @@
       unselectedNodes.forEach(node => {
         fixedNodeConstraints.push({nodeId: node.id(), position: {x: node.position().x, y: node.position().y}});
       });
+      isSubset = true;
     }
 
-    let pruneResult = pruneGraph(cy, graph);
+    let pruneResult = pruneGraph(cy, graph, isSubset);
     let prunedGraph = pruneResult.prunedGraph;
 
     // extract lines either using vision techniques or llms
     let lines = await extractLines(imageData, connectionTolerance);
 
     // lines now have assigned nodes
-    let assignment = assignNodesToLines(prunedGraph, lines, cycleThreshold);
+    let assignment = assignNodesToLines(prunedGraph, lines, cycleThreshold, isSubset);
 
-    let constraints = computeConstraints(assignment.lines, assignment.isLoop, slopeThreshold);
+    let constraints = computeConstraints(assignment.lines, assignment.isLoop, idealEdgeLength, slopeThreshold);
     constraints.fixedNodeConstraint = fixedNodeConstraints;
 
     return {constraints: constraints, applyIncremental: assignment.applyIncremental};
   };
 
   // remove one degree nodes from graph to make it simpler
-  let pruneGraph = function (cy, graph) {
+  let pruneGraph = function (cy, graph, isSubset) {
     let prunedGraph = cy.collection();
     let oneDegreeNodes = cy.collection();
-    graph.nodes().forEach(node => {
-      if (node.degree() == 1) {
-        oneDegreeNodes.merge(node);
-      }
-    });
-    if ((oneDegreeNodes.length == 2 && graph.nodes().length == 3) || (graph.nodes().length == 2)) {  // in case it is a 3-node or 2-node line graph
-      prunedGraph = graph;
-    } else {
+    if (!isSubset){ 
       graph.nodes().forEach(node => {
-        if (node.degree() > 1) {
-          prunedGraph.merge(node);
+        if (node.degree() == 1) {
+          oneDegreeNodes.merge(node);
         }
       });
+      if ((oneDegreeNodes.length == 2 && graph.nodes().length == 3) || (graph.nodes().length == 2)) {  // in case it is a 3-node or 2-node line graph
+        prunedGraph = graph;
+      } else {
+        graph.nodes().forEach(node => {
+          if (node.degree() > 1) {
+            prunedGraph.merge(node);
+          }
+        });
+      }
+    } else {
+      graph.nodes().forEach(node => {
+        if (node.edgesWith(graph).length == 1) {
+          oneDegreeNodes.merge(node);
+        }
+      });
+      if (oneDegreeNodes.length == 2) {  // in case it is a 3-node or 2-node line graph
+        prunedGraph = graph;
+      } else {
+        graph.nodes().forEach(node => {
+          if (!oneDegreeNodes.has(node)) {
+            prunedGraph.merge(node);
+          }
+        });
+      }
     }
 
     let edgesBetween = prunedGraph.edgesWith(prunedGraph);
@@ -898,6 +978,7 @@
     return { prunedGraph, ignoredGraph };
   };
 
+  //import { runTest } from "./test_runtime";
   let uggly = function () {
 
   };
@@ -906,11 +987,14 @@
     let cy = options.cy;
     let imageData = options.imageData;
     let subset = options.subset || undefined;
+    let idealEdgeLength = options.idealEdgeLength || 50;
     let slopeThreshold = options.slopeThreshold || 0.15;
     let cycleThreshold = optFn( options.cycleThreshold, cy ) || undefined;
-    let connectionTolerance = options.connectionTolerance || 10;
-    return generateConstraints(cy, imageData, subset, slopeThreshold, cycleThreshold, connectionTolerance);
+    let connectionTolerance = options.connectionTolerance || 20;
+    return generateConstraints(cy, imageData, subset, idealEdgeLength, slopeThreshold, cycleThreshold, connectionTolerance);
   };
+
+  //uggly.runTest = runTest; // for test purposes
 
   // Make uggly available globally if running in browser
   if (typeof window !== 'undefined') {

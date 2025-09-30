@@ -56,6 +56,37 @@ let stylesheetRome = [
   }
 ];
 
+let stylesheetWater = [
+  {
+    selector: 'node',
+    style: {
+      'background-color': '#1BA1E2',
+      'width': 60,
+      'height': 30,
+      'shape': 'rectangle',
+      'border-width': '1px',
+      'border-color': 'darkblue',
+      'text-valign': 'center',
+      'label': 'data(label)',
+      'text-wrap': 'wrap' 
+    }
+  },
+  {
+    selector: 'node:selected, edge:selected',
+    style: {
+      'underlay-color': '#FFCCCB',
+      'underlay-padding': '5px',
+      'underlay-opacity': '1'
+    }
+  },
+  {
+    selector: 'edge',
+    style: {
+      'line-color': 'lightblue'
+    }
+  }
+];
+
 
 let cy = window.cy = cytoscape({
   container: document.getElementById('cy'),
@@ -111,6 +142,7 @@ let sampleFileNames = {
   "sample3" : sample3,
   "sample4" : sample4,    
   "sample5" : sample5,
+  "water_network" : water_network,
   "glycolysis" : glycolysis,
   "tca_cycle" : tca_cycle,
   "cheminfo" : cheminfo,
@@ -145,6 +177,7 @@ let loadSample = function (json, sampleName) {
       if (!node.data('unitsOfInformation'))
         node.data('unitsOfInformation', []);
     });
+    document.getElementById('idealEdgeLength').value = 200;
   } else if (sampleName && sampleName == "cheminfo") {
     cy.style(stylesheetCheminfo);
     cy.json({ elements: json });
@@ -153,6 +186,9 @@ let loadSample = function (json, sampleName) {
     cy.json({ elements: json });
   } else if (sampleName && sampleName == "rome") {
     cy.style(stylesheetRome);
+    cy.json({ elements: json });
+  } else if (sampleName && sampleName == "water_network") {
+    cy.style(stylesheetWater);
     cy.json({ elements: json });
   } else {
     cy.style(defaultStylesheet);
@@ -258,6 +294,7 @@ document.getElementById("layoutButton").addEventListener("click", async function
 
   let layoutName = document.querySelector('input[name="layoutName"]:checked').value;
   let applyPolishing = document.getElementById('applyPolishing').checked;
+  let idealEdgeLength = parseFloat(document.getElementById('idealEdgeLength').value);
   let slopeThreshold = parseFloat(document.getElementById("slopeThreshold").value);
   let connectionTolerance = parseInt(document.getElementById("connectionTolerance").value);
   let imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height);
@@ -266,7 +303,7 @@ document.getElementById("layoutButton").addEventListener("click", async function
     subset = cy.elements(':selected');
   }
 
-  let result = await uggly.generateConstraints({cy: cy, imageData: imageData, subset: subset, slopeThreshold: slopeThreshold, connectionTolerance: connectionTolerance});
+  let result = await uggly.generateConstraints({cy: cy, imageData: imageData, subset: subset, idealEdgeLength: idealEdgeLength, slopeThreshold: slopeThreshold, connectionTolerance: connectionTolerance});
   let constraints = result.constraints;
   let applyIncremental = result.applyIncremental;
 
@@ -293,11 +330,11 @@ async function applyLayout(layoutName, constraints, applyIncremental, applyPolis
       if(edge.source().degree() == 1 || edge.target().degree() == 1) {
         return 75;
       } else {
-        return 200;
+        return parseFloat(document.getElementById('idealEdgeLength').value);
       }
     };
   } else {
-    idealEdgeLength = 50;
+    idealEdgeLength = parseFloat(document.getElementById('idealEdgeLength').value);
   }
 
   if (layoutName == "fcose") {  // call fCoSE layout
@@ -401,7 +438,7 @@ function callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, 
     handleDisconnected: false,
     maxSimulationTime: 1500,
     convergenceThreshold: 0.01,
-    nodeSpacing: 20,
+    //nodeSpacing: 20,
     edgeLength: idealEdgeLength,
     alignment: constraints.alignment,
     gapInequalities: constraints.gapInequalities,
@@ -417,9 +454,11 @@ function callColaLayout(randomize, idealEdgeLength, initialEnergyOnIncremental, 
           handleDisconnected: false,
           maxSimulationTime: 500,
           convergenceThreshold: 0.01,
-          nodeSpacing: 20,
+          //nodeSpacing: 20,
           edgeLength: idealEdgeLength,
-          allConstIter: 10
+          //alignment: constraints.alignment,
+          gapInequalities: constraints.gapInequalities,
+          allConstIter: 1
         }).run();
       }
       cy.nodes().unlock();
@@ -456,3 +495,7 @@ document.getElementById("downloadCanvas").addEventListener("click", async functi
 document.getElementById("uploadImage").addEventListener("click", async function () {
   loadImage("drawing.png");
 });
+
+document.getElementById("runTest").addEventListener("click", async function () {
+  uggly.runTest();
+}); 
