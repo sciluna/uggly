@@ -71,5 +71,23 @@ h1 {
 }
 
 #samples {
-  margin-right: 15px;
+  margin-right: 10px;
+}
+
+#infoTooltip {
+  visibility: hidden;
+  width: 400px;
+  background-color: white;
+  border-style: solid;
+  border-width: 1px;
+  text-align: justify;
+  border-radius: 3px;
+  padding: 3px 5px;
+  color: black;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 3000;
+  top: 0px;
+  left: 420px;
 }

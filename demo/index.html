@@ -47,7 +47,7 @@
   <hr>
   <div id="inputArea">
     <form class="form-inline">
-      <div class="btn-group me-2" role="group">
+      <div class="btn-group me-1" role="group">
         <button id="openFile" type="button" class="btn btn-secondary btn-sm" title="Load GraphML file"> Open...</button>
         <div class="alert alert-dark m-0 px-0"></div>
         <input id="inputFile" type='file' style="display: none" />
@@ -58,7 +58,7 @@
         </ul>
         <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="dropdown" aria-expanded="false" title="Save as PNG, JPG or SVG">  Save as Image</button>
       </div>
-      <label for="samples" class="col-form-label">Sample file:</label>
+      <label for="samples" class="col-form-label me-1">Sample:</label>
       <select class="form-select-sm" style="width:auto;" name="samples" id="samples">
         <option value="" disabled selected>Select</option>
         <option value="sample1">Sample 1</option>
@@ -73,15 +73,9 @@
         <option value="crime">Crime-Moreno</option>
         <option value="rome">Rome Graph</option>
       </select>
+      <i id="infoButton" class="bi bi-info-circle-fill fs-5"></i>
+      <span id="infoTooltip" class="tooltiptext">- Load a GraphML file or select a sample file <br> - Draw the sketch that will guide your graph's layout <br> - Click Apply Layout button <br> <em>Note:</em> For partial adjustment, first select the relevant part, then apply the layout </span>
     </form>
-    <div class="mb-2" role="toolbar">
-      <ul style="font-size: 15;">
-        <li>Load a GraphML file or select a sample file</li>
-        <li>Draw the shape that will guide your graph's layout</li>
-        <li>Click Apply Layout button</li>
-        <li><i>Note: </i>For partial adjustment, first select the relevant part, then apply the layout</li>
-      </ul>
-    </div>
     <div id="shapeInputField">
       <h5>Layout Options</h5>
       <div style="font-size: 15;">

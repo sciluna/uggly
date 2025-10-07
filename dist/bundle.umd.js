@@ -926,13 +926,17 @@
     // extract lines either using vision techniques or llms
     let lines = await extractLines(imageData, connectionTolerance);
 
-    // lines now have assigned nodes
-    let assignment = assignNodesToLines(prunedGraph, lines, cycleThreshold, isSubset);
+    if (lines.length > 0) {
+      // lines now have assigned nodes
+      let assignment = assignNodesToLines(prunedGraph, lines, cycleThreshold, isSubset);
 
-    let constraints = computeConstraints(assignment.lines, assignment.isLoop, idealEdgeLength, slopeThreshold);
-    constraints.fixedNodeConstraint = fixedNodeConstraints;
+      let constraints = computeConstraints(assignment.lines, assignment.isLoop, idealEdgeLength, slopeThreshold);
+      constraints.fixedNodeConstraint = fixedNodeConstraints;
 
-    return {constraints: constraints, applyIncremental: assignment.applyIncremental};
+      return {constraints: constraints, applyIncremental: assignment.applyIncremental};
+    } else {
+      return {constraints: {fixedNodeConstraint: fixedNodeConstraints, relativePlacementConstraints: undefined, alignmentConstraints: undefined}, applyIncremental: false};
+    }
   };
 
   // remove one degree nodes from graph to make it simpler

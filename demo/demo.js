@@ -356,29 +356,33 @@ async function applyLayout(layoutName, constraints, applyIncremental, applyPolis
 function convertToColaConstraints(constraints) {
   let colaConstraints = {};
   // process alignment constraints - first vertical then horizontal
-  if (constraints.alignmentConstraint.vertical || constraints.alignmentConstraint.horizontal) {
+  let alignmentConstraintExist = false;
+  if (constraints.alignmentConstraint && (constraints.alignmentConstraint.vertical || constraints.alignmentConstraint.horizontal)) {
     colaConstraints.alignment = {};
+    alignmentConstraintExist = true;
   }
-  if (constraints.alignmentConstraint.vertical) {
-    colaConstraints.alignment.vertical = [];
-    constraints.alignmentConstraint.vertical.forEach(verticalAlignment => {
-      let colaVerticalAlignment = [];
-      verticalAlignment.forEach(nodeId => {
-        colaVerticalAlignment.push({node: cy.getElementById(nodeId)});
+  if (alignmentConstraintExist) {
+    if (constraints.alignmentConstraint.vertical) {
+      colaConstraints.alignment.vertical = [];
+      constraints.alignmentConstraint.vertical.forEach(verticalAlignment => {
+        let colaVerticalAlignment = [];
+        verticalAlignment.forEach(nodeId => {
+          colaVerticalAlignment.push({node: cy.getElementById(nodeId)});
+        });
+        colaConstraints.alignment.vertical.push(colaVerticalAlignment);
       });
-      colaConstraints.alignment.vertical.push(colaVerticalAlignment);
-    });
-  }
+    }
 
-  if (constraints.alignmentConstraint.horizontal) {
-    colaConstraints.alignment.horizontal = [];
-    constraints.alignmentConstraint.horizontal.forEach(horizontalAlignment => {
-      let colaHorizontalAlignment = [];
-      horizontalAlignment.forEach(nodeId => {
-        colaHorizontalAlignment.push({node: cy.getElementById(nodeId)});
+    if (constraints.alignmentConstraint.horizontal) {
+      colaConstraints.alignment.horizontal = [];
+      constraints.alignmentConstraint.horizontal.forEach(horizontalAlignment => {
+        let colaHorizontalAlignment = [];
+        horizontalAlignment.forEach(nodeId => {
+          colaHorizontalAlignment.push({node: cy.getElementById(nodeId)});
+        });
+        colaConstraints.alignment.horizontal.push(colaHorizontalAlignment);
       });
-      colaConstraints.alignment.horizontal.push(colaHorizontalAlignment);
-    });
+    }
   }
 
   // process relative placement constraints
@@ -481,6 +485,14 @@ function loadImage(imagePath) {
   img.src = imagePath;
 }
 
+document.getElementById('infoButton').addEventListener('mouseover', function() {
+  document.getElementById('infoTooltip').style['visibility'] = 'visible';
+});
+
+document.getElementById('infoButton').addEventListener('mouseout', function() {
+  document.getElementById('infoTooltip').style['visibility'] = 'hidden';
+});
+
 // download drawing
 document.getElementById("downloadCanvas").addEventListener("click", async function () {
   const dataURL = canvas.toDataURL('image/png');
@@ -498,4 +510,4 @@ document.getElementById("uploadImage").addEventListener("click", async function 
 
 document.getElementById("runTest").addEventListener("click", async function () {
   uggly.runTest();
-}); 
+});
