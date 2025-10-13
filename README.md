@@ -8,15 +8,13 @@ Here is a video tutorial:
 
 https://github.com/user-attachments/assets/21c3380e-7239-41cb-86d6-a2e0b76a1876
 
-Please cite the following paper when you use this algorithm:
-
-Balci, H., & Luna, A. (2025). User-Guided Force-Directed Graph Layout. arXiv preprint arXiv:2506.15860. doi: [10.48550/arXiv.2506.15860](https://doi.org/10.48550/arXiv.2506.15860)
-
 ## Dependencies
   
   * Cytoscape.js ^3.2.0
   * [Skeleton Tracing](https://github.com/LingDong-/skeleton-tracing)
   * Simplify.js ^1.2.4
+  * cytoscape-fcose ^2.2.0 (optional)
+  * cytoscape-cola ^2.5.1 (optional)
 
 ## Usage instructions
 
@@ -65,20 +63,25 @@ let options = {
   imageData: imageData, 
   // a cy collection that contains graph elements that the algorithm will apply
   // if it is undefined, then algorithm applies to whole graph
-  subset: undefined, 
+  subset: undefined,
+  // ideal edge length expected between adjacent nodes
+  idealEdgeLength: 50,
   // slope threshold to capture the horizontal and vertical line segments more efficiently
   // higher value gives more flexibility
-  slopeThreshold: 0.2, 
+  slopeThreshold: 0.15, 
   // you can provide a number or a function which takes cy as the input and returns a value
   // if it is undefined, then algorithm applies 2 * Math.sqrt(|V|)
-  cycleThreshold: undefined
+  cycleThreshold: undefined,
+  // number of pixel amount to accept disconnected consecutive line segments as connected 
+  // to better capture loose drawings
+  connectionTolerance: 20
 };
 ```
 
 `generateConstraints` function returns a JS object 
 ```js
 {
-  constraints: {  // constraints compatible with fCoSE layout algorithm
+  constraints: {  // constraints compatible with fCoSE layout algorithm, they need appropriate conversion for CoLa layout
     relativePlacementConstraint: ...,
     alignmentConstraint: ...,
     fixedNodeConstraint: ...
@@ -89,15 +92,16 @@ let options = {
 
 After constraints are generated, they can be used as options in the layout algorithm as shown in the [demo](https://github.com/sciluna/uggly/blob/main/demo/demo.js).
 
-## Test with LLMs
+## Performance comparison between fCoSE and CoLa layouts
 
-We explored the use of popular multimodal large language models (LLMs) for our extraction step by comparing our skeletonization/polyline simplification processing method to line extraction done solely with GPT-4o and Gemini 2.0 Flash. For this experiment, we randomly selected 160 graphs from the Rome graph dataset and generated 20 random user drawings, pairing each graph with a randomly chosen drawing. Each graph was then laid out using different approaches. For the LLM-based methods, we tested two strategies: (1) providing only the image alongside a prompt, and (2) providing both the image and an ASCII representation of the image, following the approach described here: https://spatialeval.github.io/.
+We provide a detailed analysis of how well our method integrates with the two constraint-aware layout algorithms, fCoSE and CoLa. To this end, we constructed a dataset by randomly sampling 160 graphs from [Rome graph dataset](https://graphdrawing.unipg.it/data.html) and designed 20 base sketches consisting of consecutive line and curve segments. Each base sketch was then rotated clockwise by
+  30°, 45°, and 60° to produce variants with different orientations, resulting in a total of 80 distinct sketches. These sketches were then randomly assigned to the 160 graphs, producing 160 graph–sketch pairs. For each pair, we generated placement constraints using our approach and then applied both [fCoSE](https://github.com/iVis-at-Bilkent/cytoscape.js-fcose) and [CoLa](https://github.com/cytoscape/cytoscape.js-cola) algorithms in the final layout step. 
 
-As a result, we produced sketch-based layouts for 160 graphs. To evaluate these layouts, we conducted a human study on Amazon Mechanical Turk, where participants were shown random pairs of layouts for the same graph, each produced by different methods. They were then asked to select the layout that best matched the corresponding drawing. In total, we collected 2,500 pairwise comparisons from 51 workers. The results showed a clear preference for layouts generated with our method.  Using the Bradley-Terry model to rank user preferences, our approach achieved a score of 1.60, compared to 0.86 for Gemini, 0.80 for Gemini with image + ASCII input, 0.76 for GPT-4o, and 0.97 for GPT-4o with image + ASCII input. Failures in the LLM-based approaches were mostly due to their instability and incorrect assumptions about the sketch content. The layouts we generated for this experiment, together with the human evaluation results and score calculation scripts, can be found at [10.5281/zenodo.15306614](https://doi.org/10.5281/zenodo.15306614) 
+We report results on run time performance, soft constraint satisfaction (average edge length, edge crossings, node-node overlaps and node-edge crossings), and alignment accuracy measured by Chamfer distance between the sketch and the final layout. The graph and sketch dataset, along with the resulting layouts and measurements, can be found at [10.5281/zenodo.15306614](https://doi.org/10.5281/zenodo.15306614).
 
 ## Credits
 
-Our method uses [Cytoscape.js](https://js.cytoscape.org) for graph visualization and other graph-related operations. [Skeleton Tracing](https://github.com/LingDong-/skeleton-tracing) algorithm is used to extract the skeleton of the user sketch and [simplify-js](https://github.com/mourner/simplify-js) (licensed under the [BSD 2-Clause License](https://github.com/mourner/simplify-js/blob/master/LICENSE)) is used for polyline simplification. [cytoscape-fcose](https://github.com/iVis-at-Bilkent/cytoscape.js-fcose) is used as the layout algorithm with constraint support.
+Our method uses [Cytoscape.js](https://js.cytoscape.org) for graph visualization and other graph-related operations. [Skeleton Tracing](https://github.com/LingDong-/skeleton-tracing) algorithm is used to extract the skeleton of the user sketch and [simplify-js](https://github.com/mourner/simplify-js) (licensed under the [BSD 2-Clause License](https://github.com/mourner/simplify-js/blob/master/LICENSE)) is used for polyline simplification. [cytoscape-fcose](https://github.com/iVis-at-Bilkent/cytoscape.js-fcose) and [cytoscape-cola](https://github.com/cytoscape/cytoscape.js-cola) are used as the layout algoriths with constraint support.
 
 Third-party libraries used in demo: [Bootstrap](https://getbootstrap.com/), [FileSaver.js](https://github.com/eligrey/FileSaver.js/), [cytoscape-graphml](https://github.com/iVis-at-Bilkent/cytoscape.js-graphml), [cytoscape-sbgn-stylesheet](https://github.com/PathwayCommons/cytoscape-sbgn-stylesheet), [cytoscape-svg](https://github.com/kinimesi/cytoscape-svg) 
 
