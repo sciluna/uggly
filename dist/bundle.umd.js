@@ -991,14 +991,14 @@
     let cy = options.cy;
     let imageData = options.imageData;
     let subset = options.subset || undefined;
-    let idealEdgeLength = options.idealEdgeLength || 50;
-    let slopeThreshold = options.slopeThreshold || 0.15;
+    let idealEdgeLength = options.idealEdgeLength ?? 50;
+    let slopeThreshold = options.slopeThreshold ?? 0.15;
     let cycleThreshold = optFn( options.cycleThreshold, cy ) || undefined;
-    let connectionTolerance = options.connectionTolerance || 20;
+    let connectionTolerance = options.connectionTolerance ?? 20;
     return generateConstraints(cy, imageData, subset, idealEdgeLength, slopeThreshold, cycleThreshold, connectionTolerance);
   };
 
-  //sketchLay.runTest = runTest; // for test purposes
+  sketchLay.runTest = runTest; // for test purposes
 
   // Make sketchLay available globally if running in browser
   if (typeof window !== 'undefined') {
